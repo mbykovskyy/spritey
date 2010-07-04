@@ -1,0 +1,11 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Core
+Bundle-SymbolicName: spritey.core
+Bundle-Version: 1.0.0.qualifier
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Require-Bundle: org.junit4
+Export-Package: spritey.core,
+ spritey.core.event,
+ spritey.core.node;uses:="spritey.core.node.event,spritey.core",
+ spritey.core.node.event;uses:="spritey.core.node,spritey.core"
