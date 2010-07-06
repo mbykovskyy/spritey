@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model:Screen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:model="http://wireframesketcher.com/1.0/model.ecore">
+  <widgets xsi:type="model:Window" x="152" y="136" width="329" height="401" text="New Sprite Sheet" measuredWidth="329" measuredHeight="401"/>
+  <widgets xsi:type="model:Placeholder" x="152" y="155" width="329" height="54" measuredWidth="329" measuredHeight="54"/>
+  <widgets xsi:type="model:HLine" x="162" y="480" width="309" measuredWidth="309" measuredHeight="6"/>
+  <widgets xsi:type="model:Button" x="330" y="496" text="Finish" measuredWidth="51" measuredHeight="25">
+    <font/>
+  </widgets>
+  <widgets xsi:type="model:Button" x="392" y="496" text="Cancel" measuredWidth="56" measuredHeight="25">
+    <font/>
+  </widgets>
+  <widgets xsi:type="model:Label" x="167" y="225" text="Width:" measuredWidth="40" measuredHeight="23">
+    <font/>
+  </widgets>
+  <widgets xsi:type="model:Label" x="167" y="258" text="Height:" measuredWidth="44" measuredHeight="23">
+    <font/>
+  </widgets>
+  <widgets xsi:type="model:Label" x="167" y="296" text="Background:" measuredWidth="72" measuredHeight="23">
+    <font/>
+  </widgets>
+  <widgets xsi:type="model:Label" x="167" y="360" text="Comment:" measuredWidth="62" measuredHeight="23">
+    <font/>
+  </widgets>
+  <widgets xsi:type="model:Spinner" x="247" y="225" width="50" text="800" measuredWidth="50" measuredHeight="23"/>
+  <widgets xsi:type="model:Spinner" x="247" y="258" width="50" text="600" measuredWidth="50" measuredHeight="23"/>
+  <widgets xsi:type="model:Rectangle" x="247" y="296" width="33" height="23" measuredWidth="33" measuredHeight="23" background="#ff00ff">
+    <font/>
+  </widgets>
+  <widgets xsi:type="model:Checkbox" x="247" y="328" text="Transparent" measuredWidth="84" measuredHeight="23"/>
+  <widgets xsi:type="model:TextArea" x="247" y="360" width="210" height="76" text="Created with Spritey" measuredWidth="210" measuredHeight="76">
+    <font/>
+  </widgets>
+  <hRuler/>
+  <vRuler/>
+  <font/>
+</model:Screen>

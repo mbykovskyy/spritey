@@ -56,7 +56,7 @@ public interface Validator {
      * 
      * @return if <code>isValid()</code> was never called or returned
      *         <code>true</code>, then this method returns <code>NONE</code>
-     *         error code, which is equal to 0 (zero). Otherwise, a error code
+     *         error code, which is equal to 0 (zero). Otherwise, an error code
      *         is returned.
      */
     public int getErrorCode();

@@ -1,0 +1,15 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Spritey
+Bundle-SymbolicName: spritey.rcp;singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Bundle-Activator: spritey.rcp.SpriteyPlugin
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime,
+ org.junit4,
+ spritey.core;bundle-version="1.0.0",
+ org.eclipse.gef;bundle-version="3.6.0",
+ org.eclipse.ui.navigator;bundle-version="3.5.0"
+Bundle-ActivationPolicy: lazy
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Import-Package: org.eclipse.ui.forms.widgets

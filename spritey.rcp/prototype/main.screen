@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model:Screen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:model="http://wireframesketcher.com/1.0/model.ecore">
+  <widgets xsi:type="model:Master" x="219" y="283"/>
+  <widgets xsi:type="model:Window" x="64" y="80" width="585" height="495" text="Sprite Packer" measuredWidth="585" measuredHeight="495"/>
+  <widgets xsi:type="model:VScrollbar" x="408" y="125" height="434" measuredWidth="17" measuredHeight="434"/>
+  <widgets xsi:type="model:HScrollbar" x="64" y="558" width="345" measuredWidth="345" measuredHeight="17"/>
+  <widgets xsi:type="model:Panel" x="423" y="125" width="226" height="450" measuredWidth="226" measuredHeight="450"/>
+  <widgets xsi:type="model:Panel" x="424" y="125" width="225" height="33" measuredWidth="225" measuredHeight="33"/>
+  <widgets xsi:type="model:Tree" x="441" y="168" width="192" height="169" text="v button&#xD;&#xA;-{image} default&#xD;&#xA;-{image} hovered&#xD;&#xA;-{image} pressed&#xD;&#xA;> character&#xD;&#xA;v door&#xD;&#xA;-{image} closed&#xD;&#xA;-{image} open" measuredWidth="192" measuredHeight="169" verticalScrollbar="true" selection="3"/>
+  <widgets xsi:type="model:Label" x="433" y="129" text="Sprite List" measuredWidth="67" measuredHeight="25">
+    <font size="10" bold="true"/>
+  </widgets>
+  <widgets xsi:type="model:Menu" x="64" y="99" width="585" text="&amp;File,&amp;Edit,&amp;SpriteSheet,&amp;Help" measuredWidth="585" measuredHeight="27"/>
+  <widgets xsi:type="model:Placeholder" x="64" y="125" width="65" height="60" measuredWidth="65" measuredHeight="60"/>
+  <widgets xsi:type="model:Placeholder" x="128" y="125" measuredWidth="100" measuredHeight="100"/>
+  <widgets xsi:type="model:Placeholder" x="227" y="125" width="126" height="60" measuredWidth="126" measuredHeight="60"/>
+  <widgets xsi:type="model:Button" x="512" y="129" width="25" measuredWidth="25" measuredHeight="25" icon="asc (small)">
+    <font/>
+  </widgets>
+  <widgets xsi:type="model:Button" x="544" y="129" width="25" measuredWidth="25" measuredHeight="25" icon="squared-minus (small)">
+    <font/>
+  </widgets>
+  <widgets xsi:type="model:Button" x="576" y="129" width="25" measuredWidth="25" measuredHeight="25" icon="squared-plus (small)">
+    <font/>
+  </widgets>
+  <widgets xsi:type="model:Button" x="608" y="129" width="25" measuredWidth="25" measuredHeight="25" icon="refresh (small)">
+    <font/>
+  </widgets>
+  <widgets xsi:type="model:Panel" x="423" y="382" width="226" height="33" measuredWidth="226" measuredHeight="33"/>
+  <widgets xsi:type="model:Button" x="475" y="344" width="25" measuredWidth="25" measuredHeight="25" icon="add (small)">
+    <font/>
+  </widgets>
+  <widgets xsi:type="model:Button" x="520" y="344" width="25" measuredWidth="25" measuredHeight="25" icon="open (small)">
+    <font/>
+  </widgets>
+  <widgets xsi:type="model:Button" x="568" y="344" width="25" measuredWidth="25" measuredHeight="25" icon="trash (small)">
+    <font/>
+  </widgets>
+  <widgets xsi:type="model:Label" x="433" y="386" text="Sprite Properties" measuredWidth="108" measuredHeight="25">
+    <font size="10" bold="true"/>
+  </widgets>
+  <widgets xsi:type="model:Icon" x="617" y="391" measuredWidth="16" measuredHeight="16" icon="filled-arrow-down (small)"/>
+  <widgets xsi:type="model:TextField" x="496" y="424" width="141" text="button" measuredWidth="141" measuredHeight="23"/>
+  <widgets xsi:type="model:Label" x="433" y="424" text="Class:" measuredWidth="35" measuredHeight="23">
+    <font/>
+  </widgets>
+  <widgets xsi:type="model:TextField" x="496" y="456" width="141" text="pressed" measuredWidth="141" measuredHeight="23"/>
+  <widgets xsi:type="model:Label" x="433" y="456" text="SubClass:" measuredWidth="55" measuredHeight="23">
+    <font/>
+  </widgets>
+  <widgets xsi:type="model:TextField" x="472" y="488" width="54" text="10" measuredWidth="54" measuredHeight="23"/>
+  <widgets xsi:type="model:Label" x="433" y="488" text="X:" measuredWidth="15" measuredHeight="23">
+    <font/>
+  </widgets>
+  <widgets xsi:type="model:Label" x="540" y="488" text="Y:" measuredWidth="15" measuredHeight="23">
+    <font/>
+  </widgets>
+  <widgets xsi:type="model:TextField" x="472" y="520" width="54" text="57" measuredWidth="54" measuredHeight="23" state="disabled"/>
+  <widgets xsi:type="model:Label" x="433" y="520" text="Width:" measuredWidth="40" measuredHeight="23">
+    <font/>
+  </widgets>
+  <widgets xsi:type="model:Label" x="540" y="520" text="Height:" measuredWidth="44" measuredHeight="23">
+    <font/>
+  </widgets>
+  <widgets xsi:type="model:TextField" x="583" y="488" width="54" text="115" measuredWidth="54" measuredHeight="23"/>
+  <widgets xsi:type="model:TextField" x="583" y="520" width="54" text="64" measuredWidth="54" measuredHeight="23" state="disabled"/>
+  <hRuler/>
+  <vRuler/>
+  <font/>
+</model:Screen>

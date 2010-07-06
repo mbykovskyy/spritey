@@ -97,6 +97,7 @@ public interface Node {
      * of this node are skipped.
      * 
      * @param children
+     *        an array of children to add.
      * @return an array of nodes that have been skipped.
      * @throws IllegalArgumentException
      *         when <code>children</code> is null.
