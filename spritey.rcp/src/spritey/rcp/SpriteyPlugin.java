@@ -21,6 +21,12 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
+import spritey.core.ModelFactory;
+import spritey.core.SimpleModelFactory;
+import spritey.core.node.MapBasedNodeFactory;
+import spritey.core.node.Node;
+import spritey.core.node.NodeFactory;
+
 /**
  * The activator class controls the plug-in life cycle. It provides a series of
  * convenience methods such as access to the workspace.
@@ -33,10 +39,17 @@ public class SpriteyPlugin extends AbstractUIPlugin {
     // The shared instance
     private static SpriteyPlugin plugin;
 
+    private Node rootNode;
+    private ModelFactory modelFactory;
+    private NodeFactory nodeFactory;
+
     /**
      * The constructor
      */
     public SpriteyPlugin() {
+        rootNode = null;
+        modelFactory = new SimpleModelFactory();
+        nodeFactory = new MapBasedNodeFactory();
     }
 
     /*
@@ -84,6 +97,43 @@ public class SpriteyPlugin extends AbstractUIPlugin {
      */
     public static ImageDescriptor getImageDescriptor(String path) {
         return imageDescriptorFromPlugin(PLUGIN_ID, path);
+    }
+
+    /**
+     * Sets the root node of a sprite sheet so client could later access it.
+     * 
+     * @param root
+     *        the root node of a sprite sheet.
+     */
+    public void setRootNode(Node root) {
+        rootNode = root;
+    }
+
+    /**
+     * Returns sprite sheet's root node.
+     * 
+     * @return an instance of root node.
+     */
+    public Node getRootNode() {
+        return rootNode;
+    }
+
+    /**
+     * Returns a default model factory.
+     * 
+     * @return an instance of model factory.
+     */
+    public ModelFactory getModelFactory() {
+        return modelFactory;
+    }
+
+    /**
+     * Returns a default node factory.
+     * 
+     * @return an instance of a node factory.
+     */
+    public NodeFactory getNodeFactory() {
+        return nodeFactory;
     }
 
 }

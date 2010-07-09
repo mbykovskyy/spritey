@@ -106,5 +106,14 @@
          </includes>
       </viewerContentBinding>
    </extension>
+   <extension
+         point="org.eclipse.ui.editors">
+      <editor
+            class="spritey.rcp.editors.SheetEditor"
+            default="false"
+            id="spritey.rcp.editors.sheetEditor"
+            name="Sprite Sheet Editor">
+      </editor>
+   </extension>
 
 </plugin>
