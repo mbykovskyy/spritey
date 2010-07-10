@@ -52,6 +52,13 @@
                relationship="right"
                relative="org.eclipse.ui.editorss">
          </view>
+         <view
+               closeable="false"
+               id="org.eclipse.ui.views.PropertySheet"
+               minimized="false"
+               relationship="bottom"
+               relative="spritey.rcp.views.spriteTree">
+         </view>
       </perspectiveExtension>
    </extension>
    <extension
