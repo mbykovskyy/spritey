@@ -8,4 +8,5 @@ Require-Bundle: org.junit4
 Export-Package: spritey.core,
  spritey.core.event,
  spritey.core.node;uses:="spritey.core.node.event,spritey.core",
- spritey.core.node.event;uses:="spritey.core.node,spritey.core"
+ spritey.core.node.event;uses:="spritey.core.node,spritey.core",
+ spritey.core.validator

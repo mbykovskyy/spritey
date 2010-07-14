@@ -35,7 +35,7 @@
    <extension
          point="org.eclipse.ui.views">
       <view
-            class="spritey.rcp.views.SpriteTree"
+            class="spritey.rcp.views.navigator.SpriteTree"
             id="spritey.rcp.views.spriteTree"
             name="Sprite Tree">
       </view>
@@ -65,9 +65,9 @@
          point="org.eclipse.ui.navigator.navigatorContent">
       <navigatorContent
             activeByDefault="true"
-            contentProvider="spritey.rcp.providers.SpriteTreeDataProvider"
+            contentProvider="spritey.rcp.views.navigator.SpriteTreeDataProvider"
             id="spritey.rcp.providers.spriteTreeDataProvider"
-            labelProvider="spritey.rcp.providers.SpriteTreeDataProvider"
+            labelProvider="spritey.rcp.views.navigator.SpriteTreeDataProvider"
             name="Sprite Tree Data Provider">
          <triggerPoints>
             <or>
@@ -121,6 +121,82 @@
             id="spritey.rcp.editors.sheetEditor"
             name="Sprite Sheet Editor">
       </editor>
+   </extension>
+   <extension
+         point="org.eclipse.ui.commands">
+      <command
+            defaultHandler="spritey.rcp.handlers.NewSpriteSheetHandler"
+            id="spritey.command.newSpriteSheet"
+            name="&amp;New">
+      </command>
+      <command
+            defaultHandler="spritey.rcp.handlers.AddSpriteHandler"
+            id="spritey.command.addSprite"
+            name="Add Sprite">
+      </command>
+      <command
+            defaultHandler="spritey.rcp.handlers.AddFolderHandler"
+            id="spritey.command.addFolder"
+            name="Add Folder">
+      </command>
+      <command
+            defaultHandler="spritey.rcp.handlers.DeleteSpritesHandler"
+            id="spritey.command.deleteSprites"
+            name="Delete Sprite(s)">
+      </command>
+   </extension>
+   <extension
+         point="org.eclipse.ui.menus">
+      <menuContribution
+            locationURI="menu:org.eclipse.ui.main.menu">
+         <menu
+               label="&amp;File">
+            <command
+                  commandId="spritey.command.newSpriteSheet"
+                  style="push">
+            </command>
+         </menu>
+      </menuContribution>
+      <menuContribution
+            allPopups="false"
+            locationURI="toolbar:spritey.rcp.views.spriteTree">
+         <separator
+               name="spritey.rcp.separator3"
+               visible="true">
+         </separator>
+         <command
+               commandId="spritey.command.addSprite"
+               icon="data/icons/add.png"
+               style="push">
+         </command>
+         <command
+               commandId="spritey.command.addFolder"
+               icon="data/icons/folder.png"
+               style="push">
+         </command>
+         <command
+               commandId="spritey.command.deleteSprites"
+               icon="data/icons/cross.png"
+               style="push">
+         </command>
+      </menuContribution>
+   </extension>
+   <extension
+         point="org.eclipse.core.runtime.adapters">
+      <factory
+            adaptableType="spritey.rcp.editors.editparts.SheetEditPart"
+            class="spritey.rcp.views.properties.adapters.PropertySourceAdapterFactory">
+         <adapter
+               type="org.eclipse.ui.views.properties.IPropertySource">
+         </adapter>
+      </factory>
+      <factory
+            adaptableType="spritey.core.node.Node"
+            class="spritey.rcp.views.properties.adapters.PropertySourceAdapterFactory">
+         <adapter
+               type="org.eclipse.ui.views.properties.IPropertySource">
+         </adapter>
+      </factory>
    </extension>
 
 </plugin>

@@ -19,6 +19,7 @@ package spritey.core.internal;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -73,6 +74,8 @@ public class SimpleSpriteTests {
         final int PROPERTY = Sprite.SIZE;
         final Object VALUE = new Dimension(14, 15);
 
+        doReturn(true).when(validatorMock).isValid(VALUE);
+
         sprite.setProperty(PROPERTY, VALUE);
 
         assertEquals(VALUE, sprite.getProperty(PROPERTY));
@@ -84,20 +87,14 @@ public class SimpleSpriteTests {
         assertEquals(VALUE, eventCaptor.getValue().getNewValue());
     }
 
-    @Test
+    @Test(expected = IllegalArgumentException.class)
     public void setSizeToNull() {
         final int PROPERTY = Sprite.SIZE;
         final Object VALUE = null;
 
-        sprite.setProperty(PROPERTY, VALUE);
+        doReturn(false).when(validatorMock).isValid(VALUE);
 
-        assertEquals(VALUE, sprite.getProperty(PROPERTY));
-        verify(validatorMock).isValid(VALUE);
-        verify(listenerMock).propertyChanged(eventCaptor.capture());
-        assertEquals(sprite, eventCaptor.getValue().getSource());
-        assertEquals(PROPERTY, eventCaptor.getValue().getProperty());
-        assertEquals(null, eventCaptor.getValue().getOldValue());
-        assertEquals(VALUE, eventCaptor.getValue().getNewValue());
+        sprite.setProperty(PROPERTY, VALUE);
     }
 
     @Test
@@ -105,6 +102,8 @@ public class SimpleSpriteTests {
         final int PROPERTY = Sprite.NAME;
         final Object VALUE = "NewSprite";
 
+        doReturn(true).when(validatorMock).isValid(VALUE);
+
         sprite.setProperty(PROPERTY, VALUE);
 
         assertEquals(VALUE, sprite.getProperty(PROPERTY));
@@ -116,26 +115,22 @@ public class SimpleSpriteTests {
         assertEquals(VALUE, eventCaptor.getValue().getNewValue());
     }
 
-    @Test
+    @Test(expected = IllegalArgumentException.class)
     public void setNameToNull() {
         final int PROPERTY = Sprite.NAME;
         final Object VALUE = null;
 
-        sprite.setProperty(PROPERTY, VALUE);
+        doReturn(false).when(validatorMock).isValid(VALUE);
 
-        assertEquals(VALUE, sprite.getProperty(PROPERTY));
-        verify(validatorMock).isValid(VALUE);
-        verify(listenerMock).propertyChanged(eventCaptor.capture());
-        assertEquals(sprite, eventCaptor.getValue().getSource());
-        assertEquals(PROPERTY, eventCaptor.getValue().getProperty());
-        assertEquals(null, eventCaptor.getValue().getOldValue());
-        assertEquals(VALUE, eventCaptor.getValue().getNewValue());
+        sprite.setProperty(PROPERTY, VALUE);
     }
 
     @Test
     public void setNodeToNode() {
         final int PROPERTY = Sprite.NODE;
         final Object VALUE = nodeMock;
+
+        doReturn(true).when(validatorMock).isValid(VALUE);
 
         sprite.setProperty(PROPERTY, VALUE);
 
@@ -153,6 +148,8 @@ public class SimpleSpriteTests {
         final int PROPERTY = Sprite.NODE;
         final Object VALUE = null;
 
+        doReturn(true).when(validatorMock).isValid(VALUE);
+
         sprite.setProperty(PROPERTY, VALUE);
 
         assertEquals(VALUE, sprite.getProperty(PROPERTY));
@@ -169,6 +166,8 @@ public class SimpleSpriteTests {
         final int PROPERTY = Sprite.LOCATION;
         final Object VALUE = new Point(10, 10);
 
+        doReturn(true).when(validatorMock).isValid(VALUE);
+
         sprite.setProperty(PROPERTY, VALUE);
 
         assertEquals(VALUE, sprite.getProperty(PROPERTY));
@@ -180,7 +179,7 @@ public class SimpleSpriteTests {
         assertEquals(VALUE, eventCaptor.getValue().getNewValue());
     }
 
-    @Test
+    @Test(expected = IllegalArgumentException.class)
     public void setLocationToNull() {
         final int PROPERTY = Sprite.LOCATION;
         final Object VALUE = null;
@@ -202,6 +201,8 @@ public class SimpleSpriteTests {
         final Object VALUE = new BufferedImage(32, 32,
                 BufferedImage.TYPE_INT_RGB);
 
+        doReturn(true).when(validatorMock).isValid(VALUE);
+
         sprite.setProperty(PROPERTY, VALUE);
 
         assertEquals(VALUE, sprite.getProperty(PROPERTY));
@@ -217,6 +218,8 @@ public class SimpleSpriteTests {
     public void setImageToNull() {
         final int PROPERTY = Sprite.IMAGE;
         final Object VALUE = null;
+
+        doReturn(true).when(validatorMock).isValid(VALUE);
 
         sprite.setProperty(PROPERTY, VALUE);
 
@@ -242,6 +245,8 @@ public class SimpleSpriteTests {
     @Test
     public void removePropertyListener() {
         sprite.removeModelListener(listenerMock);
+
+        doReturn(true).when(validatorMock).isValid("Name");
 
         sprite.setProperty(Sprite.NAME, "Name");
 

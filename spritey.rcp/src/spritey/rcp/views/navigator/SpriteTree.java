@@ -1,6 +1,8 @@
-package spritey.rcp.views;
+package spritey.rcp.views.navigator;
 
 import org.eclipse.ui.navigator.CommonNavigator;
+
+import spritey.rcp.SpriteyPlugin;
 
 /**
  * A hierarchical view of sprite sheet.
@@ -16,8 +18,7 @@ public class SpriteTree extends CommonNavigator {
      */
     @Override
     protected Object getInitialInput() {
-        // TODO Auto-generated method stub
-        return super.getInitialInput();
+        return SpriteyPlugin.getDefault().getRootNode();
     }
 
 }

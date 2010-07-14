@@ -105,7 +105,7 @@ public abstract class AbstractModel implements Model {
 
         if (null != list) {
             for (Validator validator : list) {
-                if (validator.isValid(value)) {
+                if (!validator.isValid(value)) {
                     throw new IllegalArgumentException(validator.getMessage());
                 }
             }

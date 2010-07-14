@@ -19,6 +19,7 @@ package spritey.core.internal;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -66,6 +67,8 @@ public class SimpleGroupTests {
         final int PROPERTY = Group.NAME;
         final Object VALUE = "NewGroup";
 
+        doReturn(true).when(validatorMock).isValid(VALUE);
+
         group.setProperty(PROPERTY, VALUE);
 
         assertEquals(VALUE, group.getProperty(PROPERTY));
@@ -77,26 +80,22 @@ public class SimpleGroupTests {
         assertEquals(VALUE, eventCaptor.getValue().getNewValue());
     }
 
-    @Test
+    @Test(expected = IllegalArgumentException.class)
     public void setNameToNull() {
         final int PROPERTY = Group.NAME;
         final Object VALUE = null;
 
-        group.setProperty(PROPERTY, VALUE);
+        doReturn(false).when(validatorMock).isValid(VALUE);
 
-        assertEquals(VALUE, group.getProperty(PROPERTY));
-        verify(validatorMock).isValid(VALUE);
-        verify(listenerMock).propertyChanged(eventCaptor.capture());
-        assertEquals(group, eventCaptor.getValue().getSource());
-        assertEquals(PROPERTY, eventCaptor.getValue().getProperty());
-        assertEquals(null, eventCaptor.getValue().getOldValue());
-        assertEquals(VALUE, eventCaptor.getValue().getNewValue());
+        group.setProperty(PROPERTY, VALUE);
     }
 
     @Test
     public void setNodeToNode() {
         final int PROPERTY = Group.NODE;
         final Object VALUE = nodeMock;
+
+        doReturn(true).when(validatorMock).isValid(VALUE);
 
         group.setProperty(PROPERTY, VALUE);
 
@@ -113,6 +112,8 @@ public class SimpleGroupTests {
     public void setNodeToNull() {
         final int PROPERTY = Group.NODE;
         final Object VALUE = null;
+
+        doReturn(true).when(validatorMock).isValid(VALUE);
 
         group.setProperty(PROPERTY, VALUE);
 
@@ -138,6 +139,8 @@ public class SimpleGroupTests {
     @Test
     public void removePropertyListener() {
         group.removeModelListener(listenerMock);
+
+        doReturn(true).when(validatorMock).isValid("Name");
 
         group.setProperty(Group.NAME, "Name");
 

@@ -27,7 +27,7 @@ package spritey.core.validator;
 // introduce reified generics that may have a solution to this.
 public interface Validator {
 
-    public static int NONE = 0;
+    public static int NONE = -1;
 
     /**
      * Verifies that the specified value meets validation requirements. Use

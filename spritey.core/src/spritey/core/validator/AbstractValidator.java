@@ -26,6 +26,14 @@ public abstract class AbstractValidator implements Validator {
     private String message;
     private int errorCode;
 
+    /**
+     * Constructor
+     */
+    protected AbstractValidator() {
+        message = "";
+        errorCode = NONE;
+    }
+
     /*
      * (non-Javadoc)
      * 
@@ -52,7 +60,7 @@ public abstract class AbstractValidator implements Validator {
      * @param message
      *        the message to set.
      */
-    public void setMessage(String message) {
+    protected void setMessage(String message) {
         this.message = message;
     }
 
@@ -62,7 +70,7 @@ public abstract class AbstractValidator implements Validator {
      * @param errorCode
      *        the code to set.
      */
-    public void setErrorCode(int errorCode) {
+    protected void setErrorCode(int errorCode) {
         this.errorCode = errorCode;
     }
 

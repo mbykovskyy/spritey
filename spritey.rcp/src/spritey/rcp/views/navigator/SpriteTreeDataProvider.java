@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License along with
  * Spritey. If not, see <http://www.gnu.org/licenses/>.
  */
-package spritey.rcp.providers;
+package spritey.rcp.views.navigator;
 
 import org.eclipse.jface.viewers.BaseLabelProvider;
 import org.eclipse.jface.viewers.ILabelProvider;
@@ -25,6 +25,7 @@ import org.eclipse.swt.graphics.Image;
 
 import spritey.core.Group;
 import spritey.core.Model;
+import spritey.core.Sheet;
 import spritey.core.Sprite;
 import spritey.core.event.ModelEvent;
 import spritey.core.event.ModelListener;
@@ -149,7 +150,10 @@ public class SpriteTreeDataProvider extends BaseLabelProvider implements
             Model data = ((Node) element).getModel();
 
             if (null != data) {
-                if (data instanceof Group) {
+                if (data instanceof Sheet) {
+                    // Sheet does not have a name, therefore, use node's name.
+                    return ((Node) element).getName();
+                } else if (data instanceof Group) {
                     return data.getProperty(Group.NAME).toString();
                 } else if (data instanceof Sprite) {
                     return data.getProperty(Sprite.NAME).toString();

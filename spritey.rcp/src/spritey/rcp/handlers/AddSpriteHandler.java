@@ -15,20 +15,33 @@
  * You should have received a copy of the GNU General Public License along with
  * Spritey. If not, see <http://www.gnu.org/licenses/>.
  */
-package spritey.rcp.editparts;
+package spritey.rcp.handlers;
 
-import org.eclipse.gef.EditPart;
-import org.eclipse.gef.EditPartFactory;
+import org.eclipse.core.commands.AbstractHandler;
+import org.eclipse.core.commands.ExecutionEvent;
+import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.core.commands.IHandler;
 
-/**
- * A factory for creating sprite sheet and sprite graphical edit parts.
- */
-public class GraphicalEditPartFactory implements EditPartFactory {
+import spritey.rcp.SpriteyPlugin;
 
+public class AddSpriteHandler extends AbstractHandler implements IHandler {
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * org.eclipse.core.commands.IHandler#execute(org.eclipse.core.commands.
+     * ExecutionEvent)
+     */
     @Override
-    public EditPart createEditPart(EditPart context, Object model) {
+    public Object execute(ExecutionEvent event) throws ExecutionException {
         // TODO Auto-generated method stub
         return null;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return !SpriteyPlugin.getDefault().getRootNode().isLeaf();
     }
 
 }

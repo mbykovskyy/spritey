@@ -19,6 +19,7 @@ package spritey.core.internal;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -72,6 +73,8 @@ public class SimpleSheetTests {
         final int PROPERTY = Sheet.SIZE;
         final Object VALUE = new Dimension(14, 15);
 
+        doReturn(true).when(validatorMock).isValid(VALUE);
+
         sheet.setProperty(PROPERTY, VALUE);
 
         assertEquals(VALUE, sheet.getProperty(PROPERTY));
@@ -83,26 +86,22 @@ public class SimpleSheetTests {
         assertEquals(VALUE, eventCaptor.getValue().getNewValue());
     }
 
-    @Test
+    @Test(expected = IllegalArgumentException.class)
     public void setSizeToNull() {
         final int PROPERTY = Sheet.SIZE;
         final Object VALUE = null;
 
-        sheet.setProperty(PROPERTY, VALUE);
+        doReturn(false).when(validatorMock).isValid(VALUE);
 
-        assertEquals(VALUE, sheet.getProperty(PROPERTY));
-        verify(validatorMock).isValid(VALUE);
-        verify(listenerMock).propertyChanged(eventCaptor.capture());
-        assertEquals(sheet, eventCaptor.getValue().getSource());
-        assertEquals(PROPERTY, eventCaptor.getValue().getProperty());
-        assertEquals(null, eventCaptor.getValue().getOldValue());
-        assertEquals(VALUE, eventCaptor.getValue().getNewValue());
+        sheet.setProperty(PROPERTY, VALUE);
     }
 
     @Test
     public void setBackgroundToColor() {
         final int PROPERTY = Sheet.BACKGROUND;
         final Object VALUE = new Color(255, 0, 255);
+
+        doReturn(true).when(validatorMock).isValid(VALUE);
 
         sheet.setProperty(PROPERTY, VALUE);
 
@@ -120,6 +119,8 @@ public class SimpleSheetTests {
         final int PROPERTY = Sheet.BACKGROUND;
         final Object VALUE = null;
 
+        doReturn(true).when(validatorMock).isValid(VALUE);
+
         sheet.setProperty(PROPERTY, VALUE);
 
         assertEquals(VALUE, sheet.getProperty(PROPERTY));
@@ -136,6 +137,8 @@ public class SimpleSheetTests {
         final int PROPERTY = Sheet.OPAQUE;
         final Object VALUE = true;
 
+        doReturn(true).when(validatorMock).isValid(VALUE);
+
         sheet.setProperty(PROPERTY, VALUE);
 
         assertEquals(VALUE, sheet.getProperty(PROPERTY));
@@ -147,26 +150,22 @@ public class SimpleSheetTests {
         assertEquals(VALUE, eventCaptor.getValue().getNewValue());
     }
 
-    @Test
+    @Test(expected = IllegalArgumentException.class)
     public void setOpaqueToNull() {
         final int PROPERTY = Sheet.OPAQUE;
         final Object VALUE = null;
 
-        sheet.setProperty(PROPERTY, VALUE);
+        doReturn(false).when(validatorMock).isValid(VALUE);
 
-        assertEquals(VALUE, sheet.getProperty(PROPERTY));
-        verify(validatorMock).isValid(VALUE);
-        verify(listenerMock).propertyChanged(eventCaptor.capture());
-        assertEquals(sheet, eventCaptor.getValue().getSource());
-        assertEquals(PROPERTY, eventCaptor.getValue().getProperty());
-        assertEquals(null, eventCaptor.getValue().getOldValue());
-        assertEquals(VALUE, eventCaptor.getValue().getNewValue());
+        sheet.setProperty(PROPERTY, VALUE);
     }
 
     @Test
     public void setDescriptionToString() {
         final int PROPERTY = Sheet.DESCRIPTION;
         final Object VALUE = "Created with JUnit.";
+
+        doReturn(true).when(validatorMock).isValid(VALUE);
 
         sheet.setProperty(PROPERTY, VALUE);
 
@@ -184,6 +183,8 @@ public class SimpleSheetTests {
         final int PROPERTY = Sheet.DESCRIPTION;
         final Object VALUE = null;
 
+        doReturn(true).when(validatorMock).isValid(VALUE);
+
         sheet.setProperty(PROPERTY, VALUE);
 
         assertEquals(VALUE, sheet.getProperty(PROPERTY));
@@ -200,6 +201,8 @@ public class SimpleSheetTests {
         final int PROPERTY = Sheet.NODE;
         final Object VALUE = nodeMock;
 
+        doReturn(true).when(validatorMock).isValid(VALUE);
+
         sheet.setProperty(PROPERTY, VALUE);
 
         assertEquals(VALUE, sheet.getProperty(PROPERTY));
@@ -215,6 +218,8 @@ public class SimpleSheetTests {
     public void setNodeToNull() {
         final int PROPERTY = Sheet.NODE;
         final Object VALUE = null;
+
+        doReturn(true).when(validatorMock).isValid(VALUE);
 
         sheet.setProperty(PROPERTY, VALUE);
 
@@ -240,6 +245,8 @@ public class SimpleSheetTests {
     @Test
     public void removePropertyListener() {
         sheet.removeModelListener(listenerMock);
+
+        doReturn(true).when(validatorMock).isValid(nodeMock);
 
         sheet.setProperty(Sheet.NODE, nodeMock);
 

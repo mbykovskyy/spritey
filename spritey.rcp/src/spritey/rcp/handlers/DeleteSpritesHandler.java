@@ -15,23 +15,32 @@
  * You should have received a copy of the GNU General Public License along with
  * Spritey. If not, see <http://www.gnu.org/licenses/>.
  */
-package spritey.core;
+package spritey.rcp.handlers;
 
-import org.junit.runner.RunWith;
-import org.junit.runners.Suite;
+import org.eclipse.core.commands.AbstractHandler;
+import org.eclipse.core.commands.ExecutionEvent;
+import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.core.commands.IHandler;
 
-import spritey.core.internal.SimpleGroupTests;
-import spritey.core.internal.SimpleSheetTests;
-import spritey.core.internal.SimpleSpriteTests;
-import spritey.core.node.internal.MapBasedNodeTests;
-import spritey.core.validator.NotNullValidatorTests;
-import spritey.core.validator.StringLengthValidatorTests;
-import spritey.core.validator.TypeValidatorTests;
+public class DeleteSpritesHandler extends AbstractHandler implements IHandler {
 
-@RunWith(Suite.class)
-@Suite.SuiteClasses({ SimpleSpriteTests.class, SimpleGroupTests.class,
-        SimpleSheetTests.class, MapBasedNodeTests.class,
-        NotNullValidatorTests.class, TypeValidatorTests.class,
-        StringLengthValidatorTests.class })
-public class AllTests {
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * org.eclipse.core.commands.IHandler#execute(org.eclipse.core.commands.
+     * ExecutionEvent)
+     */
+    @Override
+    public Object execute(ExecutionEvent event) throws ExecutionException {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        // TODO Check if there's a selection.
+        return false;
+    }
+
 }

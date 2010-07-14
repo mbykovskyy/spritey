@@ -15,23 +15,18 @@
  * You should have received a copy of the GNU General Public License along with
  * Spritey. If not, see <http://www.gnu.org/licenses/>.
  */
-package spritey.core;
+
+package spritey.rcp;
 
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
-import spritey.core.internal.SimpleGroupTests;
-import spritey.core.internal.SimpleSheetTests;
-import spritey.core.internal.SimpleSpriteTests;
-import spritey.core.node.internal.MapBasedNodeTests;
-import spritey.core.validator.NotNullValidatorTests;
-import spritey.core.validator.StringLengthValidatorTests;
-import spritey.core.validator.TypeValidatorTests;
+import spritey.rcp.validators.BackgroundValidatorTests;
+import spritey.rcp.validators.SizeValidatorTests;
+import spritey.rcp.views.navigator.SpriteTreeDataProviderTests;
 
 @RunWith(Suite.class)
-@Suite.SuiteClasses({ SimpleSpriteTests.class, SimpleGroupTests.class,
-        SimpleSheetTests.class, MapBasedNodeTests.class,
-        NotNullValidatorTests.class, TypeValidatorTests.class,
-        StringLengthValidatorTests.class })
+@Suite.SuiteClasses({ SpriteTreeDataProviderTests.class,
+        SizeValidatorTests.class, BackgroundValidatorTests.class })
 public class AllTests {
 }

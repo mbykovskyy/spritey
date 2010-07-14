@@ -15,23 +15,34 @@
  * You should have received a copy of the GNU General Public License along with
  * Spritey. If not, see <http://www.gnu.org/licenses/>.
  */
-package spritey.core;
+package spritey.core.validator;
 
-import org.junit.runner.RunWith;
-import org.junit.runners.Suite;
 
-import spritey.core.internal.SimpleGroupTests;
-import spritey.core.internal.SimpleSheetTests;
-import spritey.core.internal.SimpleSpriteTests;
-import spritey.core.node.internal.MapBasedNodeTests;
-import spritey.core.validator.NotNullValidatorTests;
-import spritey.core.validator.StringLengthValidatorTests;
-import spritey.core.validator.TypeValidatorTests;
+/**
+ * Validates that the value is not null.
+ */
+public class NotNullValidator extends AbstractValidator {
 
-@RunWith(Suite.class)
-@Suite.SuiteClasses({ SimpleSpriteTests.class, SimpleGroupTests.class,
-        SimpleSheetTests.class, MapBasedNodeTests.class,
-        NotNullValidatorTests.class, TypeValidatorTests.class,
-        StringLengthValidatorTests.class })
-public class AllTests {
+    // Error codes
+    public static final int NULL = 0;
+
+    // Messages
+    private static final String M_NULL = "Object is null.";
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see spritey.core.validator.Validator#isValid(java.lang.Object)
+     */
+    @Override
+    public boolean isValid(Object value) {
+        if (null == value) {
+            setErrorCode(NULL);
+            setMessage(M_NULL);
+            return false;
+        }
+
+        return true;
+    }
+
 }

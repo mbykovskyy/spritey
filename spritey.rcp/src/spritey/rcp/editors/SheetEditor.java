@@ -19,9 +19,12 @@ package spritey.rcp.editors;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.gef.DefaultEditDomain;
+import org.eclipse.gef.EditPart;
 import org.eclipse.gef.ui.parts.GraphicalEditor;
 
-import spritey.rcp.editparts.GraphicalEditPartFactory;
+import spritey.rcp.SpriteyPlugin;
+import spritey.rcp.editors.editparts.ContentsEditPart;
+import spritey.rcp.editors.editparts.GraphicalEditPartFactory;
 
 /**
  * A graphical editor for displaying and editing sprite sheet.
@@ -50,7 +53,10 @@ public class SheetEditor extends GraphicalEditor {
      */
     @Override
     protected void initializeGraphicalViewer() {
-        // TODO Set contents node.
+        // Setup the GEF contents node.
+        EditPart part = new ContentsEditPart();
+        part.setModel(SpriteyPlugin.getDefault().getRootNode());
+        getGraphicalViewer().setContents(part);
     }
 
     /*

@@ -109,20 +109,4 @@ public class SheetEditorInput implements IEditorInput {
         return NAME;
     }
 
-    @Override
-    public boolean equals(Object obj) {
-        if (super.equals(obj)) {
-            return true;
-        } else if (obj instanceof SheetEditorInput) {
-            return sheet.equals(((SheetEditorInput) obj).getSheet());
-        }
-
-        return false;
-    }
-
-    @Override
-    public int hashCode() {
-        return sheet.hashCode();
-    }
-
 }

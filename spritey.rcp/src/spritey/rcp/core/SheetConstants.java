@@ -15,23 +15,28 @@
  * You should have received a copy of the GNU General Public License along with
  * Spritey. If not, see <http://www.gnu.org/licenses/>.
  */
-package spritey.core;
+package spritey.rcp.core;
 
-import org.junit.runner.RunWith;
-import org.junit.runners.Suite;
+import org.eclipse.draw2d.geometry.Dimension;
+import org.eclipse.swt.graphics.RGB;
 
-import spritey.core.internal.SimpleGroupTests;
-import spritey.core.internal.SimpleSheetTests;
-import spritey.core.internal.SimpleSpriteTests;
-import spritey.core.node.internal.MapBasedNodeTests;
-import spritey.core.validator.NotNullValidatorTests;
-import spritey.core.validator.StringLengthValidatorTests;
-import spritey.core.validator.TypeValidatorTests;
+/**
+ * Various sheet properties related constants.
+ */
+public interface SheetConstants {
 
-@RunWith(Suite.class)
-@Suite.SuiteClasses({ SimpleSpriteTests.class, SimpleGroupTests.class,
-        SimpleSheetTests.class, MapBasedNodeTests.class,
-        NotNullValidatorTests.class, TypeValidatorTests.class,
-        StringLengthValidatorTests.class })
-public class AllTests {
+    // Defaults
+    public static String DEFAULT_NAME = "Sheet";
+    public static RGB DEFAULT_BACKGROUND = new RGB(255, 0, 255);
+    public static boolean DEFAULT_OPAQUE = true;
+    public static Dimension DEFAULT_SIZE = new Dimension(800, 600);
+    public static String DEFAULT_DESCRIPTION = "Created with Spritey.";
+
+    // Limits
+    public static int DESCRIPTION_TEXT_LIMIT = 1024;
+    public static int MAX_WIDTH = 1024;
+    public static int MAX_HEIGHT = 1024;
+    public static int MIN_WIDTH = 0;
+    public static int MIN_HEIGHT = 0;
+
 }

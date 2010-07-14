@@ -100,21 +100,20 @@ public class SpriteyPlugin extends AbstractUIPlugin {
     }
 
     /**
-     * Sets the root node of a sprite sheet so client could later access it.
-     * 
-     * @param root
-     *        the root node of a sprite sheet.
-     */
-    public void setRootNode(Node root) {
-        rootNode = root;
-    }
-
-    /**
-     * Returns sprite sheet's root node.
+     * Returns sprite sheet's root node. Root node has no data attached. When
+     * sprite sheet is created, root node becomes a parent of a newly created
+     * sheet.
+     * <p>
+     * This is similar to GEF tree structure. Root-node contains Contents-node.
+     * A client has to define/implement Contents-node as opposed to Root-node.
      * 
      * @return an instance of root node.
      */
     public Node getRootNode() {
+        if (null == rootNode) {
+            rootNode = getNodeFactory().createNode("Root");
+        }
+
         return rootNode;
     }
 
