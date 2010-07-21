@@ -42,6 +42,9 @@ public class NewSpriteSheetDialog extends WizardDialog {
         setShellStyle(getShellStyle() & ~SWT.MAX & ~SWT.RESIZE);
     }
 
+    /**
+     * Configures the size and the location of the shell.
+     */
     @Override
     protected void configureShell(Shell newShell) {
         super.configureShell(newShell);

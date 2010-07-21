@@ -149,7 +149,7 @@ public class NewSpriteSheetMainPage extends WizardPage {
 
         final ToolItem item = new ToolItem(bar, SWT.DROP_DOWN);
         item.setImage(imageFactory.createColorImage(background,
-                COLOR_IMAGE_WIDTH, COLOR_IMAGE_HEIGHT));
+                COLOR_IMAGE_WIDTH, COLOR_IMAGE_HEIGHT, false));
 
         item.addSelectionListener(new SelectionAdapter() {
             @Override
@@ -168,7 +168,7 @@ public class NewSpriteSheetMainPage extends WizardPage {
 
                     if (null != color) {
                         source.setImage(imageFactory.createColorImage(color,
-                                COLOR_IMAGE_WIDTH, COLOR_IMAGE_HEIGHT));
+                                COLOR_IMAGE_WIDTH, COLOR_IMAGE_HEIGHT, false));
                         background = color;
                         isOpaque = true;
                     }
@@ -185,7 +185,7 @@ public class NewSpriteSheetMainPage extends WizardPage {
 
                 if (null != color) {
                     item.setImage(imageFactory.createColorImage(color,
-                            COLOR_IMAGE_WIDTH, COLOR_IMAGE_HEIGHT));
+                            COLOR_IMAGE_WIDTH, COLOR_IMAGE_HEIGHT, false));
                     background = color;
                     isOpaque = true;
                 }
@@ -200,7 +200,7 @@ public class NewSpriteSheetMainPage extends WizardPage {
             @Override
             public void widgetSelected(SelectionEvent e) {
                 item.setImage(imageFactory.createCheckerImage(
-                        COLOR_IMAGE_WIDTH, COLOR_IMAGE_HEIGHT));
+                        COLOR_IMAGE_WIDTH, COLOR_IMAGE_HEIGHT, false));
                 background = null;
                 isOpaque = false;
             }

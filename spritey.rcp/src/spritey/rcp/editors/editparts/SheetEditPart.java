@@ -21,12 +21,11 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.eclipse.draw2d.IFigure;
-import org.eclipse.draw2d.Shape;
+import org.eclipse.draw2d.ImageFigure;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.gef.editparts.AbstractGraphicalEditPart;
-import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.RGB;
-import org.eclipse.swt.widgets.Display;
 
 import spritey.core.Model;
 import spritey.core.Sheet;
@@ -34,7 +33,7 @@ import spritey.core.event.ModelEvent;
 import spritey.core.event.ModelListener;
 import spritey.core.node.Node;
 import spritey.core.node.event.NodeListener;
-import spritey.rcp.editors.figures.SheetFigure;
+import spritey.rcp.utils.ImageFactory;
 
 /**
  * SheetEditPart is a child of ContentsEditPart. It corresponds to model's sheet
@@ -43,25 +42,40 @@ import spritey.rcp.editors.figures.SheetFigure;
 public class SheetEditPart extends AbstractGraphicalEditPart implements
         NodeListener, ModelListener {
 
-    private Shape sheet;
+    private ImageFigure sheet;
+    private ImageFactory imageFactory;
+
+    public SheetEditPart() {
+        imageFactory = new ImageFactory();
+    }
 
     /**
-     * Populates the specified shape with model values.
+     * Populates the sheet with model values.
      * 
-     * @param shape
-     *        the shape to populate.
+     * @param sheet
+     *        the figure to populate.
      * @param model
      *        the model to get values from.
      */
-    private void populateShape(Shape shape, Model model) {
-        shape.setLineDash(new float[] { 4, 4 });
-        shape.setSize((Dimension) model.getProperty(Sheet.SIZE));
-        shape.setOpaque((Boolean) model.getProperty(Sheet.OPAQUE));
+    private void populateSheet(ImageFigure sheet, Model model) {
+        Dimension size = (Dimension) model.getProperty(Sheet.SIZE);
+        boolean isOpaque = (Boolean) model.getProperty(Sheet.OPAQUE);
+        RGB background = (RGB) model.getProperty(Sheet.BACKGROUND);
 
-        if (shape.isOpaque()) {
-            shape.setBackgroundColor(new Color(Display.getCurrent(),
-                    (RGB) model.getProperty(Sheet.BACKGROUND)));
+        Image image = null;
+        if (isOpaque && (null != background)) {
+            image = imageFactory.createColorImage(background, size.width,
+                    size.height, false);
+        } else {
+            image = imageFactory.createCheckerImage(size.width, size.height,
+                    false);
         }
+
+        sheet.setOpaque(isOpaque);
+        sheet.setSize(size);
+        sheet.setImage(image);
+
+        // TODO Draw two-color dashed outline/border similar to Gimp.
     }
 
     /*
@@ -71,8 +85,9 @@ public class SheetEditPart extends AbstractGraphicalEditPart implements
      */
     @Override
     protected IFigure createFigure() {
-        sheet = new SheetFigure();
-        populateShape(sheet, ((Node) getModel()).getModel());
+        // sheet = new SheetFigure();
+        sheet = new ImageFigure();
+        populateSheet(sheet, ((Node) getModel()).getModel());
         return sheet;
     }
 
@@ -206,12 +221,14 @@ public class SheetEditPart extends AbstractGraphicalEditPart implements
      */
     @Override
     public void propertyChanged(ModelEvent event) {
-        refreshVisuals();
+        if (event.getProperty() != Sheet.DESCRIPTION) {
+            refreshVisuals();
+        }
     }
 
     @Override
     protected void refreshVisuals() {
-        populateShape(sheet, ((Node) getModel()).getModel());
+        populateSheet(sheet, ((Node) getModel()).getModel());
     }
 
 }

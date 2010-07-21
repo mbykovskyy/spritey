@@ -15,35 +15,32 @@
  * You should have received a copy of the GNU General Public License along with
  * Spritey. If not, see <http://www.gnu.org/licenses/>.
  */
-package spritey.rcp.handlers;
+package spritey.rcp.views.properties;
 
-import org.eclipse.core.commands.AbstractHandler;
-import org.eclipse.core.commands.ExecutionEvent;
-import org.eclipse.core.commands.ExecutionException;
-import org.eclipse.core.commands.IHandler;
+import org.eclipse.jface.viewers.CellEditor;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.ui.views.properties.PropertyDescriptor;
 
 /**
- * Handles the deletion of a group of sprites.
+ * A property descriptor that provides width information to Properties view
  */
-public class DeleteSpritesHandler extends AbstractHandler implements IHandler {
+public class WidthPropertyDescriptor extends PropertyDescriptor {
 
-    /*
-     * (non-Javadoc)
+    /**
+     * Constructor
      * 
-     * @see
-     * org.eclipse.core.commands.IHandler#execute(org.eclipse.core.commands.
-     * ExecutionEvent)
+     * @param id
+     *        the property id.
+     * @param displayName
+     *        the text to be displayed in the GUI.
      */
-    @Override
-    public Object execute(ExecutionEvent event) throws ExecutionException {
-        // TODO Auto-generated method stub
-        return null;
+    public WidthPropertyDescriptor(Object id, String displayName) {
+        super(id, displayName);
     }
 
     @Override
-    public boolean isEnabled() {
-        // TODO Check if there's a selection.
-        return false;
+    public CellEditor createPropertyEditor(Composite parent) {
+        return new SizeCellEditor(parent, SizeCellEditor.WIDTH);
     }
 
 }

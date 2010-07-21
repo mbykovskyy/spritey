@@ -24,6 +24,9 @@ import org.eclipse.core.commands.IHandler;
 
 import spritey.rcp.SpriteyPlugin;
 
+/**
+ * Handler for handling the addition of a group of sprites.
+ */
 public class AddFolderHandler extends AbstractHandler implements IHandler {
 
     /*

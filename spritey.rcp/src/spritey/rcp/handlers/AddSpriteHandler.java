@@ -24,6 +24,9 @@ import org.eclipse.core.commands.IHandler;
 
 import spritey.rcp.SpriteyPlugin;
 
+/**
+ * Handling the addition of a new sprite to a sprite sheet.
+ */
 public class AddSpriteHandler extends AbstractHandler implements IHandler {
 
     /*

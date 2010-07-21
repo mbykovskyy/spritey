@@ -21,9 +21,13 @@ import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.ui.views.properties.IPropertyDescriptor;
 import org.eclipse.ui.views.properties.IPropertySource;
 import org.eclipse.ui.views.properties.PropertyDescriptor;
+import org.eclipse.ui.views.properties.TextPropertyDescriptor;
 
 import spritey.core.Model;
 import spritey.core.Sheet;
+import spritey.rcp.views.properties.BackgroundPropertyDescriptor;
+import spritey.rcp.views.properties.HeightPropertyDescriptor;
+import spritey.rcp.views.properties.WidthPropertyDescriptor;
 
 /**
  * Property source for supplying sheet properties to the Properties view.
@@ -32,18 +36,47 @@ public class SheetPropertySource implements IPropertySource {
 
     private static final int WIDTH_ID = 0;
     private static final int HEIGHT_ID = 1;
-    private static final int BACKGROUND_ID = 3;
-    private static final int DESCRIPTION_ID = 4;
+    private static final int BACKGROUND_ID = 2;
+    private static final int DESCRIPTION_ID = 3;
 
     private static final String WIDTH_TEXT = "Width";
     private static final String HEIGHT_TEXT = "Height";
     private static final String BACKGROUND_TEXT = "Background";
     private static final String DESCRIPTION_TEXT = "Description";
 
+    private static final String EDIT_ICON_PATH = "data/icons/textfield_rename.png";
+
     private final Model model;
+
+    private IPropertyDescriptor[] propertyDescriptors;
 
     public SheetPropertySource(Model model) {
         this.model = model;
+        initialize();
+    }
+
+    private void initialize() {
+        PropertyLabelProvider editableLabelProvider = new PropertyLabelProvider(
+                EDIT_ICON_PATH);
+
+        PropertyDescriptor bg = new BackgroundPropertyDescriptor(BACKGROUND_ID,
+                BACKGROUND_TEXT);
+        bg.setLabelProvider(new BackgroundPropertyLabelProvider());
+
+        TextPropertyDescriptor description = new TextPropertyDescriptor(
+                DESCRIPTION_ID, DESCRIPTION_TEXT);
+        description.setLabelProvider(editableLabelProvider);
+
+        PropertyDescriptor width = new WidthPropertyDescriptor(WIDTH_ID,
+                WIDTH_TEXT);
+        width.setLabelProvider(editableLabelProvider);
+
+        PropertyDescriptor height = new HeightPropertyDescriptor(HEIGHT_ID,
+                HEIGHT_TEXT);
+        height.setLabelProvider(editableLabelProvider);
+
+        propertyDescriptors = new IPropertyDescriptor[] { description, width,
+                height, bg };
     }
 
     /*
@@ -65,11 +98,7 @@ public class SheetPropertySource implements IPropertySource {
      */
     @Override
     public IPropertyDescriptor[] getPropertyDescriptors() {
-        return new IPropertyDescriptor[] {
-                new PropertyDescriptor(WIDTH_ID, WIDTH_TEXT),
-                new PropertyDescriptor(HEIGHT_ID, HEIGHT_TEXT),
-                new PropertyDescriptor(BACKGROUND_ID, BACKGROUND_TEXT),
-                new PropertyDescriptor(DESCRIPTION_ID, DESCRIPTION_TEXT) };
+        return propertyDescriptors;
 
     }
 
@@ -137,7 +166,27 @@ public class SheetPropertySource implements IPropertySource {
      */
     @Override
     public void setPropertyValue(Object id, Object value) {
-        // Do nothing.
+        switch ((Integer) id) {
+        case WIDTH_ID:
+            int width = (Integer) value;
+            int height = ((Dimension) model.getProperty(Sheet.SIZE)).height;
+            model.setProperty(Sheet.SIZE, new Dimension(width, height));
+            break;
+        case HEIGHT_ID:
+            width = ((Dimension) model.getProperty(Sheet.SIZE)).width;
+            height = (Integer) value;
+            model.setProperty(Sheet.SIZE, new Dimension(width, height));
+            break;
+        case BACKGROUND_ID:
+            model.setProperty(Sheet.OPAQUE, null != value);
+            model.setProperty(Sheet.BACKGROUND, value);
+            break;
+        case DESCRIPTION_ID:
+            model.setProperty(Sheet.DESCRIPTION, value);
+            break;
+        default:
+            break;
+        }
     }
 
 }

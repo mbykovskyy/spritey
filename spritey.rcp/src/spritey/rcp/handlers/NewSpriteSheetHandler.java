@@ -37,6 +37,9 @@ import spritey.rcp.editors.SheetEditor;
 import spritey.rcp.editors.SheetEditorInput;
 import spritey.rcp.wizards.NewSpriteSheetWizard;
 
+/**
+ * Handles the creation of a new sprite sheet.
+ */
 public class NewSpriteSheetHandler extends AbstractHandler implements IHandler {
 
     @Override

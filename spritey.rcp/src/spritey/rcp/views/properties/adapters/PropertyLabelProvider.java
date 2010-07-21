@@ -15,35 +15,35 @@
  * You should have received a copy of the GNU General Public License along with
  * Spritey. If not, see <http://www.gnu.org/licenses/>.
  */
-package spritey.rcp.handlers;
+package spritey.rcp.views.properties.adapters;
 
-import org.eclipse.core.commands.AbstractHandler;
-import org.eclipse.core.commands.ExecutionEvent;
-import org.eclipse.core.commands.ExecutionException;
-import org.eclipse.core.commands.IHandler;
+import org.eclipse.jface.viewers.LabelProvider;
+import org.eclipse.swt.graphics.Image;
 
-/**
- * Handles the deletion of a group of sprites.
- */
-public class DeleteSpritesHandler extends AbstractHandler implements IHandler {
+import spritey.rcp.SpriteyPlugin;
+
+public class PropertyLabelProvider extends LabelProvider {
+
+    private final Image IMG;
+
+    /**
+     * Constructor
+     * 
+     * @param path
+     *        the path to the image icon.
+     */
+    public PropertyLabelProvider(String path) {
+        IMG = SpriteyPlugin.getImageDescriptor(path).createImage();
+    }
 
     /*
      * (non-Javadoc)
      * 
-     * @see
-     * org.eclipse.core.commands.IHandler#execute(org.eclipse.core.commands.
-     * ExecutionEvent)
+     * @see org.eclipse.jface.viewers.ILabelProvider#getImage(java.lang.Object)
      */
     @Override
-    public Object execute(ExecutionEvent event) throws ExecutionException {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
-    public boolean isEnabled() {
-        // TODO Check if there's a selection.
-        return false;
+    public Image getImage(Object element) {
+        return IMG;
     }
 
 }

@@ -26,7 +26,6 @@ public class PropertySourceAdapterFactory implements IAdapterFactory {
         }
 
         return null;
-
     }
 
     @Override
