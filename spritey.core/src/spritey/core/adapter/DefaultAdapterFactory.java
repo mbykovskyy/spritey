@@ -15,26 +15,22 @@
  * You should have received a copy of the GNU General Public License along with
  * Spritey. If not, see <http://www.gnu.org/licenses/>.
  */
-package spritey.core;
-
-import java.awt.Rectangle;
+package spritey.core.adapter;
 
 /**
- * A data object representing an image that can be attached to a node.
+ * A default adapter factory which returns an adaptable object as an adapter.
  */
-public interface Sprite extends Model {
+public class DefaultAdapterFactory implements AdapterFactory {
 
-    // Properties (each id has to be unique across the whole application)
-    public static int NAME = 300;
-    public static int NODE = 301;
-    public static int BOUNDS = 302;
-    public static int IMAGE = 303;
-
-    // Defaults
-    public static String DEFAULT_NAME = "New Sprite";
-    public static Rectangle DEFAULT_BOUNDS = new Rectangle(0, 0, 0, 0);
-
-    // Limits
-    public static int NAME_TEXT_LIMIT = 1024;
+    /*
+     * (non-Javadoc)
+     * 
+     * @see spritey.core.adapter.AdapterFactory#getAdapter(java.lang.Object,
+     * java.lang.Class)
+     */
+    @Override
+    public Object getAdapter(Object adaptableObject, Class<?> adapterType) {
+        return adaptableObject;
+    }
 
 }

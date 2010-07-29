@@ -20,9 +20,11 @@ package spritey.core.node.internal;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
@@ -338,5 +340,35 @@ public class MapBasedNodeTests {
     @Test(expected = IllegalArgumentException.class)
     public void setModelToNull() {
         node.setModel(null);
+    }
+
+    @Test
+    public void getLeavesWhenChildIsLeaf() {
+        Node childMock = mock(Node.class);
+        doReturn("node-name").when(childMock).getName();
+        doReturn(false).when(childMock).isBranch();
+        node.addChild(childMock);
+
+        Node[] leaves = node.getLeaves();
+
+        assertNotNull(leaves);
+        assertEquals(1, leaves.length);
+        assertEquals(childMock, leaves[0]);
+
+        verify(childMock, never()).getLeaves();
+    }
+
+    @Test
+    public void getLeavesWhenChildIsBranch() {
+        Node childMock = mock(Node.class);
+        doReturn("node-name").when(childMock).getName();
+        doReturn(true).when(childMock).isBranch();
+        doReturn(new Node[3]).when(childMock).getLeaves();
+        node.addChild(childMock);
+
+        Node[] leaves = node.getLeaves();
+
+        assertNotNull(leaves);
+        assertEquals(3, leaves.length);
     }
 }

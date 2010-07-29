@@ -112,6 +112,13 @@ public interface Node {
     public Node[] getChildren();
 
     /**
+     * Returns all leaf nodes all the way down starting from this node.
+     * 
+     * @return a list of leaf nodes.
+     */
+    public Node[] getLeaves();
+
+    /**
      * Specifies whether node is a parent of the specified child. The comparison
      * is done against objects. This is similar to Object.equals(Object).
      * 

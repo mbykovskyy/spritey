@@ -24,8 +24,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
-import java.awt.Dimension;
-import java.awt.Point;
+import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 
 import org.junit.Before;
@@ -63,16 +62,15 @@ public class SimpleSpriteTests {
         sprite = new SimpleSprite();
         sprite.addValidator(Sprite.NAME, validatorMock);
         sprite.addValidator(Sprite.NODE, validatorMock);
-        sprite.addValidator(Sprite.SIZE, validatorMock);
-        sprite.addValidator(Sprite.LOCATION, validatorMock);
+        sprite.addValidator(Sprite.BOUNDS, validatorMock);
         sprite.addValidator(Sprite.IMAGE, validatorMock);
         sprite.addModelListener(listenerMock);
     }
 
     @Test
-    public void setSizeToDimension() {
-        final int PROPERTY = Sprite.SIZE;
-        final Object VALUE = new Dimension(14, 15);
+    public void setBoundsToRectangle() {
+        final int PROPERTY = Sprite.BOUNDS;
+        final Object VALUE = new Rectangle(0, 0, 14, 15);
 
         doReturn(true).when(validatorMock).isValid(VALUE);
 
@@ -89,7 +87,7 @@ public class SimpleSpriteTests {
 
     @Test(expected = IllegalArgumentException.class)
     public void setSizeToNull() {
-        final int PROPERTY = Sprite.SIZE;
+        final int PROPERTY = Sprite.BOUNDS;
         final Object VALUE = null;
 
         doReturn(false).when(validatorMock).isValid(VALUE);
@@ -149,40 +147,6 @@ public class SimpleSpriteTests {
         final Object VALUE = null;
 
         doReturn(true).when(validatorMock).isValid(VALUE);
-
-        sprite.setProperty(PROPERTY, VALUE);
-
-        assertEquals(VALUE, sprite.getProperty(PROPERTY));
-        verify(validatorMock).isValid(VALUE);
-        verify(listenerMock).propertyChanged(eventCaptor.capture());
-        assertEquals(sprite, eventCaptor.getValue().getSource());
-        assertEquals(PROPERTY, eventCaptor.getValue().getProperty());
-        assertEquals(null, eventCaptor.getValue().getOldValue());
-        assertEquals(VALUE, eventCaptor.getValue().getNewValue());
-    }
-
-    @Test
-    public void setLocationToPoint() {
-        final int PROPERTY = Sprite.LOCATION;
-        final Object VALUE = new Point(10, 10);
-
-        doReturn(true).when(validatorMock).isValid(VALUE);
-
-        sprite.setProperty(PROPERTY, VALUE);
-
-        assertEquals(VALUE, sprite.getProperty(PROPERTY));
-        verify(validatorMock).isValid(VALUE);
-        verify(listenerMock).propertyChanged(eventCaptor.capture());
-        assertEquals(sprite, eventCaptor.getValue().getSource());
-        assertEquals(PROPERTY, eventCaptor.getValue().getProperty());
-        assertEquals(null, eventCaptor.getValue().getOldValue());
-        assertEquals(VALUE, eventCaptor.getValue().getNewValue());
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void setLocationToNull() {
-        final int PROPERTY = Sprite.LOCATION;
-        final Object VALUE = null;
 
         sprite.setProperty(PROPERTY, VALUE);
 

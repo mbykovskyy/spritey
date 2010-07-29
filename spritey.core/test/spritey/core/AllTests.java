@@ -24,6 +24,8 @@ import spritey.core.internal.SimpleGroupTests;
 import spritey.core.internal.SimpleSheetTests;
 import spritey.core.internal.SimpleSpriteTests;
 import spritey.core.node.internal.MapBasedNodeTests;
+import spritey.core.packer.DivideAndConquerStrategyTests;
+import spritey.core.packer.PackerTests;
 import spritey.core.validator.NotNullValidatorTests;
 import spritey.core.validator.StringLengthValidatorTests;
 import spritey.core.validator.TypeValidatorTests;
@@ -32,6 +34,7 @@ import spritey.core.validator.TypeValidatorTests;
 @Suite.SuiteClasses({ SimpleSpriteTests.class, SimpleGroupTests.class,
         SimpleSheetTests.class, MapBasedNodeTests.class,
         NotNullValidatorTests.class, TypeValidatorTests.class,
-        StringLengthValidatorTests.class })
+        StringLengthValidatorTests.class, PackerTests.class,
+        DivideAndConquerStrategyTests.class })
 public class AllTests {
 }

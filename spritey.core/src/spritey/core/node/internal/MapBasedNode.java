@@ -18,6 +18,7 @@
 package spritey.core.node.internal;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -406,6 +407,27 @@ public class MapBasedNode implements Node {
             throws IllegalArgumentException {
         validateArgument(listener, "Listener is null.");
         listeners.remove(listener);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see spritey.core.node.Node#getLeaves()
+     */
+    @Override
+    public Node[] getLeaves() {
+        List<Node> leaves = new ArrayList<Node>();
+
+        for (Node child : getChildren()) {
+            if (child.isBranch()) {
+                List<Node> childLeaves = Arrays.asList(child.getLeaves());
+                leaves.addAll(childLeaves);
+            } else {
+                leaves.add(child);
+            }
+        }
+
+        return leaves.toArray(new Node[leaves.size()]);
     }
 
 }
