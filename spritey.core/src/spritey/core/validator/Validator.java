@@ -27,6 +27,7 @@ package spritey.core.validator;
 // introduce reified generics that may have a solution to this.
 public interface Validator {
 
+    // Error codes (each code has to be unique across the whole application)
     public static int NONE = -1;
 
     /**

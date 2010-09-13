@@ -26,12 +26,12 @@ import spritey.core.validator.AbstractValidator;
  */
 public class SizeValidator extends AbstractValidator {
 
-    // Error codes
-    public static final int INVALID_SIZE = 0;
-    public static final int WIDTH_TOO_SHORT = 1;
-    public static final int WIDTH_TOO_LONG = 2;
-    public static final int HEIGHT_TOO_SHORT = 3;
-    public static final int HEIGHT_TOO_LONG = 4;
+    // Error codes (each code has to be unique across the whole application)
+    public static final int INVALID_SIZE = 30;
+    public static final int WIDTH_TOO_SHORT = 31;
+    public static final int WIDTH_TOO_LONG = 32;
+    public static final int HEIGHT_TOO_SHORT = 33;
+    public static final int HEIGHT_TOO_LONG = 34;
 
     // Messages
     private static final String M_INVALID_SIZE = "Object is not of type Dimension or size is not valid.";

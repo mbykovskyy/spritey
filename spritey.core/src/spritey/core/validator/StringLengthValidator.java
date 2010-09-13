@@ -17,16 +17,15 @@
  */
 package spritey.core.validator;
 
-
 /**
  * Validates that the value is of type string.
  */
 public class StringLengthValidator extends AbstractValidator {
 
-    // Error codes
-    public static final int INVALID = 0;
-    public static final int TOO_SHORT = 1;
-    public static final int TOO_LONG = 2;
+    // Error codes (each code has to be unique across the whole application)
+    public static final int INVALID = 10;
+    public static final int TOO_SHORT = 11;
+    public static final int TOO_LONG = 12;
 
     // Messages
     private static final String M_INVALID = "Object is not of type String or string is not valid.";

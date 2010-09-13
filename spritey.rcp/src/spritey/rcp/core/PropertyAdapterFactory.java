@@ -17,27 +17,30 @@
  */
 package spritey.rcp.core;
 
-import org.eclipse.draw2d.geometry.Dimension;
-import org.eclipse.swt.graphics.RGB;
+import org.eclipse.draw2d.geometry.Rectangle;
+
+import spritey.core.adapter.AdapterFactory;
 
 /**
- * Various sheet properties related constants.
+ * An adapter factory for converting java standard types into client types.
  */
-public interface SheetConstants {
+public class PropertyAdapterFactory implements AdapterFactory {
 
-    // Defaults
-    public static String DEFAULT_NAME = "Sheet";
-    public static RGB DEFAULT_BACKGROUND = new RGB(255, 0, 255);
-    public static boolean DEFAULT_OPAQUE = true;
-    public static Dimension DEFAULT_SIZE = new Dimension(800, 600);
-    public static String DEFAULT_DESCRIPTION = "Created with Spritey.";
+    /*
+     * (non-Javadoc)
+     * 
+     * @see spritey.core.adapter.AdapterFactory#getAdapter(java.lang.Object,
+     * java.lang.Class)
+     */
+    @Override
+    public Object getAdapter(Object adaptableObject, Class<?> adapterType) {
+        if ((adapterType == Rectangle.class)
+                && (adaptableObject instanceof java.awt.Rectangle)) {
+            java.awt.Rectangle r = (java.awt.Rectangle) adaptableObject;
+            return new Rectangle(r.x, r.y, r.width, r.height);
+        }
 
-    // Limits
-    public static int MIN_DESCRIPTION_LENGTH = 0;
-    public static int MAX_DESCRIPTION_LENGTH = 1024;
-    public static int MAX_WIDTH = 1024;
-    public static int MAX_HEIGHT = 1024;
-    public static int MIN_WIDTH = 1;
-    public static int MIN_HEIGHT = 1;
+        return null;
+    }
 
 }

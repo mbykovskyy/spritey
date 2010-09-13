@@ -36,6 +36,7 @@
          point="org.eclipse.ui.views">
       <view
             class="spritey.rcp.views.navigator.SpriteTree"
+            icon="data/icons/hierarchy.gif"
             id="spritey.rcp.views.spriteTree"
             name="Sprite Tree">
       </view>
@@ -140,7 +141,6 @@
             name="Add Folder">
       </command>
       <command
-            defaultHandler="spritey.rcp.handlers.DeleteSpritesHandler"
             id="spritey.command.deleteSprites"
             name="Delete Sprite(s)">
       </command>
@@ -197,6 +197,37 @@
                type="org.eclipse.ui.views.properties.IPropertySource">
          </adapter>
       </factory>
+      <factory
+            adaptableType="spritey.rcp.editors.editparts.SpriteEditPart"
+            class="spritey.rcp.views.properties.adapters.PropertySourceAdapterFactory">
+         <adapter
+               type="org.eclipse.ui.views.properties.IPropertySource">
+         </adapter>
+      </factory>
+   </extension>
+   <extension
+         point="org.eclipse.ui.handlers">
+      <handler
+            class="spritey.rcp.handlers.DeleteSpritesHandler"
+            commandId="spritey.command.deleteSprites">
+         <enabledWhen>
+            <with
+                  variable="selection">
+               <iterate
+                     ifEmpty="false"
+                     operator="or">
+                  <or>
+                     <instanceof
+                           value="spritey.core.node.Node">
+                     </instanceof>
+                     <instanceof
+                           value="spritey.rcp.editors.editparts.SpriteEditPart">
+                     </instanceof>
+                  </or>
+               </iterate>
+            </with>
+         </enabledWhen>
+      </handler>
    </extension>
 
 </plugin>

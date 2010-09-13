@@ -25,7 +25,7 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 
 /**
- * Tests the implementation of MapBasedNode.
+ * Tests the implementation of TypeValidator.
  */
 public class TypeValidatorTests {
 

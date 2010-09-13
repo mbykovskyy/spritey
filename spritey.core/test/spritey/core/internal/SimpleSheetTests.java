@@ -18,10 +18,11 @@
 package spritey.core.internal;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 
 import java.awt.Color;
@@ -36,6 +37,7 @@ import org.mockito.MockitoAnnotations;
 import spritey.core.Sheet;
 import spritey.core.event.ModelEvent;
 import spritey.core.event.ModelListener;
+import spritey.core.exception.InvalidPropertyValueException;
 import spritey.core.node.Node;
 import spritey.core.validator.Validator;
 
@@ -69,7 +71,7 @@ public class SimpleSheetTests {
     }
 
     @Test
-    public void setSizeToDimension() {
+    public void setSizeToDimension() throws InvalidPropertyValueException {
         final int PROPERTY = Sheet.SIZE;
         final Object VALUE = new Dimension(14, 15);
 
@@ -86,18 +88,30 @@ public class SimpleSheetTests {
         assertEquals(VALUE, eventCaptor.getValue().getNewValue());
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void setSizeToNull() {
         final int PROPERTY = Sheet.SIZE;
         final Object VALUE = null;
+        final int ERROR_CODE = 1;
+        final String ERROR_MESSAGE = "Size is null.";
 
         doReturn(false).when(validatorMock).isValid(VALUE);
+        doReturn(ERROR_CODE).when(validatorMock).getErrorCode();
+        doReturn(ERROR_MESSAGE).when(validatorMock).getMessage();
 
-        sheet.setProperty(PROPERTY, VALUE);
+        try {
+            sheet.setProperty(PROPERTY, VALUE);
+            fail("Expected spritey.core.exception.InvalidPropertyValueException.");
+        } catch (InvalidPropertyValueException e) {
+            assertEquals(ERROR_CODE, e.getErrorCode());
+            assertEquals(ERROR_MESSAGE, e.getMessage());
+            assertEquals(PROPERTY, e.getProperty());
+            assertEquals(VALUE, e.getValue());
+        }
     }
 
     @Test
-    public void setBackgroundToColor() {
+    public void setBackgroundToColor() throws InvalidPropertyValueException {
         final int PROPERTY = Sheet.BACKGROUND;
         final Object VALUE = new Color(255, 0, 255);
 
@@ -115,7 +129,7 @@ public class SimpleSheetTests {
     }
 
     @Test
-    public void setBackgoundToNull() {
+    public void setBackgoundToNull() throws InvalidPropertyValueException {
         final int PROPERTY = Sheet.BACKGROUND;
         final Object VALUE = null;
 
@@ -133,7 +147,7 @@ public class SimpleSheetTests {
     }
 
     @Test
-    public void setOpaqueToBoolean() {
+    public void setOpaqueToBoolean() throws InvalidPropertyValueException {
         final int PROPERTY = Sheet.OPAQUE;
         final Object VALUE = true;
 
@@ -150,18 +164,30 @@ public class SimpleSheetTests {
         assertEquals(VALUE, eventCaptor.getValue().getNewValue());
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void setOpaqueToNull() {
+    @Test
+    public void setOpaqueToNull() throws InvalidPropertyValueException {
         final int PROPERTY = Sheet.OPAQUE;
         final Object VALUE = null;
+        final int ERROR_CODE = 1;
+        final String ERROR_MESSAGE = "Opaque is null.";
 
         doReturn(false).when(validatorMock).isValid(VALUE);
+        doReturn(ERROR_CODE).when(validatorMock).getErrorCode();
+        doReturn(ERROR_MESSAGE).when(validatorMock).getMessage();
 
-        sheet.setProperty(PROPERTY, VALUE);
+        try {
+            sheet.setProperty(PROPERTY, VALUE);
+            fail("Expected spritey.core.exception.InvalidPropertyValueException.");
+        } catch (InvalidPropertyValueException e) {
+            assertEquals(ERROR_CODE, e.getErrorCode());
+            assertEquals(ERROR_MESSAGE, e.getMessage());
+            assertEquals(PROPERTY, e.getProperty());
+            assertEquals(VALUE, e.getValue());
+        }
     }
 
     @Test
-    public void setDescriptionToString() {
+    public void setDescriptionToString() throws InvalidPropertyValueException {
         final int PROPERTY = Sheet.DESCRIPTION;
         final Object VALUE = "Created with JUnit.";
 
@@ -179,7 +205,7 @@ public class SimpleSheetTests {
     }
 
     @Test
-    public void setDescriptionToNull() {
+    public void setDescriptionToNull() throws InvalidPropertyValueException {
         final int PROPERTY = Sheet.DESCRIPTION;
         final Object VALUE = null;
 
@@ -197,7 +223,7 @@ public class SimpleSheetTests {
     }
 
     @Test
-    public void setNodeToNode() {
+    public void setNodeToNode() throws InvalidPropertyValueException {
         final int PROPERTY = Sheet.NODE;
         final Object VALUE = nodeMock;
 
@@ -215,7 +241,7 @@ public class SimpleSheetTests {
     }
 
     @Test
-    public void setNodeToNull() {
+    public void setNodeToNull() throws InvalidPropertyValueException {
         final int PROPERTY = Sheet.NODE;
         final Object VALUE = null;
 
@@ -243,14 +269,14 @@ public class SimpleSheetTests {
     }
 
     @Test
-    public void removePropertyListener() {
+    public void removePropertyListener() throws InvalidPropertyValueException {
         sheet.removeModelListener(listenerMock);
 
         doReturn(true).when(validatorMock).isValid(nodeMock);
 
         sheet.setProperty(Sheet.NODE, nodeMock);
 
-        verify(listenerMock, times(0)).propertyChanged(any(ModelEvent.class));
+        verify(listenerMock, never()).propertyChanged(any(ModelEvent.class));
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -259,12 +285,12 @@ public class SimpleSheetTests {
     }
 
     @Test
-    public void removeValidator() {
+    public void removeValidator() throws InvalidPropertyValueException {
         sheet.removeValidator(Sheet.NODE, validatorMock);
 
         sheet.setProperty(Sheet.NODE, nodeMock);
 
-        verify(validatorMock, times(0)).isValid(nodeMock);
+        verify(validatorMock, never()).isValid(nodeMock);
     }
 
     @Test(expected = IllegalArgumentException.class)

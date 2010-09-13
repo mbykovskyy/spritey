@@ -190,7 +190,13 @@ public class BackgroundCellEditor extends CellEditor {
      */
     @Override
     protected void doSetValue(Object value) {
-        background = (RGB) value;
+        // We need this until bug #320200
+        // (https://bugs.eclipse.org/bugs/show_bug.cgi?id=320200) is fixed.
+        if ((null == value) || value.equals(TRANSPARENT)) {
+            background = null;
+        } else {
+            background = (RGB) value;
+        }
         updateContent(background);
     }
 

@@ -17,74 +17,71 @@
  */
 package spritey.rcp.views.properties.adapters;
 
-import org.eclipse.draw2d.geometry.Dimension;
+import org.eclipse.draw2d.geometry.Rectangle;
+import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.ui.views.properties.IPropertyDescriptor;
 import org.eclipse.ui.views.properties.IPropertySource;
 import org.eclipse.ui.views.properties.PropertyDescriptor;
-import org.eclipse.ui.views.properties.TextPropertyDescriptor;
 
 import spritey.core.Model;
-import spritey.core.Sheet;
+import spritey.core.Sprite;
 import spritey.core.exception.InvalidPropertyValueException;
-import spritey.core.node.Node;
-import spritey.rcp.SpriteyPlugin;
-import spritey.rcp.views.properties.BackgroundPropertyDescriptor;
-import spritey.rcp.views.properties.HeightPropertyDescriptor;
-import spritey.rcp.views.properties.WidthPropertyDescriptor;
 
 /**
- * Property source for supplying sheet properties to the Properties view.
+ * Property source for supplying sprite properties to the Properties view.
  */
-public class SheetPropertySource implements IPropertySource {
+public class SpritePropertySource implements IPropertySource {
 
     private static final int WIDTH_ID = 0;
     private static final int HEIGHT_ID = 1;
-    private static final int BACKGROUND_ID = 2;
-    private static final int DESCRIPTION_ID = 3;
+    private static final int X_ID = 2;
+    private static final int Y_ID = 3;
+    private static final int NAME_ID = 4;
 
     private static final String WIDTH_TEXT = "Width";
     private static final String HEIGHT_TEXT = "Height";
-    private static final String BACKGROUND_TEXT = "Background";
-    private static final String DESCRIPTION_TEXT = "Description";
-    private static final String TRANSPARENT_TEXT = "Transparent";
+    private static final String X_TEXT = "X";
+    private static final String Y_TEXT = "Y";
+    private static final String NAME_TEXT = "Name";
 
-    private static final String EDIT_ICON_PATH = "data/icons/textfield_rename.png";
+    private static final String LOCK_ICON_PATH = "data/icons/lock.png";
 
     private final Model model;
 
     private IPropertyDescriptor[] propertyDescriptors;
 
-    public SheetPropertySource(Model model) {
+    public SpritePropertySource(Model model) {
         this.model = model;
         initialize();
     }
 
     private void initialize() {
-        PropertyLabelProvider editableLabelProvider = new PropertyLabelProvider(
-                EDIT_ICON_PATH);
+        ILabelProvider lockLabelProvider = new PropertyLabelProvider(
+                LOCK_ICON_PATH);
 
-        PropertyDescriptor bg = new BackgroundPropertyDescriptor(BACKGROUND_ID,
-                BACKGROUND_TEXT);
-        bg.setLabelProvider(new BackgroundPropertyLabelProvider());
-        bg.setAlwaysIncompatible(true);
-
-        TextPropertyDescriptor description = new TextPropertyDescriptor(
-                DESCRIPTION_ID, DESCRIPTION_TEXT);
-        description.setLabelProvider(editableLabelProvider);
-        description.setAlwaysIncompatible(true);
-
-        PropertyDescriptor width = new WidthPropertyDescriptor(WIDTH_ID,
-                WIDTH_TEXT);
-        width.setLabelProvider(editableLabelProvider);
+        PropertyDescriptor width = new PropertyDescriptor(WIDTH_ID, WIDTH_TEXT);
+        width.setLabelProvider(lockLabelProvider);
         width.setAlwaysIncompatible(true);
 
-        PropertyDescriptor height = new HeightPropertyDescriptor(HEIGHT_ID,
+        PropertyDescriptor height = new PropertyDescriptor(HEIGHT_ID,
                 HEIGHT_TEXT);
-        height.setLabelProvider(editableLabelProvider);
+        height.setLabelProvider(lockLabelProvider);
         height.setAlwaysIncompatible(true);
 
-        propertyDescriptors = new IPropertyDescriptor[] { description, width,
-                height, bg };
+        PropertyDescriptor x = new PropertyDescriptor(X_ID, X_TEXT);
+        x.setLabelProvider(lockLabelProvider);
+        x.setAlwaysIncompatible(true);
+
+        PropertyDescriptor y = new PropertyDescriptor(Y_ID, Y_TEXT);
+        y.setLabelProvider(lockLabelProvider);
+        y.setAlwaysIncompatible(true);
+
+        PropertyDescriptor name = new PropertyDescriptor(NAME_ID, NAME_TEXT);
+        name.setLabelProvider(lockLabelProvider);
+        name.setAlwaysIncompatible(true);
+
+        propertyDescriptors = new IPropertyDescriptor[] { name, width, height,
+                x, y };
     }
 
     /*
@@ -123,22 +120,19 @@ public class SheetPropertySource implements IPropertySource {
 
         switch ((Integer) id) {
         case WIDTH_ID:
-            value = ((Dimension) model.getProperty(Sheet.SIZE)).width;
+            value = ((Rectangle) model.getProperty(Sprite.BOUNDS)).width;
             break;
         case HEIGHT_ID:
-            value = ((Dimension) model.getProperty(Sheet.SIZE)).height;
+            value = ((Rectangle) model.getProperty(Sprite.BOUNDS)).height;
             break;
-        case BACKGROUND_ID:
-            value = model.getProperty(Sheet.BACKGROUND);
-
-            // We need this until bug #320200
-            // (https://bugs.eclipse.org/bugs/show_bug.cgi?id=320200) is fixed.
-            if (null == value) {
-                value = TRANSPARENT_TEXT;
-            }
+        case X_ID:
+            value = ((Rectangle) model.getProperty(Sprite.BOUNDS)).x;
             break;
-        case DESCRIPTION_ID:
-            value = model.getProperty(Sheet.DESCRIPTION);
+        case Y_ID:
+            value = ((Rectangle) model.getProperty(Sprite.BOUNDS)).y;
+            break;
+        case NAME_ID:
+            value = model.getProperty(Sprite.NAME);
             break;
         default:
             break;
@@ -182,30 +176,8 @@ public class SheetPropertySource implements IPropertySource {
     public void setPropertyValue(Object id, Object value) {
         try {
             switch ((Integer) id) {
-            case WIDTH_ID:
-                int width = (Integer) value;
-                int height = ((Dimension) model.getProperty(Sheet.SIZE)).height;
-                model.setProperty(Sheet.SIZE, new Dimension(width, height));
-
-                Node sheetNode = SpriteyPlugin.getDefault().getRootNode()
-                        .getChildren()[0];
-                SpriteyPlugin.getDefault().getPacker().pack(sheetNode, true);
-                break;
-            case HEIGHT_ID:
-                width = ((Dimension) model.getProperty(Sheet.SIZE)).width;
-                height = (Integer) value;
-                model.setProperty(Sheet.SIZE, new Dimension(width, height));
-
-                sheetNode = SpriteyPlugin.getDefault().getRootNode()
-                        .getChildren()[0];
-                SpriteyPlugin.getDefault().getPacker().pack(sheetNode, true);
-                break;
-            case BACKGROUND_ID:
-                model.setProperty(Sheet.OPAQUE, null != value);
-                model.setProperty(Sheet.BACKGROUND, value);
-                break;
-            case DESCRIPTION_ID:
-                model.setProperty(Sheet.DESCRIPTION, value);
+            case NAME_ID:
+                model.setProperty(Sprite.NAME, value);
                 break;
             default:
                 break;

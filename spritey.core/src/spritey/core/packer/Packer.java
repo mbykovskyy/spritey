@@ -17,6 +17,7 @@
  */
 package spritey.core.packer;
 
+import spritey.core.Sheet;
 import spritey.core.Sprite;
 import spritey.core.node.Node;
 
@@ -74,13 +75,16 @@ public class Packer {
      * 
      * @param sheetNode
      *        the root of a tree. It has to be a sheet node.
+     * @param flushCache
+     *        specifies whether cached values should be flushed.
      * @throws IllegalArgumentException
      *         when the root node does not have sheet model attached to it.
      * @throws IllegalArgumentException
      *         when <code>sheetNode</code> is null.
      * 
      */
-    public void pack(Node sheetNode) throws IllegalArgumentException {
+    public void pack(Node sheetNode, boolean flushCache)
+            throws IllegalArgumentException {
         validateArgument(sheetNode);
 
         Node[] leaves = sheetNode.getLeaves();
@@ -91,7 +95,7 @@ public class Packer {
             sprites[i] = (Sprite) leaves[i].getModel();
         }
 
-        strategy.pack(sprites, false);
+        strategy.pack((Sheet) sheetNode.getModel(), sprites, flushCache);
     }
 
 }

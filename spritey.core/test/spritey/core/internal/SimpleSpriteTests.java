@@ -18,10 +18,11 @@
 package spritey.core.internal;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 
 import java.awt.Rectangle;
@@ -36,6 +37,7 @@ import org.mockito.MockitoAnnotations;
 import spritey.core.Sprite;
 import spritey.core.event.ModelEvent;
 import spritey.core.event.ModelListener;
+import spritey.core.exception.InvalidPropertyValueException;
 import spritey.core.node.Node;
 import spritey.core.validator.Validator;
 
@@ -68,7 +70,7 @@ public class SimpleSpriteTests {
     }
 
     @Test
-    public void setBoundsToRectangle() {
+    public void setBoundsToRectangle() throws InvalidPropertyValueException {
         final int PROPERTY = Sprite.BOUNDS;
         final Object VALUE = new Rectangle(0, 0, 14, 15);
 
@@ -85,18 +87,30 @@ public class SimpleSpriteTests {
         assertEquals(VALUE, eventCaptor.getValue().getNewValue());
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void setSizeToNull() {
+    @Test
+    public void setBoundsToNull() {
         final int PROPERTY = Sprite.BOUNDS;
         final Object VALUE = null;
+        final int ERROR_CODE = 1;
+        final String ERROR_MESSAGE = "Bounds is null.";
 
         doReturn(false).when(validatorMock).isValid(VALUE);
+        doReturn(ERROR_CODE).when(validatorMock).getErrorCode();
+        doReturn(ERROR_MESSAGE).when(validatorMock).getMessage();
 
-        sprite.setProperty(PROPERTY, VALUE);
+        try {
+            sprite.setProperty(PROPERTY, VALUE);
+            fail("Expected spritey.core.exception.InvalidPropertyValueException.");
+        } catch (InvalidPropertyValueException e) {
+            assertEquals(ERROR_CODE, e.getErrorCode());
+            assertEquals(ERROR_MESSAGE, e.getMessage());
+            assertEquals(PROPERTY, e.getProperty());
+            assertEquals(VALUE, e.getValue());
+        }
     }
 
     @Test
-    public void setNameToString() {
+    public void setNameToString() throws InvalidPropertyValueException {
         final int PROPERTY = Sprite.NAME;
         final Object VALUE = "NewSprite";
 
@@ -113,18 +127,30 @@ public class SimpleSpriteTests {
         assertEquals(VALUE, eventCaptor.getValue().getNewValue());
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void setNameToNull() {
         final int PROPERTY = Sprite.NAME;
         final Object VALUE = null;
+        final int ERROR_CODE = 1;
+        final String ERROR_MESSAGE = "Name is null.";
 
         doReturn(false).when(validatorMock).isValid(VALUE);
+        doReturn(ERROR_CODE).when(validatorMock).getErrorCode();
+        doReturn(ERROR_MESSAGE).when(validatorMock).getMessage();
 
-        sprite.setProperty(PROPERTY, VALUE);
+        try {
+            sprite.setProperty(PROPERTY, VALUE);
+            fail("Expected spritey.core.exception.InvalidPropertyValueException.");
+        } catch (InvalidPropertyValueException e) {
+            assertEquals(ERROR_CODE, e.getErrorCode());
+            assertEquals(ERROR_MESSAGE, e.getMessage());
+            assertEquals(PROPERTY, e.getProperty());
+            assertEquals(VALUE, e.getValue());
+        }
     }
 
     @Test
-    public void setNodeToNode() {
+    public void setNodeToNode() throws InvalidPropertyValueException {
         final int PROPERTY = Sprite.NODE;
         final Object VALUE = nodeMock;
 
@@ -142,7 +168,7 @@ public class SimpleSpriteTests {
     }
 
     @Test
-    public void setNodeToNull() {
+    public void setNodeToNull() throws InvalidPropertyValueException {
         final int PROPERTY = Sprite.NODE;
         final Object VALUE = null;
 
@@ -160,7 +186,7 @@ public class SimpleSpriteTests {
     }
 
     @Test
-    public void setImageToBufferedImage() {
+    public void setImageToBufferedImage() throws InvalidPropertyValueException {
         final int PROPERTY = Sprite.IMAGE;
         final Object VALUE = new BufferedImage(32, 32,
                 BufferedImage.TYPE_INT_RGB);
@@ -179,7 +205,7 @@ public class SimpleSpriteTests {
     }
 
     @Test
-    public void setImageToNull() {
+    public void setImageToNull() throws InvalidPropertyValueException {
         final int PROPERTY = Sprite.IMAGE;
         final Object VALUE = null;
 
@@ -207,14 +233,14 @@ public class SimpleSpriteTests {
     }
 
     @Test
-    public void removePropertyListener() {
+    public void removePropertyListener() throws InvalidPropertyValueException {
         sprite.removeModelListener(listenerMock);
 
         doReturn(true).when(validatorMock).isValid("Name");
 
         sprite.setProperty(Sprite.NAME, "Name");
 
-        verify(listenerMock, times(0)).propertyChanged(any(ModelEvent.class));
+        verify(listenerMock, never()).propertyChanged(any(ModelEvent.class));
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -223,12 +249,12 @@ public class SimpleSpriteTests {
     }
 
     @Test
-    public void removeValidator() {
+    public void removeValidator() throws InvalidPropertyValueException {
         sprite.removeValidator(Sprite.NAME, validatorMock);
 
         sprite.setProperty(Sprite.NAME, "Name");
 
-        verify(validatorMock, times(0)).isValid("Name");
+        verify(validatorMock, never()).isValid("Name");
     }
 
     @Test(expected = IllegalArgumentException.class)

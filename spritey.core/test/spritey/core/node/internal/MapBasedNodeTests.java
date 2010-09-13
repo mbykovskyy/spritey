@@ -23,6 +23,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
@@ -33,9 +34,14 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import spritey.core.Group;
 import spritey.core.Model;
+import spritey.core.Sheet;
+import spritey.core.Sprite;
+import spritey.core.exception.InvalidPropertyValueException;
 import spritey.core.node.Node;
 import spritey.core.node.event.NodeListener;
+import spritey.core.validator.Validator;
 
 /**
  * Tests the implementation of MapBasedNode.
@@ -44,10 +50,12 @@ public class MapBasedNodeTests {
 
     final String NAME = "Root";
 
-    Node node;
+    MapBasedNode node;
 
     @Mock
     NodeListener listenerMock;
+    @Mock
+    Validator validatorMock;
 
     @Before
     public void initialize() {
@@ -328,13 +336,76 @@ public class MapBasedNodeTests {
     }
 
     @Test
-    public void setAndGetModel() {
-        Model mock = mock(Model.class);
+    public void setAndGetSheetModel() throws InvalidPropertyValueException {
+        Model sheetMock = mock(Sheet.class);
+        sheetMock.addValidator(Sheet.NODE, validatorMock);
 
-        node.setModel(mock);
+        doReturn(true).when(validatorMock).isValid(node);
 
-        assertEquals(mock, node.getModel());
-        verify(listenerMock).modelChanged(null, mock);
+        node.setModel(sheetMock);
+
+        assertEquals(sheetMock, node.getModel());
+        verify(sheetMock).addModelListener(node);
+        verify(listenerMock).modelChanged(null, sheetMock);
+        verify(sheetMock).setProperty(Sheet.NODE, node);
+    }
+
+    @Test
+    public void setAndGetSpriteModel() throws InvalidPropertyValueException {
+        Model spriteMock = mock(Sprite.class);
+        spriteMock.addValidator(Sprite.NODE, validatorMock);
+
+        doReturn(true).when(validatorMock).isValid(node);
+
+        node.setModel(spriteMock);
+
+        assertEquals(spriteMock, node.getModel());
+        verify(spriteMock).addModelListener(node);
+        verify(listenerMock).modelChanged(null, spriteMock);
+        verify(spriteMock).setProperty(Sprite.NODE, node);
+    }
+
+    @Test
+    public void setAndGetGroupModel() throws InvalidPropertyValueException {
+        Model groupMock = mock(Group.class);
+        groupMock.addValidator(Group.NODE, validatorMock);
+
+        doReturn(true).when(validatorMock).isValid(node);
+
+        node.setModel(groupMock);
+
+        assertEquals(groupMock, node.getModel());
+        verify(groupMock).addModelListener(node);
+        verify(listenerMock).modelChanged(null, groupMock);
+        verify(groupMock).setProperty(Group.NODE, node);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void setModelThatThrowsException() throws InvalidPropertyValueException {
+        final int PROPERTY = Sprite.NODE;
+        final Object VALUE = node;
+        final int ERROR_CODE = 2;
+        final String ERROR_MESSAGE = "Node is invalid.";
+
+        Model modelMock = mock(Sprite.class);
+        doThrow(new InvalidPropertyValueException(PROPERTY, VALUE, ERROR_CODE,
+                ERROR_MESSAGE)).when(modelMock).setProperty(PROPERTY, VALUE);
+
+        node.setModel(modelMock);
+    }
+    
+    @Test(expected = IllegalArgumentException.class)
+    public void setUnsupportedModel() throws InvalidPropertyValueException {
+        final int PROPERTY = Sprite.NODE;
+        final Object VALUE = node;
+        final int ERROR_CODE = 2;
+        final String ERROR_MESSAGE = "Node is invalid.";
+
+        Model modelMock = mock(Model.class);
+        doThrow(new InvalidPropertyValueException(PROPERTY, VALUE, ERROR_CODE,
+                ERROR_MESSAGE)).when(modelMock).setProperty(PROPERTY, VALUE);
+
+        node.setModel(modelMock);
     }
 
     @Test(expected = IllegalArgumentException.class)

@@ -21,6 +21,7 @@ import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Device;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Display;
 
@@ -182,6 +183,18 @@ public class ImageFactory {
 
         gc.dispose();
         return colorImage;
+    }
+
+    /**
+     * Create an image from the specified image data.
+     * 
+     * @param data
+     *        the image data.
+     * 
+     * @return an instance of an image.
+     */
+    public Image createImage(ImageData data) {
+        return new Image(Display.getCurrent(), data);
     }
 
 }

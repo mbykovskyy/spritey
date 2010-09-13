@@ -26,6 +26,7 @@ import static org.mockito.Mockito.verify;
 import org.junit.Before;
 import org.junit.Test;
 
+import spritey.core.Sheet;
 import spritey.core.Sprite;
 import spritey.core.node.Node;
 
@@ -41,7 +42,7 @@ public class PackerTests {
     public void initialize() {
         strategyMock = mock(Strategy.class);
         doThrow(new IllegalArgumentException()).when(strategyMock).pack(null,
-                false);
+                null, false);
 
         packer = new Packer(strategyMock);
     }
@@ -71,17 +72,19 @@ public class PackerTests {
     }
 
     @Test
-    public void pack() throws Exception {
+    public void packWithoutCacheFlush() throws Exception {
+        Sheet sheetMock = mock(Sheet.class);
         Node nodeMock = mock(Node.class);
         doReturn(new Node[0]).when(nodeMock).getLeaves();
+        doReturn(sheetMock).when(nodeMock).getModel();
 
-        packer.pack(nodeMock);
+        packer.pack(nodeMock, false);
 
-        verify(strategyMock).pack(new Sprite[0], false);
+        verify(strategyMock).pack(sheetMock, new Sprite[0], false);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void packWhenNodeIsNull() throws Exception {
-        packer.pack(null);
+        packer.pack(null, false);
     }
 }

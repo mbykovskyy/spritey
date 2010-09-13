@@ -21,6 +21,9 @@ import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.commands.IHandler;
+import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.handlers.HandlerUtil;
 
 import spritey.rcp.SpriteyPlugin;
 
@@ -38,7 +41,9 @@ public class AddFolderHandler extends AbstractHandler implements IHandler {
      */
     @Override
     public Object execute(ExecutionEvent event) throws ExecutionException {
-        // TODO Auto-generated method stub
+        Shell shell = HandlerUtil.getActiveShell(event);
+        MessageDialog.openError(shell, "Not implemented",
+                "Not yet implemented.");
         return null;
     }
 

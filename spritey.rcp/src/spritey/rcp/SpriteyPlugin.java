@@ -26,6 +26,10 @@ import spritey.core.SimpleModelFactory;
 import spritey.core.node.MapBasedNodeFactory;
 import spritey.core.node.Node;
 import spritey.core.node.NodeFactory;
+import spritey.core.packer.FirstFitStrategy;
+import spritey.core.packer.Packer;
+import spritey.rcp.core.AwtTypeAdapterFactory;
+import spritey.rcp.core.PropertyAdapterFactory;
 
 /**
  * The activator class controls the plug-in life cycle. It provides a series of
@@ -42,6 +46,7 @@ public class SpriteyPlugin extends AbstractUIPlugin {
     private Node rootNode;
     private ModelFactory modelFactory;
     private NodeFactory nodeFactory;
+    private Packer packer;
 
     /**
      * The constructor
@@ -50,6 +55,8 @@ public class SpriteyPlugin extends AbstractUIPlugin {
         rootNode = null;
         modelFactory = new SimpleModelFactory();
         nodeFactory = new MapBasedNodeFactory();
+        packer = new Packer(new FirstFitStrategy(new AwtTypeAdapterFactory(),
+                new PropertyAdapterFactory()));
     }
 
     /*
@@ -133,6 +140,15 @@ public class SpriteyPlugin extends AbstractUIPlugin {
      */
     public NodeFactory getNodeFactory() {
         return nodeFactory;
+    }
+
+    /**
+     * Returns a sprite sheet packer.
+     * 
+     * @return an instance of packer.
+     */
+    public Packer getPacker() {
+        return packer;
     }
 
 }

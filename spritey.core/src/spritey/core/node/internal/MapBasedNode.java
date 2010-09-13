@@ -23,20 +23,38 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import spritey.core.Group;
 import spritey.core.Model;
+import spritey.core.Sheet;
+import spritey.core.Sprite;
+import spritey.core.event.ModelEvent;
+import spritey.core.event.ModelListener;
+import spritey.core.exception.InvalidPropertyValueException;
 import spritey.core.node.Node;
+import spritey.core.node.event.AbstractNodeListener;
 import spritey.core.node.event.NodeListener;
 
 /**
  * A map based implementation of a Node.
  */
-public class MapBasedNode implements Node {
+public class MapBasedNode implements Node, ModelListener {
+
+    /**
+     * Updates a key (used to reference a child) in a <code>children</code> map.
+     */
+    private class ChildMapUpdater extends AbstractNodeListener {
+        @Override
+        public void nameChanged(String oldName, String newName) {
+            children.put(newName, children.remove(oldName));
+        }
+    }
 
     private String name;
     private Node parent;
     private Map<String, Node> children;
     private Model model;
     private List<NodeListener> listeners;
+    private NodeListener childMapUpdater;
 
     /**
      * Constructor
@@ -50,6 +68,7 @@ public class MapBasedNode implements Node {
         children = new LinkedHashMap<String, Node>();
         model = null;
         listeners = new ArrayList<NodeListener>();
+        childMapUpdater = new ChildMapUpdater();
     }
 
     /**
@@ -141,7 +160,7 @@ public class MapBasedNode implements Node {
      * @see spritey.core.node.Node#setName(java.lang.String)
      */
     @Override
-    public void setName(String name) throws IllegalArgumentException {
+    public void setName(String name) {
         validateArgument(name, "Name is null.");
 
         String oldName = this.name;
@@ -166,7 +185,12 @@ public class MapBasedNode implements Node {
      * @see spritey.core.node.Node#setParent(spritey.core.node.Node)
      */
     @Override
-    public void setParent(Node parent) throws IllegalArgumentException {
+    public void setParent(Node parent) {
+        if (this == parent) {
+            throw new IllegalArgumentException(
+                    "Cannot assign itself as a parent");
+        }
+
         Node oldParent = this.parent;
         this.parent = parent;
 
@@ -189,7 +213,7 @@ public class MapBasedNode implements Node {
      * @see spritey.core.node.Node#addChild(spritey.core.node.Node)
      */
     @Override
-    public boolean addChild(Node child) throws IllegalArgumentException {
+    public boolean addChild(Node child) {
         validateArgument(child, "Child is null.");
 
         // Adding children the second time and nodes with similar names are not
@@ -197,6 +221,9 @@ public class MapBasedNode implements Node {
         if (!contains(child) && !contains(child.getName())) {
             children.put(child.getName(), child);
             child.setParent(this);
+
+            // When child's name changes parent has to update its child map.
+            child.addNodeListener(childMapUpdater);
 
             fireChildAdded(child);
             return true;
@@ -210,7 +237,8 @@ public class MapBasedNode implements Node {
      * @see spritey.core.node.Node#getChild(java.lang.String)
      */
     @Override
-    public Node getChild(String childName) throws IllegalArgumentException {
+    public Node getChild(String childName) {
+        validateArgument(childName, "Child name is null.");
         return children.get(childName);
     }
 
@@ -220,7 +248,7 @@ public class MapBasedNode implements Node {
      * @see spritey.core.node.Node#addChildren(spritey.core.node.Node[])
      */
     @Override
-    public Node[] addChildren(Node[] children) throws IllegalArgumentException {
+    public Node[] addChildren(Node[] children) {
         validateArgument(children, "children is null.");
 
         List<Node> skipped = new ArrayList<Node>();
@@ -255,7 +283,7 @@ public class MapBasedNode implements Node {
      * @see spritey.core.node.Node#contains(spritey.core.node.Node)
      */
     @Override
-    public boolean contains(Node child) throws IllegalArgumentException {
+    public boolean contains(Node child) {
         validateArgument(child, "Child is null.");
         return children.containsValue(child);
     }
@@ -266,7 +294,7 @@ public class MapBasedNode implements Node {
      * @see spritey.core.node.Node#contains(java.lang.String)
      */
     @Override
-    public boolean contains(String childName) throws IllegalArgumentException {
+    public boolean contains(String childName) {
         validateArgument(childName, "Child name is null.");
         return children.containsKey(childName);
     }
@@ -328,7 +356,7 @@ public class MapBasedNode implements Node {
      * @see spritey.core.node.Node#removeChild(spritey.core.node.Node)
      */
     @Override
-    public boolean removeChild(Node child) throws IllegalArgumentException {
+    public boolean removeChild(Node child) {
         validateArgument(child, "Child is null.");
         return removeChild(child.getName());
     }
@@ -339,8 +367,7 @@ public class MapBasedNode implements Node {
      * @see spritey.core.node.Node#removeChild(java.lang.String)
      */
     @Override
-    public boolean removeChild(String childName)
-            throws IllegalArgumentException {
+    public boolean removeChild(String childName) {
         validateArgument(childName, "Child name is null.");
 
         Node child = children.remove(childName);
@@ -360,11 +387,48 @@ public class MapBasedNode implements Node {
      * @see spritey.core.node.Node#setModel(spritey.core.Model)
      */
     @Override
-    public void setModel(Model model) throws IllegalArgumentException {
+    public void setModel(Model model) {
         validateArgument(model, "Model is null.");
 
         Model oldValue = this.model;
         this.model = model;
+        this.model.addModelListener(this);
+
+        // TODO Should the user be responsible for changing model node property?
+        try {
+            if (model instanceof Sheet) {
+                this.model.setProperty(Sheet.NODE, this);
+            } else if (model instanceof Sprite) {
+                this.model.setProperty(Sprite.NODE, this);
+            } else if (model instanceof Group) {
+                this.model.setProperty(Group.NODE, this);
+            } else {
+                throw new IllegalArgumentException("Unsupported model type "
+                        + model);
+            }
+
+            if (null != oldValue) {
+                if (oldValue instanceof Sheet) {
+                    oldValue.setProperty(Sheet.NODE, null);
+                } else if (oldValue instanceof Sprite) {
+                    oldValue.setProperty(Sprite.NODE, null);
+                } else if (oldValue instanceof Group) {
+                    oldValue.setProperty(Group.NODE, null);
+                } else {
+                    throw new IllegalArgumentException(
+                            "Unsupported model type " + model);
+                }
+            }
+        } catch (InvalidPropertyValueException e) {
+            // Setting NODE property inside this method is an implementation
+            // detail that we want to hide. Declaring this method as throws
+            // InvalidPropertyValueException will reveal such detail and will
+            // force other implementations to throw this exception. A good
+            // practice is to wrap checked exceptions into unchecked exceptions.
+            // If InvalidPropertyValueException is thrown then it means this
+            // node implementation has missed some detail.
+            throw new IllegalArgumentException(e.getMessage(), e);
+        }
 
         fireModelChanged(oldValue, model);
     }
@@ -387,8 +451,7 @@ public class MapBasedNode implements Node {
      * )
      */
     @Override
-    public void addNodeListener(NodeListener listener)
-            throws IllegalArgumentException {
+    public void addNodeListener(NodeListener listener) {
         validateArgument(listener, "Listener is null.");
 
         if (!listeners.contains(listener)) {
@@ -403,8 +466,7 @@ public class MapBasedNode implements Node {
      * NodeListener)
      */
     @Override
-    public void removeNodeListener(NodeListener listener)
-            throws IllegalArgumentException {
+    public void removeNodeListener(NodeListener listener) {
         validateArgument(listener, "Listener is null.");
         listeners.remove(listener);
     }
@@ -428,6 +490,27 @@ public class MapBasedNode implements Node {
         }
 
         return leaves.toArray(new Node[leaves.size()]);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see spritey.core.event.ModelListener#propertyChanged(spritey.core.event.
+     * ModelEvent)
+     */
+    @Override
+    public void propertyChanged(ModelEvent event) {
+        Object source = event.getSource();
+        int property = event.getProperty();
+
+        // A node needs to updated its name when model name property changes,
+        // since node's name is used to keep model's names unique within a
+        // group.
+        if ((source instanceof Sprite) && (Sprite.NAME == property)) {
+            setName((String) ((Sprite) source).getProperty(property));
+        } else if ((source instanceof Group) && (Group.NAME == property)) {
+            setName((String) ((Group) source).getProperty(property));
+        }
     }
 
 }

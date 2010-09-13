@@ -26,7 +26,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 /**
- * Tests the implementation of MapBasedNode.
+ * Tests the implementation of StringLengthValidator.
  */
 public class StringLengthValidatorTests {
 

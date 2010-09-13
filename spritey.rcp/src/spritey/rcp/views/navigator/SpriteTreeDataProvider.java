@@ -17,9 +17,11 @@
  */
 package spritey.rcp.views.navigator;
 
+import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.jface.viewers.BaseLabelProvider;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ITreeContentProvider;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.graphics.Image;
 
@@ -31,6 +33,7 @@ import spritey.core.event.ModelEvent;
 import spritey.core.event.ModelListener;
 import spritey.core.node.Node;
 import spritey.core.node.event.NodeListener;
+import spritey.rcp.SpriteyPlugin;
 
 /**
  * Data provider for updating sprite tree view.
@@ -40,6 +43,27 @@ public class SpriteTreeDataProvider extends BaseLabelProvider implements
 
     private Object input;
     private Viewer viewer;
+
+    private final Image ERROR_IMG;
+    private final Image SPRITE_IMG;
+    private final Image SHEET_IMG;
+
+    private static final String ERROR_ICON_PATH = "data/icons/image_invisible.png";
+    private static final String SPRITE_ICON_PATH = "data/icons/image_1.png";
+    private static final String SHEET_ICON_PATH = "data/icons/application_view_icons.png";
+
+    private static final String INVISIBLE = "invisible";
+
+    public SpriteTreeDataProvider() {
+        // TODO This makes SpriteTreeDataProvider test to fail because RCP is
+        // not initialized when running JUnit tests.
+        ERROR_IMG = SpriteyPlugin.getImageDescriptor(ERROR_ICON_PATH)
+                .createImage();
+        SPRITE_IMG = SpriteyPlugin.getImageDescriptor(SPRITE_ICON_PATH)
+                .createImage();
+        SHEET_IMG = SpriteyPlugin.getImageDescriptor(SHEET_ICON_PATH)
+                .createImage();
+    }
 
     /*
      * (non-Javadoc)
@@ -135,7 +159,20 @@ public class SpriteTreeDataProvider extends BaseLabelProvider implements
      */
     @Override
     public Image getImage(Object element) {
-        // TODO Auto-generated method stub
+        Model model = ((Node) element).getModel();
+
+        if (model instanceof Sprite) {
+            Sprite sprite = (Sprite) model;
+            Rectangle bounds = (Rectangle) sprite.getProperty(Sprite.BOUNDS);
+
+            if ((bounds.x < 0) || (bounds.y < 0)) {
+                return ERROR_IMG;
+            }
+            return SPRITE_IMG;
+        } else if (model instanceof Sheet) {
+            return SHEET_IMG;
+        }
+
         return null;
     }
 
@@ -156,7 +193,15 @@ public class SpriteTreeDataProvider extends BaseLabelProvider implements
                 } else if (data instanceof Group) {
                     return data.getProperty(Group.NAME).toString();
                 } else if (data instanceof Sprite) {
-                    return data.getProperty(Sprite.NAME).toString();
+                    Rectangle bounds = (Rectangle) data
+                            .getProperty(Sprite.BOUNDS);
+
+                    String name = data.getProperty(Sprite.NAME).toString();
+                    if ((bounds.x < 0) || (bounds.y < 0)) {
+                        name = "[" + INVISIBLE + "] " + name;
+                    }
+
+                    return name;
                 }
             }
         }
@@ -209,6 +254,7 @@ public class SpriteTreeDataProvider extends BaseLabelProvider implements
     public void childAdded(Node child) {
         listen(child);
         viewer.refresh();
+        viewer.setSelection(new StructuredSelection(child), true);
     }
 
     /**

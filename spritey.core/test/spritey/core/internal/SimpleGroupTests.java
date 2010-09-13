@@ -18,10 +18,11 @@
 package spritey.core.internal;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 
 import org.junit.Before;
@@ -33,6 +34,7 @@ import org.mockito.MockitoAnnotations;
 import spritey.core.Group;
 import spritey.core.event.ModelEvent;
 import spritey.core.event.ModelListener;
+import spritey.core.exception.InvalidPropertyValueException;
 import spritey.core.node.Node;
 import spritey.core.validator.Validator;
 
@@ -63,7 +65,7 @@ public class SimpleGroupTests {
     }
 
     @Test
-    public void setNameToString() {
+    public void setNameToString() throws InvalidPropertyValueException {
         final int PROPERTY = Group.NAME;
         final Object VALUE = "NewGroup";
 
@@ -80,18 +82,30 @@ public class SimpleGroupTests {
         assertEquals(VALUE, eventCaptor.getValue().getNewValue());
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void setNameToNull() {
         final int PROPERTY = Group.NAME;
         final Object VALUE = null;
+        final int ERROR_CODE = 1;
+        final String ERROR_MESSAGE = "Name is null.";
 
         doReturn(false).when(validatorMock).isValid(VALUE);
+        doReturn(ERROR_CODE).when(validatorMock).getErrorCode();
+        doReturn(ERROR_MESSAGE).when(validatorMock).getMessage();
 
-        group.setProperty(PROPERTY, VALUE);
+        try {
+            group.setProperty(PROPERTY, VALUE);
+            fail("Expected spritey.core.exception.InvalidPropertyValueException.");
+        } catch (InvalidPropertyValueException e) {
+            assertEquals(ERROR_CODE, e.getErrorCode());
+            assertEquals(ERROR_MESSAGE, e.getMessage());
+            assertEquals(PROPERTY, e.getProperty());
+            assertEquals(VALUE, e.getValue());
+        }
     }
 
     @Test
-    public void setNodeToNode() {
+    public void setNodeToNode() throws InvalidPropertyValueException {
         final int PROPERTY = Group.NODE;
         final Object VALUE = nodeMock;
 
@@ -109,7 +123,7 @@ public class SimpleGroupTests {
     }
 
     @Test
-    public void setNodeToNull() {
+    public void setNodeToNull() throws InvalidPropertyValueException {
         final int PROPERTY = Group.NODE;
         final Object VALUE = null;
 
@@ -137,14 +151,14 @@ public class SimpleGroupTests {
     }
 
     @Test
-    public void removePropertyListener() {
+    public void removePropertyListener() throws InvalidPropertyValueException {
         group.removeModelListener(listenerMock);
 
         doReturn(true).when(validatorMock).isValid("Name");
 
         group.setProperty(Group.NAME, "Name");
 
-        verify(listenerMock, times(0)).propertyChanged(any(ModelEvent.class));
+        verify(listenerMock, never()).propertyChanged(any(ModelEvent.class));
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -153,12 +167,12 @@ public class SimpleGroupTests {
     }
 
     @Test
-    public void removeValidator() {
+    public void removeValidator() throws InvalidPropertyValueException {
         group.removeValidator(Group.NAME, validatorMock);
 
         group.setProperty(Group.NAME, "Name");
 
-        verify(validatorMock, times(0)).isValid("Name");
+        verify(validatorMock, never()).isValid("Name");
     }
 
     @Test(expected = IllegalArgumentException.class)

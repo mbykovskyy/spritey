@@ -18,6 +18,7 @@
 package spritey.core;
 
 import spritey.core.event.ModelListener;
+import spritey.core.exception.InvalidPropertyValueException;
 import spritey.core.validator.Validator;
 
 /**
@@ -32,12 +33,12 @@ public interface Model {
      *        the property to set.
      * @param value
      *        the value to set the property to.
-     * @throws IllegalArgumentException
-     *         when the specified <code>value</code> does not satisfy certain
-     *         validation.
+     * @throws InvalidPropertyValueException
+     *         when the specified <code>value</code> does not meet validation
+     *         requirements.
      */
     public void setProperty(int property, Object value)
-            throws IllegalArgumentException;
+            throws InvalidPropertyValueException;
 
     /**
      * Returns the value the specified property is set to.
@@ -45,10 +46,8 @@ public interface Model {
      * @param property
      *        the property to get value for.
      * @return the value.
-     * @throws IllegalArgumentException
-     *         when the specified <code>property</code> is null.
      */
-    public Object getProperty(int property) throws IllegalArgumentException;
+    public Object getProperty(int property);
 
     /**
      * Adds model listener. No action is taken when the specified listener has
@@ -60,8 +59,7 @@ public interface Model {
      * @throws IllegalArgumentException
      *         when the specified <code>listener</code> is null.
      */
-    public void addModelListener(ModelListener listener)
-            throws IllegalArgumentException;
+    public void addModelListener(ModelListener listener);
 
     /**
      * Removes model listener. No action is taken when the specified listener
@@ -73,8 +71,7 @@ public interface Model {
      * @throws IllegalArgumentException
      *         when the specified <code>listener</code> is null.
      */
-    public void removeModelListener(ModelListener listener)
-            throws IllegalArgumentException;
+    public void removeModelListener(ModelListener listener);
 
     /**
      * Adds the specified validator for the specified property. This validator
@@ -86,6 +83,8 @@ public interface Model {
      *        the validator to add.
      * @param property
      *        the property to set validator for.
+     * @throws IllegalArgumentException
+     *         when the specified <code>validator</code> is null.
      */
     public void addValidator(int property, Validator validator);
 
@@ -98,6 +97,8 @@ public interface Model {
      *        the validator to remove.
      * @param property
      *        the property to remove validator from.
+     * @throws IllegalArgumentException
+     *         when the specified <code>validator</code> is null.
      */
     public void removeValidator(int property, Validator validator);
 

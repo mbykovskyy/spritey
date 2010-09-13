@@ -17,27 +17,22 @@
  */
 package spritey.rcp.core;
 
-import org.eclipse.draw2d.geometry.Dimension;
-import org.eclipse.swt.graphics.RGB;
-
 /**
  * Various sheet properties related constants.
  */
-public interface SheetConstants {
+public interface SpriteConstants {
 
     // Defaults
-    public static String DEFAULT_NAME = "Sheet";
-    public static RGB DEFAULT_BACKGROUND = new RGB(255, 0, 255);
-    public static boolean DEFAULT_OPAQUE = true;
-    public static Dimension DEFAULT_SIZE = new Dimension(800, 600);
-    public static String DEFAULT_DESCRIPTION = "Created with Spritey.";
+    public static String DEFAULT_NAME = "Sprite";
+    public static int DEFAULT_X = -1;
+    public static int DEFAULT_Y = -1;
 
     // Limits
-    public static int MIN_DESCRIPTION_LENGTH = 0;
-    public static int MAX_DESCRIPTION_LENGTH = 1024;
+    public static int MIN_NAME_LENGTH = 1;
+    public static int MAX_NAME_LENGTH = 256;
     public static int MAX_WIDTH = 1024;
     public static int MAX_HEIGHT = 1024;
-    public static int MIN_WIDTH = 1;
-    public static int MIN_HEIGHT = 1;
+    public static int MIN_WIDTH = 0;
+    public static int MIN_HEIGHT = 0;
 
 }

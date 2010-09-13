@@ -30,8 +30,17 @@ public class BackgroundPropertyLabelProvider extends LabelProvider {
 
     private static final String TRANSPARENT = "Transparent";
 
-    private static final int SIZE = 16;
+    private static final int SIZE = 15;
     private static final int SQUARE = 5;
+
+    private final ImageFactory imageFactory;
+
+    private Image cachedImage;
+    private Object cachedElement;
+
+    public BackgroundPropertyLabelProvider() {
+        imageFactory = new ImageFactory();
+    }
 
     /*
      * (non-Javadoc)
@@ -40,13 +49,21 @@ public class BackgroundPropertyLabelProvider extends LabelProvider {
      */
     @Override
     public Image getImage(Object element) {
-        ImageFactory factory = new ImageFactory();
-
-        if (null == element) {
-            return factory.createCheckerImage(SIZE, SIZE, SQUARE, true);
+        if ((null == cachedImage) || (cachedElement != element)) {
+            // element.equals(TRANSPARENT) is needed until bug #320200
+            // (https://bugs.eclipse.org/bugs/show_bug.cgi?id=320200) is fixed.
+            if ((null == element) || element.equals(TRANSPARENT)) {
+                cachedElement = element;
+                cachedImage = imageFactory.createCheckerImage(SIZE, SIZE,
+                        SQUARE, true);
+            } else {
+                cachedElement = element;
+                cachedImage = imageFactory.createColorImage((RGB) element,
+                        SIZE, SIZE, true);
+            }
         }
 
-        return factory.createColorImage((RGB) element, SIZE, SIZE, true);
+        return cachedImage;
     }
 
     /*

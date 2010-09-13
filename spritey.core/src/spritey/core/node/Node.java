@@ -39,7 +39,7 @@ public interface Node {
      * @throws IllegalArgumentException
      *         when <code>name</code> is null or empty.
      */
-    public void setName(String name) throws IllegalArgumentException;
+    public void setName(String name);
 
     /**
      * Returns the name of the node.
@@ -58,7 +58,7 @@ public interface Node {
      *         when <code>parent</code> is the node itself. i.e.
      *         <code>parent == this</code>.
      */
-    public void setParent(Node parent) throws IllegalArgumentException;
+    public void setParent(Node parent);
 
     /**
      * Returns the parent of this node.
@@ -78,7 +78,7 @@ public interface Node {
      *         when <code>child</code> is null or the node itself. i.e.
      *         <code>child == null || child == this</code>.
      */
-    public boolean addChild(Node child) throws IllegalArgumentException;
+    public boolean addChild(Node child);
 
     /**
      * Returns a child with the specified name.
@@ -90,7 +90,7 @@ public interface Node {
      * @throws IllegalArgumentException
      *         when <code>childName</code> is null.
      */
-    public Node getChild(String childName) throws IllegalArgumentException;
+    public Node getChild(String childName);
 
     /**
      * Adds an array of children to this node. Nodes that are already children
@@ -102,7 +102,7 @@ public interface Node {
      * @throws IllegalArgumentException
      *         when <code>children</code> is null.
      */
-    public Node[] addChildren(Node[] children) throws IllegalArgumentException;
+    public Node[] addChildren(Node[] children);
 
     /**
      * Returns node's children.
@@ -129,7 +129,7 @@ public interface Node {
      * @throws IllegalArgumentException
      *         when <code>child</code> is null.
      */
-    public boolean contains(Node child) throws IllegalArgumentException;
+    public boolean contains(Node child);
 
     /**
      * Specifies whether node is a parent of node with the specified name.
@@ -141,7 +141,7 @@ public interface Node {
      * @throws IllegalArgumentException
      *         when <code>childName</code> is null.
      */
-    public boolean contains(String childName) throws IllegalArgumentException;
+    public boolean contains(String childName);
 
     /**
      * Specifies whether this node is a root. i.e. has not parent.
@@ -183,7 +183,7 @@ public interface Node {
      * @throws IllegalArgumentException
      *         when <code>child</code> is null.
      */
-    public boolean removeChild(Node child) throws IllegalArgumentException;
+    public boolean removeChild(Node child);
 
     /**
      * Removes a child with the specified name. The child will also loose its
@@ -195,8 +195,7 @@ public interface Node {
      * @throws IllegalArgumentException
      *         when <code>childName</code> is null.
      */
-    public boolean removeChild(String childName)
-            throws IllegalArgumentException;
+    public boolean removeChild(String childName);
 
     /**
      * Attaches the specified data to this node.
@@ -204,9 +203,9 @@ public interface Node {
      * @param model
      *        the data to be attached.
      * @throws IllegalArgumentException
-     *         when <code>childName</code> is null.
+     *         when <code>model</code> is null.
      */
-    public void setModel(Model model) throws IllegalArgumentException;
+    public void setModel(Model model);
 
     /**
      * Returns the data attached to this node.
@@ -224,8 +223,7 @@ public interface Node {
      * @throws IllegalArgumentException
      *         when the specified <code>listener</code> is null.
      */
-    public void addNodeListener(NodeListener listener)
-            throws IllegalArgumentException;
+    public void addNodeListener(NodeListener listener);
 
     /**
      * Removes node listener. No action is taken when the specified listener has
@@ -236,7 +234,6 @@ public interface Node {
      * @throws IllegalArgumentException
      *         when the specified <code>listener</code> is null.
      */
-    public void removeNodeListener(NodeListener listener)
-            throws IllegalArgumentException;
+    public void removeNodeListener(NodeListener listener);
 
 }

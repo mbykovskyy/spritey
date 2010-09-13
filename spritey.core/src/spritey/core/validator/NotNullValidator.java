@@ -17,13 +17,12 @@
  */
 package spritey.core.validator;
 
-
 /**
  * Validates that the value is not null.
  */
 public class NotNullValidator extends AbstractValidator {
 
-    // Error codes
+    // Error codes (each code has to be unique across the whole application)
     public static final int NULL = 0;
 
     // Messages

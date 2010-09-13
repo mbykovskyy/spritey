@@ -23,6 +23,7 @@ import org.eclipse.gef.editparts.AbstractGraphicalEditPart;
 
 import spritey.core.Model;
 import spritey.core.Sheet;
+import spritey.core.Sprite;
 import spritey.core.node.Node;
 
 /**
@@ -39,6 +40,9 @@ public class GraphicalEditPartFactory implements EditPartFactory {
 
             if (data instanceof Sheet) {
                 part = new SheetEditPart();
+                part.setModel(model);
+            } else if (data instanceof Sprite) {
+                part = new SpriteEditPart();
                 part.setModel(model);
             }
         }

@@ -20,11 +20,14 @@ package spritey.core.packer;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
 
 import java.awt.Dimension;
-import java.awt.Point;
 import java.awt.Rectangle;
 import java.util.ArrayList;
 import java.util.List;
@@ -35,16 +38,17 @@ import org.junit.Test;
 import spritey.core.Sheet;
 import spritey.core.Sprite;
 import spritey.core.adapter.AdapterFactory;
+import spritey.core.exception.InvalidPropertyValueException;
 
 /**
- * Tests the implementation of Packer.
+ * Tests the implementation of FirstFitStrategy.
  */
-public class DivideAndConquerStrategyTests {
+public class FirstFitStrategyTests {
 
     Sheet sheetMock;
     AdapterFactory factoryMock;
 
-    DivideAndConquerStrategy strategy;
+    FirstFitStrategy strategy;
 
     @Before
     public void initialize() {
@@ -57,17 +61,17 @@ public class DivideAndConquerStrategyTests {
         doReturn(SHEET_SIZE).when(factoryMock).getAdapter(SHEET_SIZE,
                 Dimension.class);
 
-        strategy = new DivideAndConquerStrategy(sheetMock, factoryMock);
+        strategy = new FirstFitStrategy(factoryMock, factoryMock);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void constructWhenSheetIsNull() {
-        new DivideAndConquerStrategy(null, factoryMock);
+        new FirstFitStrategy(null, factoryMock);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void constructWhenAdapterFactoryIsNull() {
-        new DivideAndConquerStrategy(sheetMock, null);
+        new FirstFitStrategy(null, null);
     }
 
     @Test
@@ -181,22 +185,25 @@ public class DivideAndConquerStrategyTests {
     }
 
     @Test
-    public void packOneSprite() {
+    public void packOneSprite() throws InvalidPropertyValueException {
         final Rectangle SPRITE_BOUNDS = new Rectangle(-1, -1, 3, 4);
+        final Rectangle NEW_BOUNDS = new Rectangle(0, 0, 3, 4);
 
         Sprite spriteMock = mock(Sprite.class);
         doReturn(SPRITE_BOUNDS).when(spriteMock).getProperty(Sprite.BOUNDS);
 
         doReturn(SPRITE_BOUNDS).when(factoryMock).getAdapter(SPRITE_BOUNDS,
                 Rectangle.class);
+        doReturn(NEW_BOUNDS).when(factoryMock).getAdapter(NEW_BOUNDS,
+                Rectangle.class);
 
         Sprite[] sprites = new Sprite[] { spriteMock };
-        strategy.pack(sprites, false);
+        strategy.pack(sheetMock, sprites, false);
 
         assertNotNull(sprites);
         assertEquals(1, sprites.length);
         assertEquals(spriteMock, sprites[0]);
-        assertEquals(new Point(0, 0), SPRITE_BOUNDS.getLocation());
+        verify(spriteMock).setProperty(Sprite.BOUNDS, NEW_BOUNDS);
 
         Rectangle[] freeZones = strategy.getFreeZones();
         assertNotNull(freeZones);
@@ -206,22 +213,25 @@ public class DivideAndConquerStrategyTests {
     }
 
     @Test
-    public void packOneSpriteAfterFlush() {
+    public void packOneSpriteAfterFlush() throws InvalidPropertyValueException {
         final Rectangle SPRITE_BOUNDS = new Rectangle(-1, -1, 3, 4);
+        final Rectangle NEW_BOUNDS = new Rectangle(0, 0, 3, 4);
 
         Sprite spriteMock = mock(Sprite.class);
         doReturn(SPRITE_BOUNDS).when(spriteMock).getProperty(Sprite.BOUNDS);
 
         doReturn(SPRITE_BOUNDS).when(factoryMock).getAdapter(SPRITE_BOUNDS,
                 Rectangle.class);
+        doReturn(NEW_BOUNDS).when(factoryMock).getAdapter(NEW_BOUNDS,
+                Rectangle.class);
 
         Sprite[] sprites = new Sprite[] { spriteMock };
-        strategy.pack(sprites, true);
+        strategy.pack(sheetMock, sprites, true);
 
         assertNotNull(sprites);
         assertTrue(1 == sprites.length);
         assertEquals(spriteMock, sprites[0]);
-        assertEquals(new Point(0, 0), SPRITE_BOUNDS.getLocation());
+        verify(spriteMock).setProperty(Sprite.BOUNDS, NEW_BOUNDS);
 
         Rectangle[] freeZones = strategy.getFreeZones();
         assertNotNull(freeZones);
@@ -231,9 +241,11 @@ public class DivideAndConquerStrategyTests {
     }
 
     @Test
-    public void packTwoSprites() {
+    public void packTwoSprites() throws InvalidPropertyValueException {
         final Rectangle SPRITE1_BOUNDS = new Rectangle(-1, -1, 3, 4);
         final Rectangle SPRITE2_BOUNDS = new Rectangle(-1, -1, 5, 5);
+        final Rectangle NEW_BOUNDS1 = new Rectangle(0, 0, 3, 4);
+        final Rectangle NEW_BOUNDS2 = new Rectangle(0, 4, 5, 5);
 
         Sprite sprite1Mock = mock(Sprite.class);
         doReturn(SPRITE1_BOUNDS).when(sprite1Mock).getProperty(Sprite.BOUNDS);
@@ -245,16 +257,20 @@ public class DivideAndConquerStrategyTests {
                 Rectangle.class);
         doReturn(SPRITE2_BOUNDS).when(factoryMock).getAdapter(SPRITE2_BOUNDS,
                 Rectangle.class);
+        doReturn(NEW_BOUNDS1).when(factoryMock).getAdapter(NEW_BOUNDS1,
+                Rectangle.class);
+        doReturn(NEW_BOUNDS2).when(factoryMock).getAdapter(NEW_BOUNDS2,
+                Rectangle.class);
 
         Sprite[] sprites = new Sprite[] { sprite1Mock, sprite2Mock };
-        strategy.pack(sprites, false);
+        strategy.pack(sheetMock, sprites, false);
 
         assertNotNull(sprites);
         assertTrue(2 == sprites.length);
         assertEquals(sprite1Mock, sprites[0]);
-        assertEquals(new Point(0, 0), SPRITE1_BOUNDS.getLocation());
+        verify(sprite1Mock).setProperty(Sprite.BOUNDS, NEW_BOUNDS1);
         assertEquals(sprite2Mock, sprites[1]);
-        assertEquals(new Point(0, 4), SPRITE2_BOUNDS.getLocation());
+        verify(sprite2Mock).setProperty(Sprite.BOUNDS, NEW_BOUNDS2);
 
         Rectangle[] freeZones = strategy.getFreeZones();
         assertNotNull(freeZones);
@@ -265,9 +281,11 @@ public class DivideAndConquerStrategyTests {
     }
 
     @Test
-    public void packTwoSpritesAfterFlush() {
+    public void packTwoSpritesAfterFlush() throws InvalidPropertyValueException {
         final Rectangle SPRITE1_BOUNDS = new Rectangle(-1, -1, 3, 4);
         final Rectangle SPRITE2_BOUNDS = new Rectangle(-1, -1, 5, 5);
+        final Rectangle NEW_BOUNDS1 = new Rectangle(0, 0, 3, 4);
+        final Rectangle NEW_BOUNDS2 = new Rectangle(0, 4, 5, 5);
 
         Sprite sprite1Mock = mock(Sprite.class);
         doReturn(SPRITE1_BOUNDS).when(sprite1Mock).getProperty(Sprite.BOUNDS);
@@ -279,16 +297,20 @@ public class DivideAndConquerStrategyTests {
                 Rectangle.class);
         doReturn(SPRITE2_BOUNDS).when(factoryMock).getAdapter(SPRITE2_BOUNDS,
                 Rectangle.class);
+        doReturn(NEW_BOUNDS1).when(factoryMock).getAdapter(NEW_BOUNDS1,
+                Rectangle.class);
+        doReturn(NEW_BOUNDS2).when(factoryMock).getAdapter(NEW_BOUNDS2,
+                Rectangle.class);
 
         Sprite[] sprites = new Sprite[] { sprite1Mock, sprite2Mock };
-        strategy.pack(sprites, true);
+        strategy.pack(sheetMock, sprites, true);
 
         assertNotNull(sprites);
         assertTrue(2 == sprites.length);
         assertEquals(sprite1Mock, sprites[0]);
-        assertEquals(new Point(0, 0), SPRITE1_BOUNDS.getLocation());
+        verify(sprite1Mock).setProperty(Sprite.BOUNDS, NEW_BOUNDS1);
         assertEquals(sprite2Mock, sprites[1]);
-        assertEquals(new Point(0, 4), SPRITE2_BOUNDS.getLocation());
+        verify(sprite2Mock).setProperty(Sprite.BOUNDS, NEW_BOUNDS2);
 
         Rectangle[] freeZones = strategy.getFreeZones();
         assertNotNull(freeZones);
@@ -299,9 +321,11 @@ public class DivideAndConquerStrategyTests {
     }
 
     @Test
-    public void packTwoSpritesOneFitsOneDoesNot() {
+    public void packTwoSpritesOneFitsOneDoesNot()
+            throws InvalidPropertyValueException {
         final Rectangle SPRITE1_BOUNDS = new Rectangle(-1, -1, 3, 4);
         final Rectangle SPRITE2_BOUNDS = new Rectangle(-1, -1, 15, 15);
+        final Rectangle NEW_BOUNDS = new Rectangle(0, 0, 3, 4);
 
         Sprite sprite1Mock = mock(Sprite.class);
         doReturn(SPRITE1_BOUNDS).when(sprite1Mock).getProperty(Sprite.BOUNDS);
@@ -313,16 +337,18 @@ public class DivideAndConquerStrategyTests {
                 Rectangle.class);
         doReturn(SPRITE2_BOUNDS).when(factoryMock).getAdapter(SPRITE2_BOUNDS,
                 Rectangle.class);
+        doReturn(NEW_BOUNDS).when(factoryMock).getAdapter(NEW_BOUNDS,
+                Rectangle.class);
 
         Sprite[] sprites = new Sprite[] { sprite1Mock, sprite2Mock };
-        strategy.pack(sprites, false);
+        strategy.pack(sheetMock, sprites, false);
 
         assertNotNull(sprites);
         assertTrue(2 == sprites.length);
         assertEquals(sprite1Mock, sprites[0]);
-        assertEquals(new Point(0, 0), SPRITE1_BOUNDS.getLocation());
+        verify(sprite1Mock).setProperty(Sprite.BOUNDS, NEW_BOUNDS);
         assertEquals(sprite2Mock, sprites[1]);
-        assertEquals(new Point(-1, -1), SPRITE2_BOUNDS.getLocation());
+        verify(sprite2Mock, never()).setProperty(eq(Sprite.BOUNDS), any());
 
         Rectangle[] freeZones = strategy.getFreeZones();
         assertNotNull(freeZones);
@@ -332,9 +358,11 @@ public class DivideAndConquerStrategyTests {
     }
 
     @Test
-    public void packTwoSpritesOneFitsOneDoesNotAfterFlush() {
+    public void packTwoSpritesOneFitsOneDoesNotAfterFlush()
+            throws InvalidPropertyValueException {
         final Rectangle SPRITE1_BOUNDS = new Rectangle(-1, -1, 3, 4);
         final Rectangle SPRITE2_BOUNDS = new Rectangle(-1, -1, 15, 15);
+        final Rectangle NEW_BOUNDS = new Rectangle(0, 0, 3, 4);
 
         Sprite sprite1Mock = mock(Sprite.class);
         doReturn(SPRITE1_BOUNDS).when(sprite1Mock).getProperty(Sprite.BOUNDS);
@@ -346,16 +374,18 @@ public class DivideAndConquerStrategyTests {
                 Rectangle.class);
         doReturn(SPRITE2_BOUNDS).when(factoryMock).getAdapter(SPRITE2_BOUNDS,
                 Rectangle.class);
+        doReturn(NEW_BOUNDS).when(factoryMock).getAdapter(NEW_BOUNDS,
+                Rectangle.class);
 
         Sprite[] sprites = new Sprite[] { sprite1Mock, sprite2Mock };
-        strategy.pack(sprites, true);
+        strategy.pack(sheetMock, sprites, true);
 
         assertNotNull(sprites);
         assertTrue(2 == sprites.length);
         assertEquals(sprite1Mock, sprites[0]);
-        assertEquals(new Point(0, 0), SPRITE1_BOUNDS.getLocation());
+        verify(sprite1Mock).setProperty(Sprite.BOUNDS, NEW_BOUNDS);
         assertEquals(sprite2Mock, sprites[1]);
-        assertEquals(new Point(-1, -1), SPRITE2_BOUNDS.getLocation());
+        verify(sprite2Mock, never()).setProperty(eq(Sprite.BOUNDS), any());
 
         Rectangle[] freeZones = strategy.getFreeZones();
         assertNotNull(freeZones);
@@ -365,9 +395,11 @@ public class DivideAndConquerStrategyTests {
     }
 
     @Test
-    public void packTwoSpritesOneLocatedOneIsNot() {
+    public void packTwoSpritesOneLocatedOneIsNot()
+            throws InvalidPropertyValueException {
         final Rectangle SPRITE1_BOUNDS = new Rectangle(0, 0, 3, 4);
         final Rectangle SPRITE2_BOUNDS = new Rectangle(-1, -1, 5, 5);
+        final Rectangle NEW_BOUNDS = new Rectangle(0, 4, 5, 5);
 
         Sprite sprite1Mock = mock(Sprite.class);
         doReturn(SPRITE1_BOUNDS).when(sprite1Mock).getProperty(Sprite.BOUNDS);
@@ -379,14 +411,15 @@ public class DivideAndConquerStrategyTests {
                 Rectangle.class);
         doReturn(SPRITE2_BOUNDS).when(factoryMock).getAdapter(SPRITE2_BOUNDS,
                 Rectangle.class);
+        doReturn(NEW_BOUNDS).when(factoryMock).getAdapter(NEW_BOUNDS,
+                Rectangle.class);
 
         Sprite[] sprites = new Sprite[] { sprite1Mock, sprite2Mock };
-        strategy.pack(sprites, false);
+        strategy.pack(sheetMock, sprites, false);
 
         assertNotNull(sprites);
         assertTrue(2 == sprites.length);
-        assertEquals(sprite1Mock, sprites[0]);
-        assertEquals(new Point(0, 0), SPRITE1_BOUNDS.getLocation());
+        verify(sprite1Mock, never()).setProperty(eq(Sprite.BOUNDS), any());
         assertEquals(sprite2Mock, sprites[1]);
 
         // TODO This will fail because free zones have not been generated. So,
@@ -395,7 +428,7 @@ public class DivideAndConquerStrategyTests {
         // might make it quite slow. We'll leave this test failing as a reminder
         // until we decide on how to handle this. But for now to recalculate
         // free zones a client should flush the cache.
-        assertEquals(new Point(0, 4), SPRITE2_BOUNDS.getLocation());
+        verify(sprite2Mock).setProperty(Sprite.BOUNDS, NEW_BOUNDS);
 
         Rectangle[] freeZones = strategy.getFreeZones();
         assertNotNull(freeZones);
@@ -406,9 +439,11 @@ public class DivideAndConquerStrategyTests {
     }
 
     @Test
-    public void packTwoSpritesOneLocatedOneIsNotAfterFlush() {
+    public void packTwoSpritesOneLocatedOneIsNotAfterFlush()
+            throws InvalidPropertyValueException {
         final Rectangle SPRITE1_BOUNDS = new Rectangle(0, 0, 3, 4);
         final Rectangle SPRITE2_BOUNDS = new Rectangle(-1, -1, 5, 5);
+        final Rectangle NEW_BOUNDS = new Rectangle(0, 4, 5, 5);
 
         Sprite sprite1Mock = mock(Sprite.class);
         doReturn(SPRITE1_BOUNDS).when(sprite1Mock).getProperty(Sprite.BOUNDS);
@@ -420,16 +455,18 @@ public class DivideAndConquerStrategyTests {
                 Rectangle.class);
         doReturn(SPRITE2_BOUNDS).when(factoryMock).getAdapter(SPRITE2_BOUNDS,
                 Rectangle.class);
+        doReturn(NEW_BOUNDS).when(factoryMock).getAdapter(NEW_BOUNDS,
+                Rectangle.class);
 
         Sprite[] sprites = new Sprite[] { sprite1Mock, sprite2Mock };
-        strategy.pack(sprites, true);
+        strategy.pack(sheetMock, sprites, true);
 
         assertNotNull(sprites);
         assertTrue(2 == sprites.length);
         assertEquals(sprite1Mock, sprites[0]);
-        assertEquals(new Point(0, 0), SPRITE1_BOUNDS.getLocation());
+        verify(sprite1Mock, never()).setProperty(eq(Sprite.BOUNDS), any());
         assertEquals(sprite2Mock, sprites[1]);
-        assertEquals(new Point(0, 4), SPRITE2_BOUNDS.getLocation());
+        verify(sprite2Mock).setProperty(Sprite.BOUNDS, NEW_BOUNDS);
 
         Rectangle[] freeZones = strategy.getFreeZones();
         assertNotNull(freeZones);

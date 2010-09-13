@@ -40,10 +40,4 @@ public class DeleteSpritesHandler extends AbstractHandler implements IHandler {
         return null;
     }
 
-    @Override
-    public boolean isEnabled() {
-        // TODO Check if there's a selection.
-        return false;
-    }
-
 }

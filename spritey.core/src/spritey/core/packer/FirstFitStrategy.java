@@ -28,6 +28,7 @@ import java.util.List;
 import spritey.core.Sheet;
 import spritey.core.Sprite;
 import spritey.core.adapter.AdapterFactory;
+import spritey.core.exception.InvalidPropertyValueException;
 
 /**
  * This strategy tries to put each sprite into first smallest area it finds by
@@ -35,31 +36,31 @@ import spritey.core.adapter.AdapterFactory;
  * sprite is tested against each zone. Redundant zones i.e. zones completely
  * covered by other zones, are removed.
  */
-public class DivideAndConquerStrategy implements Strategy {
+public class FirstFitStrategy implements Strategy {
 
-    private AdapterFactory adapterFactory;
-    private Sheet sheet;
+    private AdapterFactory awtTypeAdapterFactory;
+    private AdapterFactory propertyAdapterFactory;
     private List<Rectangle> freeZones;
+    private Sheet sheet;
 
     /**
      * Constructor.
      * 
-     * @param sheet
-     *        a sprite sheet defining boundaries within which sprites should be
-     *        packed.
-     * @param adapterFactory
+     * @param awtTypeAdapterFactory
      *        an adapter factory to convert model properties types into standard
      *        java types.
+     * @param propertyAdapterFactory
+     *        an adapter factory to convert AWT types to model property types.
      */
-    public DivideAndConquerStrategy(Sheet sheet, AdapterFactory adapterFactory) {
-        validateNotNull(sheet, "Sheet is null.");
-        validateNotNull(adapterFactory, "Adapter factory is null.");
+    public FirstFitStrategy(AdapterFactory awtTypeAdapterFactory,
+            AdapterFactory propertyAdapterFactory) {
+        validateNotNull(awtTypeAdapterFactory, "AWT Adapter factory is null.");
+        validateNotNull(propertyAdapterFactory,
+                "Property Adapter factory is null.");
 
-        this.sheet = sheet;
-        this.adapterFactory = adapterFactory;
+        this.awtTypeAdapterFactory = awtTypeAdapterFactory;
+        this.propertyAdapterFactory = propertyAdapterFactory;
         freeZones = new ArrayList<Rectangle>();
-
-        flushCache();
     }
 
     private void validateNotNull(Object o, String msg) {
@@ -70,9 +71,13 @@ public class DivideAndConquerStrategy implements Strategy {
 
     /**
      * Clears cached values.
+     * 
+     * @param sheet
+     *        a sprite sheet defining boundaries within which sprites should be
+     *        packed.
      */
-    protected void flushCache() {
-        Dimension size = (Dimension) adapterFactory.getAdapter(
+    protected void flushCache(Sheet sheet) {
+        Dimension size = (Dimension) awtTypeAdapterFactory.getAdapter(
                 sheet.getProperty(Sheet.SIZE), Dimension.class);
 
         freeZones.clear();
@@ -80,7 +85,8 @@ public class DivideAndConquerStrategy implements Strategy {
     }
 
     /**
-     * Recalculates each zone.
+     * Recalculates each zone. It will modify a <code>freeZones</code> list, so
+     * be careful when calling this while reading from <code>freeZones</code>.
      * 
      * @param rect
      *        the rectangle representing occupied area.
@@ -265,24 +271,32 @@ public class DivideAndConquerStrategy implements Strategy {
      *        the sprite to position.
      */
     protected void computeLocation(Sprite sprite) {
-        Rectangle bounds = (Rectangle) adapterFactory.getAdapter(
+        Rectangle bounds = (Rectangle) awtTypeAdapterFactory.getAdapter(
                 sprite.getProperty(Sprite.BOUNDS), Rectangle.class);
         Rectangle boundsCopy = (Rectangle) bounds.clone();
 
         for (Rectangle freeZone : freeZones) {
-            // Temporarily set location so we can check if sprite fits a zone.
+            // Temporarily set location so we can check if sprite fits into a
+            // zone.
             boundsCopy.setLocation(freeZone.getLocation());
 
             if (freeZone.contains(boundsCopy)) {
-                bounds.setLocation(freeZone.getLocation());
+                Object newBounds = propertyAdapterFactory.getAdapter(boundsCopy,
+                        sprite.getProperty(Sprite.BOUNDS).getClass());
+                try {
+                    sprite.setProperty(Sprite.BOUNDS, newBounds);
+                } catch (InvalidPropertyValueException e) {
+                    // This exception should never happen unless we have a bug
+                    // somewhere, because this strategy will only position
+                    // sprite if it fits into remaining space.
+                    e.printStackTrace();
+                }
+
+                // This will modify the freeZones list, but it is safe to call
+                // it here since we are breaking.
+                recalculateZones(boundsCopy);
                 break;
             }
-        }
-
-        // Recalculate zones outside for-loop to avoid concurrent access
-        // exception.
-        if ((bounds.x != -1) && (bounds.y != -1)) {
-            recalculateZones(bounds);
         }
     }
 
@@ -292,15 +306,19 @@ public class DivideAndConquerStrategy implements Strategy {
      * @see spritey.core.packer.Strategy#pack(spritey.core.Sprite[], boolean)
      */
     @Override
-    public void pack(Sprite[] sprites, boolean flushCache) {
-        if (flushCache) {
-            flushCache();
+    public void pack(Sheet sheet, Sprite[] sprites, boolean flushCache) {
+        validateNotNull(sheet, "Sheet is null.");
+        validateNotNull(sprites, "Sprites is null.");
+
+        if (flushCache || (this.sheet != sheet)) {
+            this.sheet = sheet;
+            flushCache(sheet);
         }
 
         List<Sprite> unlocatedSprites = new ArrayList<Sprite>();
 
         for (Sprite sprite : sprites) {
-            Rectangle bounds = (Rectangle) adapterFactory.getAdapter(
+            Rectangle bounds = (Rectangle) awtTypeAdapterFactory.getAdapter(
                     sprite.getProperty(Sprite.BOUNDS), Rectangle.class);
 
             if ((bounds.x == -1) && (bounds.y == -1)) {

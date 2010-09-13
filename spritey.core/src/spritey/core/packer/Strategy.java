@@ -17,6 +17,7 @@
  */
 package spritey.core.packer;
 
+import spritey.core.Sheet;
 import spritey.core.Sprite;
 
 /**
@@ -30,6 +31,9 @@ public interface Strategy {
      * strategy to their strategy if they want sprites to be organized the way
      * the want.
      * 
+     * @param sheet
+     *        a sprite sheet defining boundaries within which sprites should be
+     *        packed.
      * @param sprites
      *        a list of sprites to pack into sprite sheet.
      * @param flushCache
@@ -38,7 +42,7 @@ public interface Strategy {
      *         when <code>sprites</code> list is null.
      * 
      */
-    public void pack(Sprite[] sprites, boolean flushCache)
+    public void pack(Sheet sheet, Sprite[] sprites, boolean flushCache)
             throws IllegalArgumentException;
 
 }

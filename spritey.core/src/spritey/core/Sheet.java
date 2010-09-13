@@ -39,7 +39,8 @@ public interface Sheet extends Model {
     public static String DEFAULT_DESCRIPTION = "Created with Spritey.";
 
     // Limits
-    public static int DESCRIPTION_TEXT_LIMIT = 1024;
+    public static int MIN_DESCRIPTION_LENGTH = 0;
+    public static int MAX_DESCRIPTION_LENGTH = 1024;
     public static int MAX_WIDTH = 1024;
     public static int MAX_HEIGHT = 1024;
     public static int MIN_WIDTH = 0;

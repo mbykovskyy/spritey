@@ -18,7 +18,9 @@
 package spritey.rcp.wizards;
 
 import org.eclipse.draw2d.geometry.Dimension;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.wizard.WizardPage;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -39,8 +41,14 @@ import org.eclipse.swt.widgets.ToolItem;
 
 import spritey.core.Model;
 import spritey.core.Sheet;
+import spritey.core.exception.InvalidPropertyValueException;
+import spritey.core.validator.NotNullValidator;
+import spritey.core.validator.StringLengthValidator;
+import spritey.core.validator.TypeValidator;
+import spritey.rcp.core.Messages;
 import spritey.rcp.core.SheetConstants;
 import spritey.rcp.utils.ImageFactory;
+import spritey.rcp.validators.SizeValidator;
 
 /**
  * A main wizard page for creating a new sprite sheet.
@@ -65,7 +73,7 @@ public class NewSpriteSheetMainPage extends WizardPage {
     static final int COLOR_IMAGE_WIDTH = 31;
     static final int COLOR_IMAGE_HEIGHT = 20;
 
-    static final int COMMENT_TEXT_LIMIT = SheetConstants.DESCRIPTION_TEXT_LIMIT;
+    static final int COMMENT_TEXT_LIMIT = SheetConstants.MAX_DESCRIPTION_LENGTH;
     static final RGB DEFAULT_BACKGROUND = SheetConstants.DEFAULT_BACKGROUND;
 
     static final int DEFAULT_WIDTH = Sheet.DEFAULT_SIZE.width;
@@ -230,10 +238,55 @@ public class NewSpriteSheetMainPage extends WizardPage {
         int width = Integer.valueOf(widthSpinner.getText());
         int height = Integer.valueOf(heightSpinner.getText());
 
-        sheet.setProperty(Sheet.SIZE, new Dimension(width, height));
-        sheet.setProperty(Sheet.DESCRIPTION, commentText.getText());
-        sheet.setProperty(Sheet.OPAQUE, isOpaque);
-        sheet.setProperty(Sheet.BACKGROUND, background);
+        try {
+            sheet.setProperty(Sheet.SIZE, new Dimension(width, height));
+            sheet.setProperty(Sheet.DESCRIPTION, commentText.getText());
+            sheet.setProperty(Sheet.OPAQUE, isOpaque);
+            sheet.setProperty(Sheet.BACKGROUND, background);
+        } catch (InvalidPropertyValueException e) {
+            handleException(e);
+        }
+    }
+
+    private void handleException(InvalidPropertyValueException e) {
+        String message = Messages.INTERNAL_ERROR;
+
+        switch (e.getErrorCode()) {
+        case SizeValidator.WIDTH_TOO_LONG:
+        case SizeValidator.WIDTH_TOO_SHORT:
+            // TODO Is this considered a dead code? This error should never
+            // happen since width spinner will limit value range to min and max.
+            // If this error occurs then something is wrong with our code.
+            // Should we display internal error message instead?
+            message = NLS.bind(Messages.SHEET_WIDTH_INVALID,
+                    SheetConstants.MIN_WIDTH, SheetConstants.MAX_WIDTH);
+            break;
+        case SizeValidator.HEIGHT_TOO_LONG:
+        case SizeValidator.HEIGHT_TOO_SHORT:
+            // TODO Height spinner will limit value range to min and max,
+            // similar to width. So, is this a dead code? Or should we display
+            // internal error message instead?
+            message = NLS.bind(Messages.SHEET_HEIGHT_INVALID,
+                    SheetConstants.MIN_HEIGHT, SheetConstants.MAX_HEIGHT);
+            break;
+        case StringLengthValidator.TOO_LONG:
+        case StringLengthValidator.TOO_SHORT:
+            // TODO This should never happen since description text control will
+            // limit the number of characters. If this happens anyway does it
+            // mean there's something wrong with our code?
+            message = NLS.bind(Messages.SHEET_DESCRIPTION_INVALID,
+                    SheetConstants.MIN_DESCRIPTION_LENGTH,
+                    SheetConstants.MAX_DESCRIPTION_LENGTH);
+            break;
+        case NotNullValidator.NULL:
+        case TypeValidator.NOT_TYPE:
+        default:
+            // Log it since we don't expect this exception.
+            e.printStackTrace();
+            break;
+        }
+
+        MessageDialog.openError(getShell(), Messages.NEW_SPRITE_SHEET, message);
     }
 
 }

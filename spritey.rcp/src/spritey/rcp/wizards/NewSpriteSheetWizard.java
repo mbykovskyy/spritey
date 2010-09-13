@@ -71,8 +71,9 @@ public class NewSpriteSheetWizard extends Wizard {
 
         sheet.addValidator(Sheet.DESCRIPTION, notNullValidator);
         sheet.addValidator(Sheet.DESCRIPTION, new TypeValidator(String.class));
-        sheet.addValidator(Sheet.DESCRIPTION, new StringLengthValidator(0,
-                SheetConstants.DESCRIPTION_TEXT_LIMIT));
+        sheet.addValidator(Sheet.DESCRIPTION, new StringLengthValidator(
+                SheetConstants.MIN_DESCRIPTION_LENGTH,
+                SheetConstants.MAX_DESCRIPTION_LENGTH));
 
         sheet.addValidator(Sheet.SIZE, notNullValidator);
         sheet.addValidator(Sheet.SIZE, new TypeValidator(Dimension.class));

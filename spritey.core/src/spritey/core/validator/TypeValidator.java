@@ -17,14 +17,13 @@
  */
 package spritey.core.validator;
 
-
 /**
  * Validates that the value is of the specified type.
  */
 public class TypeValidator extends AbstractValidator {
 
-    // Error codes
-    public static final int NOT_TYPE = 0;
+    // Error codes (each code has to be unique across the whole application)
+    public static final int NOT_TYPE = 20;
 
     // Messages
     private static final String M_NOT_TYPE = "Object is not of type ";

@@ -24,6 +24,7 @@ import java.util.Map;
 
 import spritey.core.event.ModelEvent;
 import spritey.core.event.ModelListener;
+import spritey.core.exception.InvalidPropertyValueException;
 import spritey.core.validator.Validator;
 
 /**
@@ -77,7 +78,7 @@ public abstract class AbstractModel implements Model {
      */
     @Override
     public void setProperty(int property, Object value)
-            throws IllegalArgumentException {
+            throws InvalidPropertyValueException {
         validate(property, value);
 
         // TODO No need to verify that property exists? This will allow new
@@ -96,17 +97,19 @@ public abstract class AbstractModel implements Model {
      *        the property to verify the value for.
      * @param value
      *        the value to validate.
-     * @throws IllegalArgumentException
+     * @throws InvalidPropertyValueException
      *         when the specified <code>value</code> does not meet validation
      *         requirements.
      */
-    void validate(int property, Object value) throws IllegalArgumentException {
+    void validate(int property, Object value)
+            throws InvalidPropertyValueException {
         List<Validator> list = validators.get(property);
 
         if (null != list) {
             for (Validator validator : list) {
                 if (!validator.isValid(value)) {
-                    throw new IllegalArgumentException(validator.getMessage());
+                    throw new InvalidPropertyValueException(property, value,
+                            validator.getErrorCode(), validator.getMessage());
                 }
             }
         }
@@ -118,7 +121,7 @@ public abstract class AbstractModel implements Model {
      * @see spritey.core.Model#getProperty(int)
      */
     @Override
-    public Object getProperty(int property) throws IllegalArgumentException {
+    public Object getProperty(int property) {
         // TODO No need to verify that property exists? If property is not
         // in the map this will return null.
         return properties.get(property);
@@ -131,8 +134,7 @@ public abstract class AbstractModel implements Model {
      * PropertyListener)
      */
     @Override
-    public void addModelListener(ModelListener listener)
-            throws IllegalArgumentException {
+    public void addModelListener(ModelListener listener) {
         validateArgument(listener);
 
         if (!listeners.contains(listener)) {
@@ -147,8 +149,7 @@ public abstract class AbstractModel implements Model {
      * PropertyListener)
      */
     @Override
-    public void removeModelListener(ModelListener listener)
-            throws IllegalArgumentException {
+    public void removeModelListener(ModelListener listener) {
         validateArgument(listener);
         listeners.remove(listener);
     }
@@ -165,7 +166,7 @@ public abstract class AbstractModel implements Model {
         List<Validator> list = validators.get(property);
 
         if (null == list) {
-            // No validators for this property has been added yet.
+            // No validators have been added for this property yet.
             list = new ArrayList<Validator>();
             validators.put(property, list);
         }
