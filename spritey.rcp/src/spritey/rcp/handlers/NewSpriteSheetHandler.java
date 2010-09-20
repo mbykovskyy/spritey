@@ -23,7 +23,6 @@ import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.commands.IHandler;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.handlers.HandlerUtil;
@@ -48,22 +47,21 @@ public class NewSpriteSheetHandler extends AbstractHandler implements IHandler {
 
         Window wizard = new NewSpriteSheetDialog(shell,
                 new NewSpriteSheetWizard());
-        int returnCode = wizard.open();
 
-        if (returnCode != Window.CANCEL) {
+        if (wizard.open() != Window.CANCEL) {
             Node sheet = SpriteyPlugin.getDefault().getRootNode()
                     .getChild(SheetConstants.DEFAULT_NAME);
 
             if (sheet != null) {
                 IWorkbenchWindow window = HandlerUtil
                         .getActiveWorkbenchWindow(event);
-                IWorkbenchPage page = window.getActivePage();
+                SheetEditorInput input = new SheetEditorInput(
+                        (Sheet) sheet.getModel());
+
                 try {
-                    SheetEditorInput input = new SheetEditorInput(
-                            (Sheet) sheet.getModel());
-                    page.openEditor(input, SheetEditor.ID);
+                    window.getActivePage().openEditor(input, SheetEditor.ID);
                 } catch (PartInitException e) {
-                    // TODO Output to problems view.
+                    // TODO Log this exception as we do not expect it.
                     e.printStackTrace();
                 }
             }

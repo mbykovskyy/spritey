@@ -76,16 +76,6 @@ public abstract class AbstractNodeListener implements NodeListener {
     /*
      * (non-Javadoc)
      * 
-     * @see spritey.core.node.event.NodeListener#childrenRemoved()
-     */
-    @Override
-    public void childrenRemoved() {
-        // Do nothing.
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
      * @see spritey.core.node.event.NodeListener#properitesChanged(spritey.core.
      * Model, spritey.core.Model)
      */

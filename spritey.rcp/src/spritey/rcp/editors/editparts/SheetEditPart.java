@@ -85,7 +85,6 @@ public class SheetEditPart extends AbstractGraphicalEditPart implements
      */
     @Override
     protected IFigure createFigure() {
-        // sheet = new SheetFigure();
         sheet = new ImageFigure();
         populateSheet(sheet, ((Node) getModel()).getModel());
         return sheet;
@@ -98,8 +97,7 @@ public class SheetEditPart extends AbstractGraphicalEditPart implements
      */
     @Override
     protected void createEditPolicies() {
-        // TODO Auto-generated method stub
-
+        // Do nothing.
     }
 
     /*
@@ -109,7 +107,7 @@ public class SheetEditPart extends AbstractGraphicalEditPart implements
      */
     @Override
     protected List<?> getModelChildren() {
-        return Arrays.asList(((Node) getModel()).getChildren());
+        return Arrays.asList(((Node) getModel()).getLeaves());
     }
 
     /*
@@ -188,16 +186,6 @@ public class SheetEditPart extends AbstractGraphicalEditPart implements
      */
     @Override
     public void childRemoved(Node child) {
-        refresh();
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see spritey.core.node.event.NodeListener#childrenRemoved()
-     */
-    @Override
-    public void childrenRemoved() {
         refresh();
     }
 

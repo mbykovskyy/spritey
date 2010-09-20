@@ -29,9 +29,14 @@ public class Messages extends NLS {
     // Titles
     public static String NEW_SPRITE_SHEET;
     public static String ADD_SPRITE;
+    public static String ADD_SPRITES;
 
     // General messages
     public static String INTERNAL_ERROR;
+    public static String DIRECTORY_INACCESSIBLE;
+
+    // IO messages
+    public static String UNABLE_TO_LOAD_IMAGE;
 
     // Sheet messages
     public static String SHEET_WIDTH_INVALID;
@@ -43,6 +48,11 @@ public class Messages extends NLS {
     public static String SPRITE_NAME_INVALID;
     public static String SPRITE_NAME_EXISTS;
     public static String SPRITE_DOES_NOT_FIT;
+    public static String SPRITES_IMPORT_FAILED;
+
+    // Group messages
+    public static String GROUP_NAME_INVALID;
+    public static String GROUP_NAME_EXISTS;
 
     static {
         reloadMessages();

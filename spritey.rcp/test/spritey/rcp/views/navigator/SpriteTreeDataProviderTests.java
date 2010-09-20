@@ -313,16 +313,6 @@ public class SpriteTreeDataProviderTests {
     }
 
     @Test
-    public void childrenRemoved() {
-        Viewer viewerMock = mock(Viewer.class);
-        provider.inputChanged(viewerMock, null, null);
-
-        provider.childrenRemoved();
-
-        verify(viewerMock).refresh();
-    }
-
-    @Test
     public void modelChanged() {
         Model modelMock = mock(Model.class);
 

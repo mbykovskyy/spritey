@@ -148,16 +148,6 @@ public class ContentsEditPart extends AbstractGraphicalEditPart implements
     /*
      * (non-Javadoc)
      * 
-     * @see spritey.core.node.event.NodeListener#childrenRemoved()
-     */
-    @Override
-    public void childrenRemoved() {
-        refresh();
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
      * @see spritey.core.node.event.NodeListener#properitesChanged(spritey.core.
      * Model, spritey.core.Model)
      */

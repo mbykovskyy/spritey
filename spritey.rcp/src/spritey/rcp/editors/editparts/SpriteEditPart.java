@@ -22,6 +22,7 @@ import java.util.List;
 
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.ImageFigure;
+import org.eclipse.draw2d.LineBorder;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gef.editparts.AbstractGraphicalEditPart;
 import org.eclipse.swt.graphics.Image;
@@ -63,6 +64,7 @@ public class SpriteEditPart extends AbstractGraphicalEditPart implements
             Image image = (Image) model.getProperty(Sprite.IMAGE);
             sprite.setImage(image);
             sprite.setVisible(true);
+            sprite.setBorder(new LineBorder());
         }
     }
 
@@ -175,16 +177,6 @@ public class SpriteEditPart extends AbstractGraphicalEditPart implements
      */
     @Override
     public void childRemoved(Node child) {
-        // Do nothing.
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see spritey.core.node.event.NodeListener#childrenRemoved()
-     */
-    @Override
-    public void childrenRemoved() {
         // Do nothing.
     }
 

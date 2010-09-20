@@ -27,6 +27,7 @@ import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.SWTException;
 import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.ImageLoader;
 import org.eclipse.swt.widgets.FileDialog;
@@ -38,7 +39,6 @@ import spritey.core.ModelFactory;
 import spritey.core.Sprite;
 import spritey.core.exception.InvalidPropertyValueException;
 import spritey.core.node.Node;
-import spritey.core.node.NodeFactory;
 import spritey.core.validator.NotNullValidator;
 import spritey.core.validator.StringLengthValidator;
 import spritey.core.validator.TypeValidator;
@@ -108,7 +108,7 @@ public class AddSpriteHandler extends AbstractHandler implements IHandler {
 
         String file = dialog.open();
         if (null != file) {
-            createSprite(file);
+            loadFile(new File(file));
         }
 
         return null;
@@ -119,50 +119,61 @@ public class AddSpriteHandler extends AbstractHandler implements IHandler {
         return !SpriteyPlugin.getDefault().getRootNode().isLeaf();
     }
 
-    private ImageData loadImage(String path) {
-        ImageLoader loader = new ImageLoader();
-        return loader.load(path)[0];
-    }
-
-    private void createSprite(String path) {
-        String spriteName = new File(path).getName();
-        ImageData imageData = loadImage(path);
-
-        SpriteyPlugin plugin = SpriteyPlugin.getDefault();
-        ModelFactory modelFactory = plugin.getModelFactory();
-        NodeFactory nodeFactory = plugin.getNodeFactory();
+    private ImageData loadImage(File file) {
+        ImageData image = null;
 
         try {
-            Model sprite = createSprite(modelFactory);
-            sprite.setProperty(Sprite.NAME, spriteName);
+            image = new ImageLoader().load(file.getAbsolutePath())[0];
+        } catch (SWTException e) {
+            // Do nothing.
+        }
+        return image;
+    }
+
+    private void loadFile(File file) {
+        ImageData imageData = loadImage(file);
+
+        if (null == imageData) {
+            String message = NLS.bind(Messages.UNABLE_TO_LOAD_IMAGE,
+                    file.getAbsolutePath());
+            MessageDialog.openError(shell, Messages.ADD_SPRITE, message);
+            return;
+        }
+
+        SpriteyPlugin plugin = SpriteyPlugin.getDefault();
+        Model sprite = createSprite(plugin.getModelFactory());
+
+        try {
+            sprite.setProperty(Sprite.NAME, file.getName());
             sprite.setProperty(Sprite.IMAGE,
                     imageFactory.createImage(imageData));
             sprite.setProperty(Sprite.BOUNDS, new Rectangle(
                     SpriteConstants.DEFAULT_X, SpriteConstants.DEFAULT_Y,
                     imageData.width, imageData.height));
-
-            Node node = nodeFactory.createNode(spriteName);
-            node.setModel(sprite);
-
-            Node sheetNode = plugin.getRootNode().getChildren()[0];
-            if (sheetNode.addChild(node)) {
-                SpriteyPlugin.getDefault().getPacker().pack(sheetNode, false);
-
-                if (((Rectangle) sprite.getProperty(Sprite.BOUNDS)).x < 0) {
-                    MessageDialog.openWarning(shell, Messages.ADD_SPRITE,
-                            NLS.bind(Messages.SPRITE_DOES_NOT_FIT, spriteName));
-                }
-            } else {
-                MessageDialog.openError(shell, Messages.ADD_SPRITE,
-                        NLS.bind(Messages.SPRITE_NAME_EXISTS, spriteName));
-            }
         } catch (InvalidPropertyValueException e) {
             handleException(e);
+            return;
+        }
+
+        Node node = plugin.getNodeFactory().createNode(file.getName());
+        node.setModel(sprite);
+
+        Node sheetNode = plugin.getRootNode().getChildren()[0];
+        if (sheetNode.addChild(node)) {
+            plugin.getPacker().pack(sheetNode, false);
+
+            if (((Rectangle) sprite.getProperty(Sprite.BOUNDS)).x < 0) {
+                MessageDialog.openWarning(shell, Messages.ADD_SPRITE,
+                        NLS.bind(Messages.SPRITE_DOES_NOT_FIT, file.getName()));
+            }
+        } else {
+            MessageDialog.openError(shell, Messages.ADD_SPRITE,
+                    NLS.bind(Messages.SPRITE_NAME_EXISTS, file.getName()));
         }
     }
 
     /**
-     * Creates and populates sprite model.
+     * Creates sprite model.
      * 
      * @param modelFactory
      *        factory to use to create sprite model.

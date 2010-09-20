@@ -47,10 +47,12 @@ public class SpriteTreeDataProvider extends BaseLabelProvider implements
     private final Image ERROR_IMG;
     private final Image SPRITE_IMG;
     private final Image SHEET_IMG;
+    private final Image GROUP_IMG;
 
     private static final String ERROR_ICON_PATH = "data/icons/image_invisible.png";
     private static final String SPRITE_ICON_PATH = "data/icons/image_1.png";
     private static final String SHEET_ICON_PATH = "data/icons/application_view_icons.png";
+    private static final String GROUP_ICON_PATH = "data/icons/images.png";
 
     private static final String INVISIBLE = "invisible";
 
@@ -62,6 +64,8 @@ public class SpriteTreeDataProvider extends BaseLabelProvider implements
         SPRITE_IMG = SpriteyPlugin.getImageDescriptor(SPRITE_ICON_PATH)
                 .createImage();
         SHEET_IMG = SpriteyPlugin.getImageDescriptor(SHEET_ICON_PATH)
+                .createImage();
+        GROUP_IMG = SpriteyPlugin.getImageDescriptor(GROUP_ICON_PATH)
                 .createImage();
     }
 
@@ -171,6 +175,8 @@ public class SpriteTreeDataProvider extends BaseLabelProvider implements
             return SPRITE_IMG;
         } else if (model instanceof Sheet) {
             return SHEET_IMG;
+        } else if (model instanceof Group) {
+            return GROUP_IMG;
         }
 
         return null;
@@ -311,16 +317,6 @@ public class SpriteTreeDataProvider extends BaseLabelProvider implements
         for (Node child : node.getChildren()) {
             ignore(child);
         }
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see spritey.core.node.event.NodeListener#childrenRemoved()
-     */
-    @Override
-    public void childrenRemoved() {
-        viewer.refresh();
     }
 
     /*

@@ -54,15 +54,6 @@ public interface NodeListener {
      */
     public void childAdded(Node child);
 
-    // TODO We probably don't need this since when each child is added the
-    // childAdded event will be sent. However, it might be more efficient to
-    // notify listeners once when adding bulk. For example, it's more efficient
-    // to update a tree in gui once.
-    // public void childrenAdded(Node[] children);
-
-    // TODO Same issue here.
-    // public void childrenRemoved();
-
     /**
      * Sent when a child has been removed from the node.
      * 
@@ -70,11 +61,6 @@ public interface NodeListener {
      *        the child that has been removed.
      */
     public void childRemoved(Node child);
-
-    /**
-     * Sent when all children has been removed from the node.
-     */
-    public void childrenRemoved();
 
     /**
      * Sent when then data that this node represent is attached.
