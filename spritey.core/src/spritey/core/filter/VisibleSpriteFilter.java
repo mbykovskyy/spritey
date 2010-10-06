@@ -15,22 +15,31 @@
  * You should have received a copy of the GNU General Public License along with
  * Spritey. If not, see <http://www.gnu.org/licenses/>.
  */
-package spritey.core.adapter;
+package spritey.core.filter;
+
+import java.awt.Rectangle;
+
+import spritey.core.Sprite;
+import spritey.core.node.Node;
 
 /**
- * A default adapter factory which returns an adaptable object as an adapter.
+ * Filter for extracting visible sprites.
  */
-public class DefaultAdapterFactory implements AdapterFactory {
+public class VisibleSpriteFilter extends SpriteFilter {
 
     /*
      * (non-Javadoc)
      * 
-     * @see spritey.core.adapter.AdapterFactory#getAdapter(java.lang.Object,
-     * java.lang.Class)
+     * @see spritey.core.filter.AbstractFilter#select(spritey.core.node.Node)
      */
     @Override
-    public Object getAdapter(Object adaptableObject, Class<?> adapterType) {
-        return adaptableObject;
-    }
+    public boolean select(Node node) {
+        if (super.select(node)) {
+            Rectangle bounds = (Rectangle) node.getModel().getProperty(
+                    Sprite.BOUNDS);
 
+            return (bounds.x >= 0) && (bounds.y >= 0);
+        }
+        return false;
+    }
 }

@@ -22,19 +22,36 @@ import java.awt.Rectangle;
 /**
  * A data object representing an image that can be attached to a node.
  */
-public interface Sprite extends Model {
+public class Sprite extends AbstractModel {
 
-    // Properties (each id has to be unique across the whole application)
-    public static int NAME = 300;
-    public static int NODE = 301;
-    public static int BOUNDS = 302;
-    public static int IMAGE = 303;
+    /**
+     * Sprite name property id. Has to be <code>java.lang.String</code> type.
+     */
+    public final static int NAME = 300;
+
+    /**
+     * Node property id. Has to be <code>spritey.core.node.Node</code> type.
+     */
+    public final static int NODE = 301;
+
+    /**
+     * Sprite bounds property id. Has to be of <code>java.awt.Rectangle</code>
+     * type. Sprite is not positioned when <code>x</code> and <code>y</code> are
+     * negative.
+     */
+    public final static int BOUNDS = 302;
+
+    /**
+     * Sprite image property id. Has to be of <code>TODO</code> type.
+     */
+    public final static int IMAGE = 303;
 
     // Defaults
-    public static String DEFAULT_NAME = "New Sprite";
-    public static Rectangle DEFAULT_BOUNDS = new Rectangle(0, 0, 0, 0);
+    public final static String DEFAULT_NAME = "New Sprite";
+    public final static Rectangle DEFAULT_BOUNDS = new Rectangle(-1, -1, 0, 0);
 
     // Limits
-    public static int NAME_TEXT_LIMIT = 1024;
+    public final static int MIN_NAME_LENGTH = 0;
+    public final static int MAX_NAME_LENGTH = 1024;
 
 }

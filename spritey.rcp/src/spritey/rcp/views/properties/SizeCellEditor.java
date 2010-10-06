@@ -29,7 +29,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Spinner;
 
-import spritey.rcp.core.SheetConstants;
+import spritey.core.Sheet;
 
 /**
  * Specialised cell editor for width or height property.
@@ -43,13 +43,13 @@ public class SizeCellEditor extends CellEditor {
     static final int INCREMENT = 1;
     static final int PAGE_INCREMENT = 10;
 
-    static final int DEFAULT_WIDTH = SheetConstants.DEFAULT_SIZE.width;
-    static final int MAX_WIDTH = SheetConstants.MAX_WIDTH;
-    static final int MIN_WIDTH = SheetConstants.MIN_WIDTH;
+    static final int DEFAULT_WIDTH = Sheet.DEFAULT_SIZE.width;
+    static final int MAX_WIDTH = Sheet.MAX_WIDTH;
+    static final int MIN_WIDTH = Sheet.MIN_WIDTH;
 
-    static final int DEFAULT_HEIGHT = SheetConstants.DEFAULT_SIZE.height;
-    static final int MAX_HEIGHT = SheetConstants.MAX_HEIGHT;
-    static final int MIN_HEIGHT = SheetConstants.MIN_HEIGHT;
+    static final int DEFAULT_HEIGHT = Sheet.DEFAULT_SIZE.height;
+    static final int MAX_HEIGHT = Sheet.MAX_HEIGHT;
+    static final int MIN_HEIGHT = Sheet.MIN_HEIGHT;
 
     private Spinner spinner;
     private KeyListener spinnerKeyListener;

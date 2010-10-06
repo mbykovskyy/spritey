@@ -37,7 +37,6 @@ import org.junit.Test;
 
 import spritey.core.Sheet;
 import spritey.core.Sprite;
-import spritey.core.adapter.AdapterFactory;
 import spritey.core.exception.InvalidPropertyValueException;
 
 /**
@@ -46,7 +45,6 @@ import spritey.core.exception.InvalidPropertyValueException;
 public class FirstFitStrategyTests {
 
     Sheet sheetMock;
-    AdapterFactory factoryMock;
 
     FirstFitStrategy strategy;
 
@@ -57,21 +55,7 @@ public class FirstFitStrategyTests {
         sheetMock = mock(Sheet.class);
         doReturn(SHEET_SIZE).when(sheetMock).getProperty(Sheet.SIZE);
 
-        factoryMock = mock(AdapterFactory.class);
-        doReturn(SHEET_SIZE).when(factoryMock).getAdapter(SHEET_SIZE,
-                Dimension.class);
-
-        strategy = new FirstFitStrategy(factoryMock, factoryMock);
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void constructWhenSheetIsNull() {
-        new FirstFitStrategy(null, factoryMock);
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void constructWhenAdapterFactoryIsNull() {
-        new FirstFitStrategy(null, null);
+        strategy = new FirstFitStrategy();
     }
 
     @Test
@@ -192,11 +176,6 @@ public class FirstFitStrategyTests {
         Sprite spriteMock = mock(Sprite.class);
         doReturn(SPRITE_BOUNDS).when(spriteMock).getProperty(Sprite.BOUNDS);
 
-        doReturn(SPRITE_BOUNDS).when(factoryMock).getAdapter(SPRITE_BOUNDS,
-                Rectangle.class);
-        doReturn(NEW_BOUNDS).when(factoryMock).getAdapter(NEW_BOUNDS,
-                Rectangle.class);
-
         Sprite[] sprites = new Sprite[] { spriteMock };
         strategy.pack(sheetMock, sprites, false);
 
@@ -219,11 +198,6 @@ public class FirstFitStrategyTests {
 
         Sprite spriteMock = mock(Sprite.class);
         doReturn(SPRITE_BOUNDS).when(spriteMock).getProperty(Sprite.BOUNDS);
-
-        doReturn(SPRITE_BOUNDS).when(factoryMock).getAdapter(SPRITE_BOUNDS,
-                Rectangle.class);
-        doReturn(NEW_BOUNDS).when(factoryMock).getAdapter(NEW_BOUNDS,
-                Rectangle.class);
 
         Sprite[] sprites = new Sprite[] { spriteMock };
         strategy.pack(sheetMock, sprites, true);
@@ -252,15 +226,6 @@ public class FirstFitStrategyTests {
 
         Sprite sprite2Mock = mock(Sprite.class);
         doReturn(SPRITE2_BOUNDS).when(sprite2Mock).getProperty(Sprite.BOUNDS);
-
-        doReturn(SPRITE1_BOUNDS).when(factoryMock).getAdapter(SPRITE1_BOUNDS,
-                Rectangle.class);
-        doReturn(SPRITE2_BOUNDS).when(factoryMock).getAdapter(SPRITE2_BOUNDS,
-                Rectangle.class);
-        doReturn(NEW_BOUNDS1).when(factoryMock).getAdapter(NEW_BOUNDS1,
-                Rectangle.class);
-        doReturn(NEW_BOUNDS2).when(factoryMock).getAdapter(NEW_BOUNDS2,
-                Rectangle.class);
 
         Sprite[] sprites = new Sprite[] { sprite1Mock, sprite2Mock };
         strategy.pack(sheetMock, sprites, false);
@@ -293,15 +258,6 @@ public class FirstFitStrategyTests {
         Sprite sprite2Mock = mock(Sprite.class);
         doReturn(SPRITE2_BOUNDS).when(sprite2Mock).getProperty(Sprite.BOUNDS);
 
-        doReturn(SPRITE1_BOUNDS).when(factoryMock).getAdapter(SPRITE1_BOUNDS,
-                Rectangle.class);
-        doReturn(SPRITE2_BOUNDS).when(factoryMock).getAdapter(SPRITE2_BOUNDS,
-                Rectangle.class);
-        doReturn(NEW_BOUNDS1).when(factoryMock).getAdapter(NEW_BOUNDS1,
-                Rectangle.class);
-        doReturn(NEW_BOUNDS2).when(factoryMock).getAdapter(NEW_BOUNDS2,
-                Rectangle.class);
-
         Sprite[] sprites = new Sprite[] { sprite1Mock, sprite2Mock };
         strategy.pack(sheetMock, sprites, true);
 
@@ -333,13 +289,6 @@ public class FirstFitStrategyTests {
         Sprite sprite2Mock = mock(Sprite.class);
         doReturn(SPRITE2_BOUNDS).when(sprite2Mock).getProperty(Sprite.BOUNDS);
 
-        doReturn(SPRITE1_BOUNDS).when(factoryMock).getAdapter(SPRITE1_BOUNDS,
-                Rectangle.class);
-        doReturn(SPRITE2_BOUNDS).when(factoryMock).getAdapter(SPRITE2_BOUNDS,
-                Rectangle.class);
-        doReturn(NEW_BOUNDS).when(factoryMock).getAdapter(NEW_BOUNDS,
-                Rectangle.class);
-
         Sprite[] sprites = new Sprite[] { sprite1Mock, sprite2Mock };
         strategy.pack(sheetMock, sprites, false);
 
@@ -370,13 +319,6 @@ public class FirstFitStrategyTests {
         Sprite sprite2Mock = mock(Sprite.class);
         doReturn(SPRITE2_BOUNDS).when(sprite2Mock).getProperty(Sprite.BOUNDS);
 
-        doReturn(SPRITE1_BOUNDS).when(factoryMock).getAdapter(SPRITE1_BOUNDS,
-                Rectangle.class);
-        doReturn(SPRITE2_BOUNDS).when(factoryMock).getAdapter(SPRITE2_BOUNDS,
-                Rectangle.class);
-        doReturn(NEW_BOUNDS).when(factoryMock).getAdapter(NEW_BOUNDS,
-                Rectangle.class);
-
         Sprite[] sprites = new Sprite[] { sprite1Mock, sprite2Mock };
         strategy.pack(sheetMock, sprites, true);
 
@@ -406,13 +348,6 @@ public class FirstFitStrategyTests {
 
         Sprite sprite2Mock = mock(Sprite.class);
         doReturn(SPRITE2_BOUNDS).when(sprite2Mock).getProperty(Sprite.BOUNDS);
-
-        doReturn(SPRITE1_BOUNDS).when(factoryMock).getAdapter(SPRITE1_BOUNDS,
-                Rectangle.class);
-        doReturn(SPRITE2_BOUNDS).when(factoryMock).getAdapter(SPRITE2_BOUNDS,
-                Rectangle.class);
-        doReturn(NEW_BOUNDS).when(factoryMock).getAdapter(NEW_BOUNDS,
-                Rectangle.class);
 
         Sprite[] sprites = new Sprite[] { sprite1Mock, sprite2Mock };
         strategy.pack(sheetMock, sprites, false);
@@ -450,13 +385,6 @@ public class FirstFitStrategyTests {
 
         Sprite sprite2Mock = mock(Sprite.class);
         doReturn(SPRITE2_BOUNDS).when(sprite2Mock).getProperty(Sprite.BOUNDS);
-
-        doReturn(SPRITE1_BOUNDS).when(factoryMock).getAdapter(SPRITE1_BOUNDS,
-                Rectangle.class);
-        doReturn(SPRITE2_BOUNDS).when(factoryMock).getAdapter(SPRITE2_BOUNDS,
-                Rectangle.class);
-        doReturn(NEW_BOUNDS).when(factoryMock).getAdapter(NEW_BOUNDS,
-                Rectangle.class);
 
         Sprite[] sprites = new Sprite[] { sprite1Mock, sprite2Mock };
         strategy.pack(sheetMock, sprites, true);

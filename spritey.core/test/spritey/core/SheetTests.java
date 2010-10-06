@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License along with
  * Spritey. If not, see <http://www.gnu.org/licenses/>.
  */
-package spritey.core.internal;
+package spritey.core;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
@@ -34,7 +34,6 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.MockitoAnnotations;
 
-import spritey.core.Sheet;
 import spritey.core.event.ModelEvent;
 import spritey.core.event.ModelListener;
 import spritey.core.exception.InvalidPropertyValueException;
@@ -42,9 +41,9 @@ import spritey.core.node.Node;
 import spritey.core.validator.Validator;
 
 /**
- * Tests the implementation of SimpleSheet.
+ * Tests the implementation of Sheet.
  */
-public class SimpleSheetTests {
+public class SheetTests {
     Sheet sheet;
     ModelListener listenerMock;
     Validator validatorMock;
@@ -61,7 +60,7 @@ public class SimpleSheetTests {
         validatorMock = mock(Validator.class);
         nodeMock = mock(Node.class);
 
-        sheet = new SimpleSheet();
+        sheet = new Sheet();
         sheet.addValidator(Sheet.BACKGROUND, validatorMock);
         sheet.addValidator(Sheet.SIZE, validatorMock);
         sheet.addValidator(Sheet.OPAQUE, validatorMock);

@@ -17,30 +17,31 @@
  */
 package spritey.rcp.editors.editparts;
 
+import java.awt.Color;
+import java.awt.Dimension;
 import java.util.Arrays;
 import java.util.List;
 
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.ImageFigure;
-import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.gef.editparts.AbstractGraphicalEditPart;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.RGB;
 
 import spritey.core.Model;
 import spritey.core.Sheet;
-import spritey.core.event.ModelEvent;
-import spritey.core.event.ModelListener;
+import spritey.core.filter.VisibleSpriteFilter;
 import spritey.core.node.Node;
-import spritey.core.node.event.NodeListener;
+import spritey.rcp.SpriteyPlugin;
 import spritey.rcp.utils.ImageFactory;
+import spritey.rcp.views.ViewUpdateListener;
 
 /**
  * SheetEditPart is a child of ContentsEditPart. It corresponds to model's sheet
  * node.
  */
 public class SheetEditPart extends AbstractGraphicalEditPart implements
-        NodeListener, ModelListener {
+        ViewUpdateListener {
 
     private ImageFigure sheet;
     private ImageFactory imageFactory;
@@ -58,9 +59,13 @@ public class SheetEditPart extends AbstractGraphicalEditPart implements
      *        the model to get values from.
      */
     private void populateSheet(ImageFigure sheet, Model model) {
+        freeImage(sheet.getImage());
+
         Dimension size = (Dimension) model.getProperty(Sheet.SIZE);
         boolean isOpaque = (Boolean) model.getProperty(Sheet.OPAQUE);
-        RGB background = (RGB) model.getProperty(Sheet.BACKGROUND);
+        Color bg = (Color) model.getProperty(Sheet.BACKGROUND);
+        RGB background = (null != bg) ? new RGB(bg.getRed(), bg.getGreen(),
+                bg.getBlue()) : null;
 
         Image image = null;
         if (isOpaque && (null != background)) {
@@ -72,10 +77,28 @@ public class SheetEditPart extends AbstractGraphicalEditPart implements
         }
 
         sheet.setOpaque(isOpaque);
-        sheet.setSize(size);
+        sheet.setSize(size.width, size.height);
         sheet.setImage(image);
 
         // TODO Draw two-color dashed outline/border similar to Gimp.
+    }
+
+    /**
+     * Free the specified image.
+     * 
+     * @param image
+     *        the image to free.
+     */
+    private void freeImage(Image image) {
+        if ((null != image) && !image.isDisposed()) {
+            image.dispose();
+        }
+    }
+
+    @Override
+    public void removeNotify() {
+        super.removeNotify();
+        freeImage(sheet.getImage());
     }
 
     /*
@@ -107,7 +130,9 @@ public class SheetEditPart extends AbstractGraphicalEditPart implements
      */
     @Override
     protected List<?> getModelChildren() {
-        return Arrays.asList(((Node) getModel()).getLeaves());
+        Node[] sprites = new VisibleSpriteFilter()
+                .filterNodes((Node) getModel());
+        return Arrays.asList(sprites);
     }
 
     /*
@@ -118,13 +143,7 @@ public class SheetEditPart extends AbstractGraphicalEditPart implements
     @Override
     public void activate() {
         super.activate();
-
-        Node node = (Node) getModel();
-        node.addNodeListener(this);
-
-        if (node.getModel() != null) {
-            node.getModel().addModelListener(this);
-        }
+        SpriteyPlugin.getDefault().getViewUpdater().addListener(this);
     }
 
     /*
@@ -134,89 +153,35 @@ public class SheetEditPart extends AbstractGraphicalEditPart implements
      */
     @Override
     public void deactivate() {
-        Node model = (Node) getModel();
-        model.removeNodeListener(this);
-
-        if (model.getModel() != null) {
-            model.getModel().removeModelListener(this);
-        }
-
+        SpriteyPlugin.getDefault().getViewUpdater().removeListener(this);
         super.deactivate();
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see spritey.core.node.event.NodeListener#nameChanged(java.lang.String,
-     * java.lang.String)
-     */
-    @Override
-    public void nameChanged(String oldName, String newName) {
-        // Do nothing.
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * spritey.core.node.event.NodeListener#parentChanged(spritey.core.node.
-     * Node, spritey.core.node.Node)
-     */
-    @Override
-    public void parentChanged(Node oldParent, Node newParent) {
-        // Do nothing.
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * spritey.core.node.event.NodeListener#childAdded(spritey.core.node.Node)
-     */
-    @Override
-    public void childAdded(Node child) {
-        refresh();
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * spritey.core.node.event.NodeListener#childRemoved(spritey.core.node.Node)
-     */
-    @Override
-    public void childRemoved(Node child) {
-        refresh();
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see spritey.core.node.event.NodeListener#properitesChanged(spritey.core.
-     * Model, spritey.core.Model)
-     */
-    @Override
-    public void modelChanged(Model oldValue, Model newValue) {
-        refreshVisuals();
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * spritey.core.event.PropertyListener#propertyChanged(spritey.core.event
-     * .PropertyEvent)
-     */
-    @Override
-    public void propertyChanged(ModelEvent event) {
-        if (event.getProperty() != Sheet.DESCRIPTION) {
-            refreshVisuals();
-        }
     }
 
     @Override
     protected void refreshVisuals() {
         populateSheet(sheet, ((Node) getModel()).getModel());
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see spritey.rcp.views.ViewUpdateListener#updateView()
+     */
+    @Override
+    public void updateView() {
+        // if (event.getProperty() != Sheet.DESCRIPTION) {
+        refreshVisuals();
+        // }
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see spritey.rcp.views.ViewUpdateListener#refreshView()
+     */
+    @Override
+    public void refreshView() {
+        refresh();
     }
 
 }

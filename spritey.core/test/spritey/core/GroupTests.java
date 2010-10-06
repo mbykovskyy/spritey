@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License along with
  * Spritey. If not, see <http://www.gnu.org/licenses/>.
  */
-package spritey.core.internal;
+package spritey.core;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
@@ -31,7 +31,6 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.MockitoAnnotations;
 
-import spritey.core.Group;
 import spritey.core.event.ModelEvent;
 import spritey.core.event.ModelListener;
 import spritey.core.exception.InvalidPropertyValueException;
@@ -41,7 +40,7 @@ import spritey.core.validator.Validator;
 /**
  * Tests the implementation of SimpleGroup.
  */
-public class SimpleGroupTests {
+public class GroupTests {
     Group group;
     ModelListener listenerMock;
     Validator validatorMock;
@@ -58,7 +57,7 @@ public class SimpleGroupTests {
         validatorMock = mock(Validator.class);
         nodeMock = mock(Node.class);
 
-        group = new SimpleGroup();
+        group = new Group();
         group.addValidator(Group.NAME, validatorMock);
         group.addValidator(Group.NODE, validatorMock);
         group.addModelListener(listenerMock);

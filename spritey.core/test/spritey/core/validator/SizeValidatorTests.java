@@ -15,18 +15,17 @@
  * You should have received a copy of the GNU General Public License along with
  * Spritey. If not, see <http://www.gnu.org/licenses/>.
  */
-package spritey.rcp.validators;
+package spritey.core.validator;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-import org.eclipse.draw2d.geometry.Dimension;
+import java.awt.Dimension;
+
 import org.junit.Before;
 import org.junit.Test;
-
-import spritey.core.validator.Validator;
 
 /**
  * Tests the implementation of SizeValidator.

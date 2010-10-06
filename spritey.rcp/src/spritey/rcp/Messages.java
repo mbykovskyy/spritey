@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License along with
  * Spritey. If not, see <http://www.gnu.org/licenses/>.
  */
-package spritey.rcp.core;
+package spritey.rcp;
 
 import org.eclipse.osgi.util.NLS;
 
@@ -24,12 +24,18 @@ import org.eclipse.osgi.util.NLS;
  */
 public class Messages extends NLS {
 
-    private static final String BUNDLE_NAME = "spritey.rcp.core.messages";
+    private static final String BUNDLE_NAME = "spritey.rcp.messages";
 
     // Titles
     public static String NEW_SPRITE_SHEET;
     public static String ADD_SPRITE;
     public static String ADD_SPRITES;
+    public static String DELETE_SPRITES;
+
+    // Tasks
+    public static String ADDING_SPRITES;
+    public static String PACKING_SPRITES;
+    public static String DELETING_SPRITES;
 
     // General messages
     public static String INTERNAL_ERROR;
@@ -43,12 +49,14 @@ public class Messages extends NLS {
     public static String SHEET_HEIGHT_INVALID;
     public static String SHEET_BACKGROUND_INVALID;
     public static String SHEET_DESCRIPTION_INVALID;
+    public static String DELETING_SHEET_DISALLOWED;
 
     // Sprite messages
     public static String SPRITE_NAME_INVALID;
     public static String SPRITE_NAME_EXISTS;
     public static String SPRITE_DOES_NOT_FIT;
     public static String SPRITES_IMPORT_FAILED;
+    public static String DELETE_SPRITES_PROBLEMS;
 
     // Group messages
     public static String GROUP_NAME_INVALID;

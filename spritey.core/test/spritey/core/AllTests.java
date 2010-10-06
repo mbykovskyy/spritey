@@ -20,21 +20,20 @@ package spritey.core;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
-import spritey.core.internal.SimpleGroupTests;
-import spritey.core.internal.SimpleSheetTests;
-import spritey.core.internal.SimpleSpriteTests;
 import spritey.core.node.internal.MapBasedNodeTests;
 import spritey.core.packer.FirstFitStrategyTests;
 import spritey.core.packer.PackerTests;
 import spritey.core.validator.NotNullValidatorTests;
+import spritey.core.validator.NullOrTypeValidatorTests;
+import spritey.core.validator.SizeValidatorTests;
 import spritey.core.validator.StringLengthValidatorTests;
 import spritey.core.validator.TypeValidatorTests;
 
 @RunWith(Suite.class)
-@Suite.SuiteClasses({ SimpleSpriteTests.class, SimpleGroupTests.class,
-        SimpleSheetTests.class, MapBasedNodeTests.class,
-        NotNullValidatorTests.class, TypeValidatorTests.class,
-        StringLengthValidatorTests.class, PackerTests.class,
-        FirstFitStrategyTests.class })
+@Suite.SuiteClasses({ SpriteTests.class, GroupTests.class, SheetTests.class,
+        MapBasedNodeTests.class, PackerTests.class,
+        FirstFitStrategyTests.class, NotNullValidatorTests.class,
+        NullOrTypeValidatorTests.class, SizeValidatorTests.class,
+        TypeValidatorTests.class, StringLengthValidatorTests.class })
 public class AllTests {
 }

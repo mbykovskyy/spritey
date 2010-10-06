@@ -20,20 +20,18 @@ package spritey.rcp.views.properties.adapters;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Image;
 
-import spritey.rcp.SpriteyPlugin;
-
 public class PropertyLabelProvider extends LabelProvider {
 
-    private final Image IMG;
+    private final Image img;
 
     /**
      * Constructor
      * 
-     * @param path
-     *        the path to the image icon.
+     * @param icon
+     *        the image icon.
      */
-    public PropertyLabelProvider(String path) {
-        IMG = SpriteyPlugin.getImageDescriptor(path).createImage();
+    public PropertyLabelProvider(Image icon) {
+        img = icon;
     }
 
     /*
@@ -43,7 +41,7 @@ public class PropertyLabelProvider extends LabelProvider {
      */
     @Override
     public Image getImage(Object element) {
-        return IMG;
+        return img;
     }
 
 }

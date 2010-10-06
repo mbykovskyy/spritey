@@ -19,6 +19,7 @@ package spritey.core.packer;
 
 import spritey.core.Sheet;
 import spritey.core.Sprite;
+import spritey.core.filter.SpriteFilter;
 import spritey.core.node.Node;
 
 /**
@@ -86,15 +87,7 @@ public class Packer {
     public void pack(Node sheetNode, boolean flushCache)
             throws IllegalArgumentException {
         validateArgument(sheetNode);
-
-        Node[] leaves = sheetNode.getLeaves();
-        Sprite[] sprites = new Sprite[leaves.length];
-
-        // TODO Move this into Node#getLeavesModels()
-        for (int i = 0; i < leaves.length; ++i) {
-            sprites[i] = (Sprite) leaves[i].getModel();
-        }
-
+        Sprite[] sprites = new SpriteFilter().filterModels(sheetNode);
         strategy.pack((Sheet) sheetNode.getModel(), sprites, flushCache);
     }
 

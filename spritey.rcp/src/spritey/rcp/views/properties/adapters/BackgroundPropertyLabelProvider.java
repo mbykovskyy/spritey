@@ -42,6 +42,15 @@ public class BackgroundPropertyLabelProvider extends LabelProvider {
         imageFactory = new ImageFactory();
     }
 
+    @Override
+    public void dispose() {
+        super.dispose();
+
+        if ((null != cachedImage) && !cachedImage.isDisposed()) {
+            cachedImage.dispose();
+        }
+    }
+
     /*
      * (non-Javadoc)
      * 
@@ -50,19 +59,22 @@ public class BackgroundPropertyLabelProvider extends LabelProvider {
     @Override
     public Image getImage(Object element) {
         if ((null == cachedImage) || (cachedElement != element)) {
+            cachedElement = element;
+
+            if ((null != cachedImage) && !cachedImage.isDisposed()) {
+                cachedImage.dispose();
+            }
+
             // element.equals(TRANSPARENT) is needed until bug #320200
             // (https://bugs.eclipse.org/bugs/show_bug.cgi?id=320200) is fixed.
             if ((null == element) || element.equals(TRANSPARENT)) {
-                cachedElement = element;
                 cachedImage = imageFactory.createCheckerImage(SIZE, SIZE,
                         SQUARE, true);
             } else {
-                cachedElement = element;
                 cachedImage = imageFactory.createColorImage((RGB) element,
                         SIZE, SIZE, true);
             }
         }
-
         return cachedImage;
     }
 

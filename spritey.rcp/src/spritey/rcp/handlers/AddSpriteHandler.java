@@ -17,13 +17,13 @@
  */
 package spritey.rcp.handlers;
 
+import java.awt.Rectangle;
 import java.io.File;
 
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.commands.IHandler;
-import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
@@ -35,19 +35,16 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.handlers.HandlerUtil;
 
 import spritey.core.Model;
-import spritey.core.ModelFactory;
 import spritey.core.Sprite;
 import spritey.core.exception.InvalidPropertyValueException;
 import spritey.core.node.Node;
 import spritey.core.validator.NotNullValidator;
 import spritey.core.validator.StringLengthValidator;
 import spritey.core.validator.TypeValidator;
-import spritey.core.validator.Validator;
+import spritey.core.validator.UniqueNameValidator;
+import spritey.rcp.Messages;
 import spritey.rcp.SpriteyPlugin;
-import spritey.rcp.core.Messages;
-import spritey.rcp.core.SpriteConstants;
 import spritey.rcp.utils.ImageFactory;
-import spritey.rcp.validators.UniqueNameValidator;
 
 /**
  * Handling the addition of a new sprite to a sprite sheet.
@@ -141,14 +138,14 @@ public class AddSpriteHandler extends AbstractHandler implements IHandler {
         }
 
         SpriteyPlugin plugin = SpriteyPlugin.getDefault();
-        Model sprite = createSprite(plugin.getModelFactory());
+        Model sprite = plugin.getModelFactory().createSprite();
 
         try {
             sprite.setProperty(Sprite.NAME, file.getName());
             sprite.setProperty(Sprite.IMAGE,
                     imageFactory.createImage(imageData));
             sprite.setProperty(Sprite.BOUNDS, new Rectangle(
-                    SpriteConstants.DEFAULT_X, SpriteConstants.DEFAULT_Y,
+                    Sprite.DEFAULT_BOUNDS.x, Sprite.DEFAULT_BOUNDS.y,
                     imageData.width, imageData.height));
         } catch (InvalidPropertyValueException e) {
             handleException(e);
@@ -161,6 +158,7 @@ public class AddSpriteHandler extends AbstractHandler implements IHandler {
         Node sheetNode = plugin.getRootNode().getChildren()[0];
         if (sheetNode.addChild(node)) {
             plugin.getPacker().pack(sheetNode, false);
+            plugin.getViewUpdater().refreshViews();
 
             if (((Rectangle) sprite.getProperty(Sprite.BOUNDS)).x < 0) {
                 MessageDialog.openWarning(shell, Messages.ADD_SPRITE,
@@ -170,35 +168,6 @@ public class AddSpriteHandler extends AbstractHandler implements IHandler {
             MessageDialog.openError(shell, Messages.ADD_SPRITE,
                     NLS.bind(Messages.SPRITE_NAME_EXISTS, file.getName()));
         }
-    }
-
-    /**
-     * Creates sprite model.
-     * 
-     * @param modelFactory
-     *        factory to use to create sprite model.
-     * 
-     * @return instance of sprite model.
-     */
-    private Model createSprite(ModelFactory modelFactory) {
-        Validator notNullValidator = new NotNullValidator();
-
-        Model sprite = modelFactory.createSprite();
-        sprite.addValidator(Sprite.NAME, notNullValidator);
-        sprite.addValidator(Sprite.NAME, new TypeValidator(String.class));
-        sprite.addValidator(Sprite.NAME, new StringLengthValidator(
-                SpriteConstants.MIN_NAME_LENGTH,
-                SpriteConstants.MAX_NAME_LENGTH));
-        sprite.addValidator(Sprite.NAME, new UniqueNameValidator(
-                (Sprite) sprite));
-
-        sprite.addValidator(Sprite.BOUNDS, notNullValidator);
-        // TODO Add bounds validator.
-
-        sprite.addValidator(Sprite.IMAGE, notNullValidator);
-        // TODO Add image validator.
-
-        return sprite;
     }
 
     private void handleException(InvalidPropertyValueException e) {
@@ -211,8 +180,7 @@ public class AddSpriteHandler extends AbstractHandler implements IHandler {
         case StringLengthValidator.TOO_LONG:
         case StringLengthValidator.TOO_SHORT:
             message = NLS.bind(Messages.SPRITE_NAME_INVALID,
-                    SpriteConstants.MIN_NAME_LENGTH,
-                    SpriteConstants.MAX_NAME_LENGTH);
+                    Sprite.MIN_NAME_LENGTH, Sprite.MAX_NAME_LENGTH);
             break;
         case NotNullValidator.NULL:
         case TypeValidator.NOT_TYPE:

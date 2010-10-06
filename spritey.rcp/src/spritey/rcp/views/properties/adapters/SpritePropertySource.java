@@ -17,7 +17,9 @@
  */
 package spritey.rcp.views.properties.adapters;
 
-import org.eclipse.draw2d.geometry.Rectangle;
+import java.awt.Rectangle;
+
+import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.ui.views.properties.IPropertyDescriptor;
 import org.eclipse.ui.views.properties.IPropertySource;
@@ -26,6 +28,7 @@ import org.eclipse.ui.views.properties.PropertyDescriptor;
 import spritey.core.Model;
 import spritey.core.Sprite;
 import spritey.core.exception.InvalidPropertyValueException;
+import spritey.rcp.SpriteyPlugin;
 
 /**
  * Property source for supplying sprite properties to the Properties view.
@@ -44,8 +47,6 @@ public class SpritePropertySource implements IPropertySource {
     private static final String Y_TEXT = "Y";
     private static final String NAME_TEXT = "Name";
 
-    private static final String LOCK_ICON_PATH = "data/icons/lock.png";
-
     private final Model model;
 
     private IPropertyDescriptor[] propertyDescriptors;
@@ -56,8 +57,10 @@ public class SpritePropertySource implements IPropertySource {
     }
 
     private void initialize() {
+        ImageRegistry reg = SpriteyPlugin.getDefault().getImageRegistry();
+
         ILabelProvider lockLabelProvider = new PropertyLabelProvider(
-                LOCK_ICON_PATH);
+                reg.get(SpriteyPlugin.LOCK_IMG_ID));
 
         PropertyDescriptor width = new PropertyDescriptor(WIDTH_ID, WIDTH_TEXT);
         width.setLabelProvider(lockLabelProvider);
@@ -188,6 +191,8 @@ public class SpritePropertySource implements IPropertySource {
             // method to be called a second time. Find a better place to
             // display a message.
         }
+
+        SpriteyPlugin.getDefault().getViewUpdater().refreshViews();
     }
 
 }

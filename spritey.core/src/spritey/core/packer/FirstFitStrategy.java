@@ -27,7 +27,6 @@ import java.util.List;
 
 import spritey.core.Sheet;
 import spritey.core.Sprite;
-import spritey.core.adapter.AdapterFactory;
 import spritey.core.exception.InvalidPropertyValueException;
 
 /**
@@ -38,28 +37,13 @@ import spritey.core.exception.InvalidPropertyValueException;
  */
 public class FirstFitStrategy implements Strategy {
 
-    private AdapterFactory awtTypeAdapterFactory;
-    private AdapterFactory propertyAdapterFactory;
     private List<Rectangle> freeZones;
     private Sheet sheet;
 
     /**
-     * Constructor.
-     * 
-     * @param awtTypeAdapterFactory
-     *        an adapter factory to convert model properties types into standard
-     *        java types.
-     * @param propertyAdapterFactory
-     *        an adapter factory to convert AWT types to model property types.
+     * Creates a new instance of FirstFitStrategy.
      */
-    public FirstFitStrategy(AdapterFactory awtTypeAdapterFactory,
-            AdapterFactory propertyAdapterFactory) {
-        validateNotNull(awtTypeAdapterFactory, "AWT Adapter factory is null.");
-        validateNotNull(propertyAdapterFactory,
-                "Property Adapter factory is null.");
-
-        this.awtTypeAdapterFactory = awtTypeAdapterFactory;
-        this.propertyAdapterFactory = propertyAdapterFactory;
+    public FirstFitStrategy() {
         freeZones = new ArrayList<Rectangle>();
     }
 
@@ -77,8 +61,7 @@ public class FirstFitStrategy implements Strategy {
      *        packed.
      */
     protected void flushCache(Sheet sheet) {
-        Dimension size = (Dimension) awtTypeAdapterFactory.getAdapter(
-                sheet.getProperty(Sheet.SIZE), Dimension.class);
+        Dimension size = (Dimension) sheet.getProperty(Sheet.SIZE);
 
         freeZones.clear();
         freeZones.add(new Rectangle(new Point(0, 0), size));
@@ -271,8 +254,7 @@ public class FirstFitStrategy implements Strategy {
      *        the sprite to position.
      */
     protected void computeLocation(Sprite sprite) {
-        Rectangle bounds = (Rectangle) awtTypeAdapterFactory.getAdapter(
-                sprite.getProperty(Sprite.BOUNDS), Rectangle.class);
+        Rectangle bounds = (Rectangle) sprite.getProperty(Sprite.BOUNDS);
         Rectangle boundsCopy = (Rectangle) bounds.clone();
 
         for (Rectangle freeZone : freeZones) {
@@ -281,10 +263,8 @@ public class FirstFitStrategy implements Strategy {
             boundsCopy.setLocation(freeZone.getLocation());
 
             if (freeZone.contains(boundsCopy)) {
-                Object newBounds = propertyAdapterFactory.getAdapter(boundsCopy,
-                        sprite.getProperty(Sprite.BOUNDS).getClass());
                 try {
-                    sprite.setProperty(Sprite.BOUNDS, newBounds);
+                    sprite.setProperty(Sprite.BOUNDS, boundsCopy);
                 } catch (InvalidPropertyValueException e) {
                     // This exception should never happen unless we have a bug
                     // somewhere, because this strategy will only position
@@ -318,8 +298,7 @@ public class FirstFitStrategy implements Strategy {
         List<Sprite> unlocatedSprites = new ArrayList<Sprite>();
 
         for (Sprite sprite : sprites) {
-            Rectangle bounds = (Rectangle) awtTypeAdapterFactory.getAdapter(
-                    sprite.getProperty(Sprite.BOUNDS), Rectangle.class);
+            Rectangle bounds = (Rectangle) sprite.getProperty(Sprite.BOUNDS);
 
             if ((bounds.x == -1) && (bounds.y == -1)) {
                 // Unlocated sprites should be positioned last, after all
@@ -337,7 +316,7 @@ public class FirstFitStrategy implements Strategy {
     }
 
     /**
-     * Returns a list of free zones.
+     * Returns a list of free zones. Used by a test.
      * 
      * @return a list of free zones.
      */

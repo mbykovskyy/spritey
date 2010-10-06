@@ -29,22 +29,15 @@ import org.eclipse.swt.graphics.Image;
 
 import spritey.core.Model;
 import spritey.core.Sprite;
-import spritey.core.event.ModelEvent;
-import spritey.core.event.ModelListener;
 import spritey.core.node.Node;
-import spritey.core.node.event.NodeListener;
 
 /**
  * SpriteEditPart is a child of SheetEditPart. It corresponds to model's sprite
  * node.
  */
-public class SpriteEditPart extends AbstractGraphicalEditPart implements
-        NodeListener, ModelListener {
+public class SpriteEditPart extends AbstractGraphicalEditPart {
 
     private ImageFigure sprite;
-
-    public SpriteEditPart() {
-    }
 
     /**
      * Populates the sprite with model values.
@@ -55,8 +48,10 @@ public class SpriteEditPart extends AbstractGraphicalEditPart implements
      *        the model to get values from.
      */
     private void populateSprite(ImageFigure sprite, Model model) {
-        Rectangle bounds = (Rectangle) model.getProperty(Sprite.BOUNDS);
-        sprite.setBounds(bounds);
+        java.awt.Rectangle bounds = (java.awt.Rectangle) model
+                .getProperty(Sprite.BOUNDS);
+        sprite.setBounds(new Rectangle(bounds.x, bounds.y, bounds.width,
+                bounds.height));
 
         if ((bounds.x < 0) || (bounds.y < 0)) {
             sprite.setVisible(false);
@@ -101,6 +96,24 @@ public class SpriteEditPart extends AbstractGraphicalEditPart implements
         return Arrays.asList(((Node) getModel()).getChildren());
     }
 
+    /**
+     * Free the specified image.
+     * 
+     * @param image
+     *        the image to free.
+     */
+    private void freeImage(Image image) {
+        if ((null != image) && !image.isDisposed()) {
+            image.dispose();
+        }
+    }
+
+    @Override
+    public void removeNotify() {
+        super.removeNotify();
+        freeImage(sprite.getImage());
+    }
+
     /*
      * (non-Javadoc)
      * 
@@ -109,13 +122,7 @@ public class SpriteEditPart extends AbstractGraphicalEditPart implements
     @Override
     public void activate() {
         super.activate();
-
-        Node node = (Node) getModel();
-        node.addNodeListener(this);
-
-        if (node.getModel() != null) {
-            node.getModel().addModelListener(this);
-        }
+        // TODO add to view update manager.
     }
 
     /*
@@ -125,85 +132,15 @@ public class SpriteEditPart extends AbstractGraphicalEditPart implements
      */
     @Override
     public void deactivate() {
-        Node model = (Node) getModel();
-        model.removeNodeListener(this);
-
-        if (model.getModel() != null) {
-            model.getModel().removeModelListener(this);
-        }
-
+        // TODO remove from view update manager.
         super.deactivate();
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see spritey.core.node.event.NodeListener#nameChanged(java.lang.String,
-     * java.lang.String)
-     */
-    @Override
-    public void nameChanged(String oldName, String newName) {
-        // Do nothing.
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * spritey.core.node.event.NodeListener#parentChanged(spritey.core.node.
-     * Node, spritey.core.node.Node)
-     */
-    @Override
-    public void parentChanged(Node oldParent, Node newParent) {
-        // Do nothing.
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * spritey.core.node.event.NodeListener#childAdded(spritey.core.node.Node)
-     */
-    @Override
-    public void childAdded(Node child) {
-        // Do nothing.
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * spritey.core.node.event.NodeListener#childRemoved(spritey.core.node.Node)
-     */
-    @Override
-    public void childRemoved(Node child) {
-        // Do nothing.
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see spritey.core.node.event.NodeListener#properitesChanged(spritey.core.
-     * Model, spritey.core.Model)
-     */
-    @Override
-    public void modelChanged(Model oldValue, Model newValue) {
-        refreshVisuals();
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * spritey.core.event.PropertyListener#propertyChanged(spritey.core.event
-     * .PropertyEvent)
-     */
-    @Override
-    public void propertyChanged(ModelEvent event) {
-        if (event.getProperty() == Sprite.BOUNDS) {
-            refreshVisuals();
-        }
-    }
+    // public void propertyChanged(ModelEvent event) {
+    // if (event.getProperty() == Sprite.BOUNDS) {
+    // refreshVisuals();
+    // }
+    // }
 
     @Override
     protected void refreshVisuals() {

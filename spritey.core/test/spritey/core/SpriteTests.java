@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License along with
  * Spritey. If not, see <http://www.gnu.org/licenses/>.
  */
-package spritey.core.internal;
+package spritey.core;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
@@ -34,7 +34,6 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.MockitoAnnotations;
 
-import spritey.core.Sprite;
 import spritey.core.event.ModelEvent;
 import spritey.core.event.ModelListener;
 import spritey.core.exception.InvalidPropertyValueException;
@@ -44,7 +43,7 @@ import spritey.core.validator.Validator;
 /**
  * Tests the implementation of SimpleSprite.
  */
-public class SimpleSpriteTests {
+public class SpriteTests {
     Sprite sprite;
     ModelListener listenerMock;
     Validator validatorMock;
@@ -61,7 +60,7 @@ public class SimpleSpriteTests {
         validatorMock = mock(Validator.class);
         nodeMock = mock(Node.class);
 
-        sprite = new SimpleSprite();
+        sprite = new Sprite();
         sprite.addValidator(Sprite.NAME, validatorMock);
         sprite.addValidator(Sprite.NODE, validatorMock);
         sprite.addValidator(Sprite.BOUNDS, validatorMock);

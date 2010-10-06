@@ -18,18 +18,17 @@
 package spritey.rcp;
 
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
 import spritey.core.ModelFactory;
-import spritey.core.SimpleModelFactory;
 import spritey.core.node.MapBasedNodeFactory;
 import spritey.core.node.Node;
 import spritey.core.node.NodeFactory;
 import spritey.core.packer.FirstFitStrategy;
 import spritey.core.packer.Packer;
-import spritey.rcp.core.AwtTypeAdapterFactory;
-import spritey.rcp.core.PropertyAdapterFactory;
+import spritey.rcp.views.ViewUpdateManager;
 
 /**
  * The activator class controls the plug-in life cycle. It provides a series of
@@ -40,6 +39,20 @@ public class SpriteyPlugin extends AbstractUIPlugin {
     // The plug-in ID
     public static final String PLUGIN_ID = "spritey.rcp";
 
+    public static final String LOCK_IMG_ID = "lock";
+    public static final String INVISIBLE_IMG_ID = "invisible";
+    public static final String SPRITE_IMG_ID = "sprite";
+    public static final String SHEET_IMG_ID = "sheet";
+    public static final String GROUP_IMG_ID = "group";
+    public static final String EDIT_IMG_ID = "edit";
+
+    public static final String LOCK_IMG_PATH = "data/icons/lock.png";
+    public static final String INVISIBLE_IMG_PATH = "data/icons/image_invisible.png";
+    public static final String SPRITE_IMG_PATH = "data/icons/image_1.png";
+    public static final String SHEET_IMG_PATH = "data/icons/application_view_icons.png";
+    public static final String GROUP_IMG_PATH = "data/icons/images.png";
+    public static final String EDIT_IMG_PATH = "data/icons/textfield_rename.png";
+
     // The shared instance
     private static SpriteyPlugin plugin;
 
@@ -47,16 +60,17 @@ public class SpriteyPlugin extends AbstractUIPlugin {
     private ModelFactory modelFactory;
     private NodeFactory nodeFactory;
     private Packer packer;
+    private ViewUpdateManager viewUpdater;
 
     /**
      * The constructor
      */
     public SpriteyPlugin() {
         rootNode = null;
-        modelFactory = new SimpleModelFactory();
+        modelFactory = new ModelFactory();
         nodeFactory = new MapBasedNodeFactory();
-        packer = new Packer(new FirstFitStrategy(new AwtTypeAdapterFactory(),
-                new PropertyAdapterFactory()));
+        packer = new Packer(new FirstFitStrategy());
+        viewUpdater = new ViewUpdateManager();
     }
 
     /*
@@ -149,6 +163,27 @@ public class SpriteyPlugin extends AbstractUIPlugin {
      */
     public Packer getPacker() {
         return packer;
+    }
+
+    /**
+     * Returns a view updater.
+     * 
+     * @return view updater.
+     */
+    public ViewUpdateManager getViewUpdater() {
+        return viewUpdater;
+    }
+
+    @Override
+    protected void initializeImageRegistry(ImageRegistry reg) {
+        super.initializeImageRegistry(reg);
+
+        reg.put(LOCK_IMG_ID, getImageDescriptor(LOCK_IMG_PATH));
+        reg.put(INVISIBLE_IMG_ID, getImageDescriptor(INVISIBLE_IMG_PATH));
+        reg.put(SPRITE_IMG_ID, getImageDescriptor(SPRITE_IMG_PATH));
+        reg.put(SHEET_IMG_ID, getImageDescriptor(SHEET_IMG_PATH));
+        reg.put(GROUP_IMG_ID, getImageDescriptor(GROUP_IMG_PATH));
+        reg.put(EDIT_IMG_ID, getImageDescriptor(EDIT_IMG_PATH));
     }
 
 }

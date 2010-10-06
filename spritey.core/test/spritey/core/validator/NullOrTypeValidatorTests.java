@@ -15,38 +15,38 @@
  * You should have received a copy of the GNU General Public License along with
  * Spritey. If not, see <http://www.gnu.org/licenses/>.
  */
-package spritey.rcp.validators;
+package spritey.core.validator;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-import org.eclipse.swt.graphics.RGB;
+import org.junit.Before;
 import org.junit.Test;
 
-import spritey.core.validator.TypeValidator;
-import spritey.core.validator.Validator;
-
 /**
- * Tests the implementation of BackgroundValidator.
+ * Tests the implementation of NullOrTypeValidator.
  */
-public class BackgroundValidatorTests {
+public class NullOrTypeValidatorTests {
+
+    Validator validator;
+
+    @Before
+    public void initialize() {
+        validator = new NullOrTypeValidator(String.class);
+    }
 
     @Test
-    public void isValidWhenExpectedRgbActualRgb() {
-        Validator validator = new BackgroundValidator(RGB.class);
-
-        assertTrue(validator.isValid(new RGB(0, 0, 0)));
+    public void isValidWhenExpectedStringActualString() {
+        assertTrue(validator.isValid(new String()));
         assertEquals(Validator.NONE, validator.getErrorCode());
         assertNotNull(validator.getMessage());
         assertTrue(validator.getMessage().isEmpty());
     }
 
     @Test
-    public void isValidWhenExpectedRgbActualObject() {
-        Validator validator = new BackgroundValidator(RGB.class);
-
+    public void isValidWhenExpectedStringActualObject() {
         assertFalse(validator.isValid(new Object()));
         assertEquals(TypeValidator.NOT_TYPE, validator.getErrorCode());
         assertNotNull(validator.getMessage());
@@ -54,10 +54,8 @@ public class BackgroundValidatorTests {
     }
 
     @Test
-    public void isValidWhenExpectedRgbActualNull() {
-        Validator validator = new BackgroundValidator(RGB.class);
-
-        assertTrue(validator.isValid(null));
+    public void isValidWhenExpectedStringActualNull() {
+        assertTrue(validator.isValid(new String()));
         assertEquals(Validator.NONE, validator.getErrorCode());
         assertNotNull(validator.getMessage());
         assertTrue(validator.getMessage().isEmpty());

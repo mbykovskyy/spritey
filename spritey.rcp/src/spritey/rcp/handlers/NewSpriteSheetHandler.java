@@ -30,7 +30,6 @@ import org.eclipse.ui.handlers.HandlerUtil;
 import spritey.core.Sheet;
 import spritey.core.node.Node;
 import spritey.rcp.SpriteyPlugin;
-import spritey.rcp.core.SheetConstants;
 import spritey.rcp.dialogs.NewSpriteSheetDialog;
 import spritey.rcp.editors.SheetEditor;
 import spritey.rcp.editors.SheetEditorInput;
@@ -50,13 +49,12 @@ public class NewSpriteSheetHandler extends AbstractHandler implements IHandler {
 
         if (wizard.open() != Window.CANCEL) {
             Node sheet = SpriteyPlugin.getDefault().getRootNode()
-                    .getChild(SheetConstants.DEFAULT_NAME);
+                    .getChild(Sheet.DEFAULT_NAME);
 
             if (sheet != null) {
                 IWorkbenchWindow window = HandlerUtil
                         .getActiveWorkbenchWindow(event);
-                SheetEditorInput input = new SheetEditorInput(
-                        (Sheet) sheet.getModel());
+                SheetEditorInput input = new SheetEditorInput();
 
                 try {
                     window.getActivePage().openEditor(input, SheetEditor.ID);
@@ -67,6 +65,7 @@ public class NewSpriteSheetHandler extends AbstractHandler implements IHandler {
             }
         }
 
+        SpriteyPlugin.getDefault().getViewUpdater().refreshViews();
         return null;
     }
 

@@ -21,8 +21,6 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IPersistableElement;
 
-import spritey.core.Sheet;
-
 /**
  * A sprite sheet editor input type. It is not a model. It is used to describe
  * the source for an IEditorPart and determine whether an editor is already
@@ -33,21 +31,6 @@ import spritey.core.Sheet;
 public class SheetEditorInput implements IEditorInput {
 
     private static final String NAME = "Sprite Sheet Editor";
-
-    private Sheet sheet;
-
-    public SheetEditorInput(Sheet sheet) {
-        this.sheet = sheet;
-    }
-
-    /**
-     * Returns a sheet assigned to this editor.
-     * 
-     * @return an instance of a sheet.
-     */
-    public Sheet getSheet() {
-        return sheet;
-    }
 
     /*
      * (non-Javadoc)

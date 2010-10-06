@@ -21,12 +21,9 @@ package spritey.rcp;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
-import spritey.rcp.validators.BackgroundValidatorTests;
-import spritey.rcp.validators.SizeValidatorTests;
-import spritey.rcp.views.navigator.SpriteTreeDataProviderTests;
+import spritey.rcp.views.navigator.SpriteTreeLabelProviderTests;
 
 @RunWith(Suite.class)
-@Suite.SuiteClasses({ SpriteTreeDataProviderTests.class,
-        SizeValidatorTests.class, BackgroundValidatorTests.class })
+@Suite.SuiteClasses({ SpriteTreeLabelProviderTests.class })
 public class AllTests {
 }

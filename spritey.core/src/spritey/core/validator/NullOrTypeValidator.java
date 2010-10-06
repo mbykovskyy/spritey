@@ -15,13 +15,39 @@
  * You should have received a copy of the GNU General Public License along with
  * Spritey. If not, see <http://www.gnu.org/licenses/>.
  */
-package spritey.core.internal;
+package spritey.core.validator;
 
-import spritey.core.AbstractModel;
-import spritey.core.Sprite;
 
 /**
- * An implementation of a simple sprite.
+ * Validates that the value is either <code>null</code> or of the specified
+ * type.
  */
-public class SimpleSprite extends AbstractModel implements Sprite {
+public class NullOrTypeValidator extends TypeValidator {
+
+    /**
+     * Constructor
+     * <p>
+     * This validator yields <code>null</code> value.
+     * 
+     * @param type
+     *        the expected type.
+     */
+    public NullOrTypeValidator(Class<?> type) {
+        super(type);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see spritey.core.validator.Validator#isValid(java.lang.Object)
+     */
+    @Override
+    public boolean isValid(Object value) {
+        if (null == value) {
+            return true;
+        }
+
+        return super.isValid(value);
+    }
+
 }

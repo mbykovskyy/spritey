@@ -17,7 +17,11 @@
  */
 package spritey.rcp.views.properties.adapters;
 
-import org.eclipse.draw2d.geometry.Dimension;
+import java.awt.Color;
+import java.awt.Dimension;
+
+import org.eclipse.jface.resource.ImageRegistry;
+import org.eclipse.swt.graphics.RGB;
 import org.eclipse.ui.views.properties.IPropertyDescriptor;
 import org.eclipse.ui.views.properties.IPropertySource;
 import org.eclipse.ui.views.properties.PropertyDescriptor;
@@ -48,8 +52,6 @@ public class SheetPropertySource implements IPropertySource {
     private static final String DESCRIPTION_TEXT = "Description";
     private static final String TRANSPARENT_TEXT = "Transparent";
 
-    private static final String EDIT_ICON_PATH = "data/icons/textfield_rename.png";
-
     private final Model model;
 
     private IPropertyDescriptor[] propertyDescriptors;
@@ -60,8 +62,10 @@ public class SheetPropertySource implements IPropertySource {
     }
 
     private void initialize() {
+        ImageRegistry reg = SpriteyPlugin.getDefault().getImageRegistry();
+
         PropertyLabelProvider editableLabelProvider = new PropertyLabelProvider(
-                EDIT_ICON_PATH);
+                reg.get(SpriteyPlugin.EDIT_IMG_ID));
 
         PropertyDescriptor bg = new BackgroundPropertyDescriptor(BACKGROUND_ID,
                 BACKGROUND_TEXT);
@@ -129,12 +133,15 @@ public class SheetPropertySource implements IPropertySource {
             value = ((Dimension) model.getProperty(Sheet.SIZE)).height;
             break;
         case BACKGROUND_ID:
-            value = model.getProperty(Sheet.BACKGROUND);
+            Color bg = (Color) model.getProperty(Sheet.BACKGROUND);
 
-            // We need this until bug #320200
-            // (https://bugs.eclipse.org/bugs/show_bug.cgi?id=320200) is fixed.
-            if (null == value) {
+            if (null == bg) {
+                // We need this until bug #320200
+                // (https://bugs.eclipse.org/bugs/show_bug.cgi?id=320200) is
+                // fixed.
                 value = TRANSPARENT_TEXT;
+            } else {
+                value = new RGB(bg.getRed(), bg.getGreen(), bg.getBlue());
             }
             break;
         case DESCRIPTION_ID:
@@ -201,8 +208,14 @@ public class SheetPropertySource implements IPropertySource {
                 SpriteyPlugin.getDefault().getPacker().pack(sheetNode, true);
                 break;
             case BACKGROUND_ID:
+                if (null != value) {
+                    RGB bg = (RGB) value;
+                    model.setProperty(Sheet.BACKGROUND, new Color(bg.red,
+                            bg.green, bg.blue));
+                } else {
+                    model.setProperty(Sheet.BACKGROUND, null);
+                }
                 model.setProperty(Sheet.OPAQUE, null != value);
-                model.setProperty(Sheet.BACKGROUND, value);
                 break;
             case DESCRIPTION_ID:
                 model.setProperty(Sheet.DESCRIPTION, value);
@@ -216,6 +229,8 @@ public class SheetPropertySource implements IPropertySource {
             // method to be called a second time. Find a better place to
             // display a message.
         }
+
+        SpriteyPlugin.getDefault().getViewUpdater().refreshViews();
     }
 
 }

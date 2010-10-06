@@ -15,32 +15,24 @@
  * You should have received a copy of the GNU General Public License along with
  * Spritey. If not, see <http://www.gnu.org/licenses/>.
  */
-package spritey.rcp.core;
-
-import org.eclipse.draw2d.geometry.Rectangle;
-
-import spritey.core.adapter.AdapterFactory;
+package spritey.rcp.views;
 
 /**
- * An adapter factory for converting java standard types into client types.
+ * Views implementing this interface will be notified when they need need to
+ * refresh themselves.
  */
-public class PropertyAdapterFactory implements AdapterFactory {
+public interface ViewUpdateListener {
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see spritey.core.adapter.AdapterFactory#getAdapter(java.lang.Object,
-     * java.lang.Class)
+    /**
+     * Called when a view needs to be refreshed. This method is called when a
+     * view and all it's children need to be updated.
      */
-    @Override
-    public Object getAdapter(Object adaptableObject, Class<?> adapterType) {
-        if ((adapterType == Rectangle.class)
-                && (adaptableObject instanceof java.awt.Rectangle)) {
-            java.awt.Rectangle r = (java.awt.Rectangle) adaptableObject;
-            return new Rectangle(r.x, r.y, r.width, r.height);
-        }
+    public void refreshView();
 
-        return null;
-    }
+    /**
+     * Called when a view needs to be updated. This method is called when just a
+     * single view needs to be updated.
+     */
+    public void updateView();
 
 }

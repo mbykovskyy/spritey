@@ -22,16 +22,23 @@ package spritey.core;
  * container that does not have any graphical representation but can contain a
  * collection of sprites or other groups.
  */
-public interface Group extends Model {
+public class Group extends AbstractModel {
 
-    // Properties (each id has to be unique across the whole application)
-    public static int NAME = 100;
-    public static int NODE = 101;
+    /**
+     * Group name property id. Has to be <code>java.lang.String</code> type.
+     */
+    public final static int NAME = 100;
+
+    /**
+     * Node property id. Has to be <code>spritey.core.node.Node</code> type.
+     */
+    public final static int NODE = 101;
 
     // Defaults
-    public static String DEFAULT_NAME = "New Group";
+    public final static String DEFAULT_NAME = "New Group";
 
     // Limits
-    public static int NAME_TEXT_LIMIT = 1024;
+    public final static int MIN_NAME_LENGTH = 0;
+    public final static int MAX_NAME_LENGTH = 1024;
 
 }

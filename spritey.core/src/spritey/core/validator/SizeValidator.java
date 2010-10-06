@@ -15,11 +15,9 @@
  * You should have received a copy of the GNU General Public License along with
  * Spritey. If not, see <http://www.gnu.org/licenses/>.
  */
-package spritey.rcp.validators;
+package spritey.core.validator;
 
-import org.eclipse.draw2d.geometry.Dimension;
-
-import spritey.core.validator.AbstractValidator;
+import java.awt.Dimension;
 
 /**
  * Validates that the value satisfies min and max dimension requirements.

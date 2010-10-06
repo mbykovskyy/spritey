@@ -66,9 +66,9 @@
          point="org.eclipse.ui.navigator.navigatorContent">
       <navigatorContent
             activeByDefault="true"
-            contentProvider="spritey.rcp.views.navigator.SpriteTreeDataProvider"
+            contentProvider="spritey.rcp.views.navigator.SpriteTreeContentProvider"
             id="spritey.rcp.providers.spriteTreeDataProvider"
-            labelProvider="spritey.rcp.views.navigator.SpriteTreeDataProvider"
+            labelProvider="spritey.rcp.views.navigator.SpriteTreeLabelProvider"
             name="Sprite Tree Data Provider">
          <triggerPoints>
             <or>

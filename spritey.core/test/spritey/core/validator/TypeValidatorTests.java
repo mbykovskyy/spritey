@@ -22,6 +22,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
+import org.junit.Before;
 import org.junit.Test;
 
 /**
@@ -29,10 +30,15 @@ import org.junit.Test;
  */
 public class TypeValidatorTests {
 
+    Validator validator;
+
+    @Before
+    public void initialize() {
+        validator = new TypeValidator(String.class);
+    }
+
     @Test
     public void isValidWhenExpectedStringActualString() {
-        Validator validator = new TypeValidator(String.class);
-
         assertTrue(validator.isValid(new String()));
         assertEquals(Validator.NONE, validator.getErrorCode());
         assertNotNull(validator.getMessage());
@@ -41,8 +47,6 @@ public class TypeValidatorTests {
 
     @Test
     public void isValidWhenExpectedStringActualObject() {
-        Validator validator = new TypeValidator(String.class);
-
         assertFalse(validator.isValid(new Object()));
         assertEquals(TypeValidator.NOT_TYPE, validator.getErrorCode());
         assertNotNull(validator.getMessage());
@@ -51,8 +55,6 @@ public class TypeValidatorTests {
 
     @Test
     public void isValidWhenExpectedStringActualNull() {
-        Validator validator = new TypeValidator(String.class);
-
         assertFalse(validator.isValid(null));
         assertEquals(TypeValidator.NOT_TYPE, validator.getErrorCode());
         assertNotNull(validator.getMessage());

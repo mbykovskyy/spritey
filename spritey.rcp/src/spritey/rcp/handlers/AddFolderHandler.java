@@ -17,6 +17,7 @@
  */
 package spritey.rcp.handlers;
 
+import java.awt.Rectangle;
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
@@ -30,7 +31,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
@@ -54,13 +54,10 @@ import spritey.core.node.NodeFactory;
 import spritey.core.validator.NotNullValidator;
 import spritey.core.validator.StringLengthValidator;
 import spritey.core.validator.TypeValidator;
-import spritey.core.validator.Validator;
+import spritey.core.validator.UniqueNameValidator;
+import spritey.rcp.Messages;
 import spritey.rcp.SpriteyPlugin;
-import spritey.rcp.core.GroupConstants;
-import spritey.rcp.core.Messages;
-import spritey.rcp.core.SpriteConstants;
 import spritey.rcp.utils.ImageFactory;
-import spritey.rcp.validators.UniqueNameValidator;
 
 /**
  * Handler for handling the addition of a group of sprites.
@@ -140,32 +137,38 @@ public class AddFolderHandler extends AbstractHandler implements IHandler {
             @Override
             public void run(IProgressMonitor monitor)
                     throws InvocationTargetException, InterruptedException {
-                monitor.beginTask("Add sprites", IProgressMonitor.UNKNOWN);
+                monitor.beginTask(Messages.ADDING_SPRITES,
+                        IProgressMonitor.UNKNOWN);
                 final Node branchRoot = createNode(root, monitor);
 
                 if (monitor.isCanceled()) {
+                    // TODO Created sprites need to be destroyed to free Image
+                    // handles.
+
                     errorMessages.clear();
                 } else if (null != branchRoot) {
-                    // Adding a child to a sheet needs to be executed in a GUI
-                    // thread as it causes views to update.
-                    Display.getDefault().syncExec(new Runnable() {
-                        @Override
-                        public void run() {
-                            SpriteyPlugin plugin = SpriteyPlugin.getDefault();
-                            Node sheetNode = plugin.getRootNode().getChildren()[0];
+                    monitor.beginTask(Messages.PACKING_SPRITES,
+                            IProgressMonitor.UNKNOWN);
 
-                            if (sheetNode.addChild(branchRoot)) {
-                                plugin.getPacker().pack(sheetNode, false);
-                                checkForInvisibleSprites(sheetNode);
-                            } else {
-                                String message = NLS.bind(
-                                        Messages.GROUP_NAME_EXISTS,
-                                        root.getName());
-                                errorMessages.add(new Status(IStatus.ERROR,
-                                        "unknown", message));
+                    final SpriteyPlugin plugin = SpriteyPlugin.getDefault();
+                    Node sheetNode = plugin.getRootNode().getChildren()[0];
+
+                    if (sheetNode.addChild(branchRoot)) {
+                        plugin.getPacker().pack(sheetNode, false);
+
+                        Display.getDefault().syncExec(new Runnable() {
+                            @Override
+                            public void run() {
+                                plugin.getViewUpdater().refreshViews();
                             }
-                        }
-                    });
+                        });
+                        checkForInvisibleSprites(sheetNode);
+                    } else {
+                        String message = NLS.bind(Messages.GROUP_NAME_EXISTS,
+                                root.getName());
+                        errorMessages.add(new Status(IStatus.WARNING,
+                                "unknown", message));
+                    }
                 }
 
                 monitor.done();
@@ -285,7 +288,7 @@ public class AddFolderHandler extends AbstractHandler implements IHandler {
                 } else {
                     String message = NLS.bind(Messages.DIRECTORY_INACCESSIBLE,
                             child.getAbsolutePath());
-                    errorMessages.add(new Status(IStatus.ERROR, "unknown",
+                    errorMessages.add(new Status(IStatus.WARNING, "unknown",
                             message));
                 }
             }
@@ -343,31 +346,17 @@ public class AddFolderHandler extends AbstractHandler implements IHandler {
         if (null == imageData) {
             String message = NLS.bind(Messages.UNABLE_TO_LOAD_IMAGE,
                     file.getAbsolutePath());
-            errorMessages.add(new Status(IStatus.ERROR, "unknown", message));
+            errorMessages.add(new Status(IStatus.WARNING, "unknown", message));
             return null;
         }
 
-        Validator notNullValidator = new NotNullValidator();
-
         Model data = modelFactory.createSprite();
-        data.addValidator(Sprite.NAME, notNullValidator);
-        data.addValidator(Sprite.NAME, new TypeValidator(String.class));
-        data.addValidator(Sprite.NAME, new StringLengthValidator(
-                SpriteConstants.MIN_NAME_LENGTH,
-                SpriteConstants.MAX_NAME_LENGTH));
-        data.addValidator(Sprite.NAME, new UniqueNameValidator((Sprite) data));
-
-        data.addValidator(Sprite.BOUNDS, notNullValidator);
-        // TODO Add bounds validator.
-
-        data.addValidator(Sprite.IMAGE, notNullValidator);
-        // TODO Add image validator.
 
         try {
             data.setProperty(Sprite.IMAGE, imageFactory.createImage(imageData));
             data.setProperty(Sprite.NAME, file.getName());
             data.setProperty(Sprite.BOUNDS, new Rectangle(
-                    SpriteConstants.DEFAULT_X, SpriteConstants.DEFAULT_Y,
+                    Sprite.DEFAULT_BOUNDS.x, Sprite.DEFAULT_BOUNDS.y,
                     imageData.width, imageData.height));
         } catch (InvalidPropertyValueException e) {
             handleSpriteException(e);
@@ -388,14 +377,7 @@ public class AddFolderHandler extends AbstractHandler implements IHandler {
      * @return instance of sprite group.
      */
     private Model createGroup(String name, ModelFactory modelFactory) {
-        Validator notNullValidator = new NotNullValidator();
-
         Model data = modelFactory.createGroup();
-        data.addValidator(Group.NAME, notNullValidator);
-        data.addValidator(Group.NAME, new TypeValidator(String.class));
-        data.addValidator(Group.NAME, new StringLengthValidator(
-                GroupConstants.MIN_NAME_LENGTH, GroupConstants.MAX_NAME_LENGTH));
-        data.addValidator(Group.NAME, new UniqueNameValidator((Group) data));
 
         try {
             data.setProperty(Group.NAME, name);
@@ -424,8 +406,7 @@ public class AddFolderHandler extends AbstractHandler implements IHandler {
         case StringLengthValidator.TOO_LONG:
         case StringLengthValidator.TOO_SHORT:
             message = NLS.bind(Messages.SPRITE_NAME_INVALID,
-                    SpriteConstants.MIN_NAME_LENGTH,
-                    SpriteConstants.MAX_NAME_LENGTH);
+                    Sprite.MIN_NAME_LENGTH, Sprite.MAX_NAME_LENGTH);
             break;
         case NotNullValidator.NULL:
         case TypeValidator.NOT_TYPE:
@@ -434,7 +415,7 @@ public class AddFolderHandler extends AbstractHandler implements IHandler {
             e.printStackTrace();
             break;
         }
-        errorMessages.add(new Status(IStatus.ERROR, "unknown", message));
+        errorMessages.add(new Status(IStatus.WARNING, "unknown", message));
     }
 
     /**
@@ -454,8 +435,7 @@ public class AddFolderHandler extends AbstractHandler implements IHandler {
         case StringLengthValidator.TOO_LONG:
         case StringLengthValidator.TOO_SHORT:
             message = NLS.bind(Messages.GROUP_NAME_INVALID,
-                    GroupConstants.MIN_NAME_LENGTH,
-                    GroupConstants.MAX_NAME_LENGTH);
+                    Group.MIN_NAME_LENGTH, Group.MAX_NAME_LENGTH);
             break;
         case NotNullValidator.NULL:
         case TypeValidator.NOT_TYPE:
@@ -464,7 +444,7 @@ public class AddFolderHandler extends AbstractHandler implements IHandler {
             e.printStackTrace();
             break;
         }
-        errorMessages.add(new Status(IStatus.ERROR, "unknown", message));
+        errorMessages.add(new Status(IStatus.WARNING, "unknown", message));
     }
 
 }

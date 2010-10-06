@@ -75,7 +75,7 @@ public class PackerTests {
     public void packWithoutCacheFlush() throws Exception {
         Sheet sheetMock = mock(Sheet.class);
         Node nodeMock = mock(Node.class);
-        doReturn(new Node[0]).when(nodeMock).getLeaves();
+        doReturn(new Node[0]).when(nodeMock).getChildren();
         doReturn(sheetMock).when(nodeMock).getModel();
 
         packer.pack(nodeMock, false);
