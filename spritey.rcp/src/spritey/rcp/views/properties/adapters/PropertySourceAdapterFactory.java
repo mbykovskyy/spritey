@@ -3,6 +3,7 @@ package spritey.rcp.views.properties.adapters;
 import org.eclipse.core.runtime.IAdapterFactory;
 import org.eclipse.ui.views.properties.IPropertySource;
 
+import spritey.core.Group;
 import spritey.core.Model;
 import spritey.core.Sheet;
 import spritey.core.Sprite;
@@ -34,6 +35,8 @@ public class PropertySourceAdapterFactory implements IAdapterFactory {
                     return new SheetPropertySource(model);
                 } else if (model instanceof Sprite) {
                     return new SpritePropertySource(model);
+                } else if (model instanceof Group) {
+                    return new GroupPropertySource(model);
                 }
             }
         }
