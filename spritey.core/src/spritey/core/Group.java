@@ -38,7 +38,7 @@ public class Group extends AbstractModel {
     public final static String DEFAULT_NAME = "New Group";
 
     // Limits
-    public final static int MIN_NAME_LENGTH = 0;
+    public final static int MIN_NAME_LENGTH = 1;
     public final static int MAX_NAME_LENGTH = 1024;
 
 }

@@ -31,6 +31,7 @@ public class Messages extends NLS {
     public static String ADD_SPRITE;
     public static String ADD_SPRITES;
     public static String DELETE_SPRITES;
+    public static String CHANGE_PROPERTY;
 
     // Tasks
     public static String ADDING_SPRITES;

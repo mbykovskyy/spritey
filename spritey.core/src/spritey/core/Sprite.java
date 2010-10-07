@@ -51,7 +51,7 @@ public class Sprite extends AbstractModel {
     public final static Rectangle DEFAULT_BOUNDS = new Rectangle(-1, -1, 0, 0);
 
     // Limits
-    public final static int MIN_NAME_LENGTH = 0;
+    public final static int MIN_NAME_LENGTH = 1;
     public final static int MAX_NAME_LENGTH = 1024;
 
 }
