@@ -49,6 +49,7 @@ import spritey.core.Model;
 import spritey.core.ModelFactory;
 import spritey.core.Sprite;
 import spritey.core.exception.InvalidPropertyValueException;
+import spritey.core.filter.InvisibleSpriteFilter;
 import spritey.core.node.Node;
 import spritey.core.node.NodeFactory;
 import spritey.core.validator.NotNullValidator;
@@ -155,6 +156,7 @@ public class AddFolderHandler extends AbstractHandler implements IHandler {
 
                     if (sheetNode.addChild(branchRoot)) {
                         plugin.getPacker().pack(sheetNode, false);
+                        checkForInvisibleSprites(branchRoot);
 
                         Display.getDefault().syncExec(new Runnable() {
                             @Override
@@ -162,7 +164,6 @@ public class AddFolderHandler extends AbstractHandler implements IHandler {
                                 plugin.getViewUpdater().refreshViews();
                             }
                         });
-                        checkForInvisibleSprites(sheetNode);
                     } else {
                         String message = NLS.bind(Messages.GROUP_NAME_EXISTS,
                                 root.getName());
@@ -190,19 +191,16 @@ public class AddFolderHandler extends AbstractHandler implements IHandler {
      * Checks for sprites that do not fit into sprite sheet and adds a warning
      * messages for each match.
      * 
-     * @param sheetNode
-     *        the sprite sheet node.
+     * @param branchRoot
+     *        the root of the branch where new sprites were added.
      */
-    private void checkForInvisibleSprites(Node sheetNode) {
-        for (Node spriteNode : sheetNode.getLeaves()) {
-            Model sprite = spriteNode.getModel();
+    private void checkForInvisibleSprites(Node branchRoot) {
+        Sprite[] sprites = new InvisibleSpriteFilter().filterModels(branchRoot);
 
-            if (((Rectangle) sprite.getProperty(Sprite.BOUNDS)).x < 0) {
-                String message = NLS.bind(Messages.SPRITE_DOES_NOT_FIT,
-                        sprite.getProperty(Sprite.NAME));
-                errorMessages.add(new Status(IStatus.WARNING, "unknown",
-                        message));
-            }
+        for (Sprite sprite : sprites) {
+            String message = NLS.bind(Messages.SPRITE_DOES_NOT_FIT,
+                    sprite.getProperty(Sprite.NAME));
+            errorMessages.add(new Status(IStatus.WARNING, "unknown", message));
         }
     }
 

@@ -25,19 +25,30 @@ import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Shell;
 
 /**
- * A dialog for creating a new sprite sheet.
+ * A static wizard dialog that can not be resized.
  */
-public class NewSpriteSheetDialog extends WizardDialog {
+public class StaticWizardDialog extends WizardDialog {
 
-    static final int WIDTH = 390;
-    static final int HEIGHT = 420;
+    private int width;
+    private int height;
 
     /**
+     * Creates a new wizard dialog.
+     * 
      * @param parentShell
+     *        the parent shell.
+     * @param width
+     *        the dialog width.
+     * @param height
+     *        the dialog height.
      * @param newWizard
+     *        the wizard to display in this dialog.
      */
-    public NewSpriteSheetDialog(Shell parentShell, IWizard newWizard) {
+    public StaticWizardDialog(Shell parentShell, int width, int height,
+            IWizard newWizard) {
         super(parentShell, newWizard);
+        this.width = width;
+        this.height = height;
 
         setShellStyle(getShellStyle() & ~SWT.MAX & ~SWT.RESIZE);
     }
@@ -48,7 +59,7 @@ public class NewSpriteSheetDialog extends WizardDialog {
     @Override
     protected void configureShell(Shell newShell) {
         super.configureShell(newShell);
-        newShell.setSize(WIDTH, HEIGHT);
+        newShell.setSize(width, height);
         center(newShell, getParentShell());
     }
 

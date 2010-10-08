@@ -30,7 +30,7 @@ import org.eclipse.ui.handlers.HandlerUtil;
 import spritey.core.Sheet;
 import spritey.core.node.Node;
 import spritey.rcp.SpriteyPlugin;
-import spritey.rcp.dialogs.NewSpriteSheetDialog;
+import spritey.rcp.dialogs.StaticWizardDialog;
 import spritey.rcp.editors.SheetEditor;
 import spritey.rcp.editors.SheetEditorInput;
 import spritey.rcp.wizards.NewSpriteSheetWizard;
@@ -40,11 +40,14 @@ import spritey.rcp.wizards.NewSpriteSheetWizard;
  */
 public class NewSpriteSheetHandler extends AbstractHandler implements IHandler {
 
+    private static final int WIDTH = 390;
+    private static final int HEIGHT = 420;
+
     @Override
     public Object execute(ExecutionEvent event) throws ExecutionException {
         Shell shell = HandlerUtil.getActiveShell(event);
 
-        Window wizard = new NewSpriteSheetDialog(shell,
+        Window wizard = new StaticWizardDialog(shell, WIDTH, HEIGHT,
                 new NewSpriteSheetWizard());
 
         if (wizard.open() != Window.CANCEL) {

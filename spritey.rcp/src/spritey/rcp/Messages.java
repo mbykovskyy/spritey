@@ -28,6 +28,7 @@ public class Messages extends NLS {
 
     // Titles
     public static String NEW_SPRITE_SHEET;
+    public static String NEW_GROUP;
     public static String ADD_SPRITE;
     public static String ADD_SPRITES;
     public static String DELETE_SPRITES;

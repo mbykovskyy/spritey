@@ -144,6 +144,11 @@
             id="spritey.command.deleteSprites"
             name="Delete Sprite(s)">
       </command>
+      <command
+            defaultHandler="spritey.rcp.handlers.AddGroupHandler"
+            id="spritey.command.addGroup"
+            name="Add Group">
+      </command>
    </extension>
    <extension
          point="org.eclipse.ui.menus">
@@ -172,6 +177,11 @@
          <command
                commandId="spritey.command.addFolder"
                icon="data/icons/folder.png"
+               style="push">
+         </command>
+         <command
+               commandId="spritey.command.addGroup"
+               icon="data/icons/group_add.png"
                style="push">
          </command>
          <command
