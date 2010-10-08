@@ -17,8 +17,12 @@
  */
 package spritey.rcp.views.properties.adapters;
 
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.jface.viewers.ILabelProvider;
+import org.eclipse.osgi.util.NLS;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.views.properties.IPropertyDescriptor;
 import org.eclipse.ui.views.properties.IPropertySource;
 import org.eclipse.ui.views.properties.PropertyDescriptor;
@@ -26,7 +30,13 @@ import org.eclipse.ui.views.properties.PropertyDescriptor;
 import spritey.core.Group;
 import spritey.core.Model;
 import spritey.core.exception.InvalidPropertyValueException;
+import spritey.core.validator.NotNullValidator;
+import spritey.core.validator.StringLengthValidator;
+import spritey.core.validator.TypeValidator;
+import spritey.core.validator.UniqueNameValidator;
+import spritey.rcp.Messages;
 import spritey.rcp.SpriteyPlugin;
+import spritey.rcp.views.properties.TextPropertyDescriptorEx;
 
 /**
  * Property source for supplying group properties to the Properties view.
@@ -49,11 +59,12 @@ public class GroupPropertySource implements IPropertySource {
     private void initialize() {
         ImageRegistry reg = SpriteyPlugin.getDefault().getImageRegistry();
 
-        ILabelProvider lockLabelProvider = new PropertyLabelProvider(
-                reg.get(SpriteyPlugin.LOCK_IMG_ID));
+        ILabelProvider editLabelProvider = new PropertyLabelProvider(
+                reg.get(SpriteyPlugin.EDIT_IMG_ID));
 
-        PropertyDescriptor name = new PropertyDescriptor(NAME_ID, NAME_TEXT);
-        name.setLabelProvider(lockLabelProvider);
+        PropertyDescriptor name = new TextPropertyDescriptorEx(NAME_ID,
+                NAME_TEXT);
+        name.setLabelProvider(editLabelProvider);
         name.setAlwaysIncompatible(true);
 
         propertyDescriptors = new IPropertyDescriptor[] { name };
@@ -146,13 +157,47 @@ public class GroupPropertySource implements IPropertySource {
                 break;
             }
         } catch (InvalidPropertyValueException e) {
-            // TODO Do NOT display any messages here since it will cause
-            // another focus changed event which will in turn cause this
-            // method to be called a second time. Find a better place to
-            // display a message.
+            handleException(e);
         }
 
         SpriteyPlugin.getDefault().getViewUpdater().refreshViews();
+    }
+
+    private void handleException(InvalidPropertyValueException e) {
+        final String[] message = new String[] { Messages.INTERNAL_ERROR };
+
+        switch (e.getErrorCode()) {
+        case UniqueNameValidator.NAME_NOT_UNIQUE:
+            message[0] = NLS.bind(Messages.GROUP_NAME_EXISTS, e.getValue());
+            break;
+        case StringLengthValidator.TOO_LONG:
+        case StringLengthValidator.TOO_SHORT:
+            message[0] = NLS.bind(Messages.GROUP_NAME_INVALID,
+                    Group.MIN_NAME_LENGTH, Group.MAX_NAME_LENGTH);
+            break;
+        case NotNullValidator.NULL:
+        case TypeValidator.NOT_TYPE:
+        default:
+            // Log it since we don't expect this exception.
+            e.printStackTrace();
+            break;
+        }
+
+        // We are currently in the gui thread, therefore, pushing runnable
+        // into a gui queue like this will invoke the message box at the
+        // very end, when all existing operations finish.
+        Display.getDefault().asyncExec(new Runnable() {
+            @Override
+            public void run() {
+                Shell shell = Display.getDefault().getActiveShell();
+                MessageDialog.openError(shell, Messages.CHANGE_PROPERTY,
+                        message[0]);
+            }
+        });
+        // TODO A hack to bug #327285
+        // (https://bugs.eclipse.org/bugs/show_bug.cgi?id=327285).
+        ((TextPropertyDescriptorEx) propertyDescriptors[0]).getCellEditor()
+                .setValue(model.getProperty(Group.NAME));
     }
 
 }
