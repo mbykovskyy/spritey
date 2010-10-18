@@ -24,18 +24,32 @@ import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.ImageFigure;
 import org.eclipse.draw2d.LineBorder;
 import org.eclipse.draw2d.geometry.Rectangle;
+import org.eclipse.gef.DragTracker;
+import org.eclipse.gef.EditPolicy;
+import org.eclipse.gef.Request;
 import org.eclipse.gef.editparts.AbstractGraphicalEditPart;
+import org.eclipse.gef.editpolicies.SelectionEditPolicy;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.RGB;
+import org.eclipse.swt.widgets.Display;
 
 import spritey.core.Model;
 import spritey.core.Sprite;
 import spritey.core.node.Node;
+import spritey.rcp.editors.tools.SpriteDragTracker;
 
 /**
  * SpriteEditPart is a child of SheetEditPart. It corresponds to model's sprite
  * node.
  */
 public class SpriteEditPart extends AbstractGraphicalEditPart {
+
+    private static final RGB BORDER_COLOR = new RGB(0, 0, 0);
+    private static final RGB SELECTION_COLOR = new RGB(255, 255, 255);
+
+    private static final int BORDER_WIDTH = 1;
+    private static final int SELECTION_WIDTH = 2;
 
     private ImageFigure sprite;
 
@@ -59,7 +73,12 @@ public class SpriteEditPart extends AbstractGraphicalEditPart {
             Image image = (Image) model.getProperty(Sprite.IMAGE);
             sprite.setImage(image);
             sprite.setVisible(true);
-            sprite.setBorder(new LineBorder());
+        }
+
+        // XYLayout positions figures using figure constraints.
+        if (null != sprite.getParent()) {
+            sprite.getParent().setConstraint(sprite,
+                    sprite.getBounds().getCopy());
         }
     }
 
@@ -82,8 +101,22 @@ public class SpriteEditPart extends AbstractGraphicalEditPart {
      */
     @Override
     protected void createEditPolicies() {
-        // TODO Auto-generated method stub
+        installEditPolicy(EditPolicy.SELECTION_FEEDBACK_ROLE,
+                new SelectionEditPolicy() {
+                    @Override
+                    protected void showSelection() {
+                        sprite.setBorder(new LineBorder(SELECTION_WIDTH));
+                        sprite.setForegroundColor(new Color(Display
+                                .getDefault(), SELECTION_COLOR));
+                    }
 
+                    @Override
+                    protected void hideSelection() {
+                        sprite.setBorder(new LineBorder(BORDER_WIDTH));
+                        sprite.setForegroundColor(new Color(Display
+                                .getDefault(), BORDER_COLOR));
+                    }
+                });
     }
 
     /*
@@ -122,7 +155,8 @@ public class SpriteEditPart extends AbstractGraphicalEditPart {
     @Override
     public void activate() {
         super.activate();
-        // TODO add to view update manager.
+        // TODO add to view update manager. At the moment sheet updates all
+        // sprites.
     }
 
     /*
@@ -132,19 +166,19 @@ public class SpriteEditPart extends AbstractGraphicalEditPart {
      */
     @Override
     public void deactivate() {
-        // TODO remove from view update manager.
+        // TODO remove from view update manager. At the moment sheet updates all
+        // sprites.
         super.deactivate();
     }
-
-    // public void propertyChanged(ModelEvent event) {
-    // if (event.getProperty() == Sprite.BOUNDS) {
-    // refreshVisuals();
-    // }
-    // }
 
     @Override
     protected void refreshVisuals() {
         populateSprite(sprite, ((Node) getModel()).getModel());
+    }
+
+    @Override
+    public DragTracker getDragTracker(Request request) {
+        return new SpriteDragTracker((SheetEditPart) getParent());
     }
 
 }

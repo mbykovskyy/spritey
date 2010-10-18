@@ -134,4 +134,5 @@ public class SpriteTreeContentProvider implements ITreeContentProvider,
         // TODO change this to update().
         viewer.refresh();
     }
+
 }

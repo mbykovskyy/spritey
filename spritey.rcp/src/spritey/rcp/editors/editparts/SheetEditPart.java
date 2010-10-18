@@ -24,6 +24,9 @@ import java.util.List;
 
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.ImageFigure;
+import org.eclipse.draw2d.XYLayout;
+import org.eclipse.gef.DragTracker;
+import org.eclipse.gef.Request;
 import org.eclipse.gef.editparts.AbstractGraphicalEditPart;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.RGB;
@@ -33,6 +36,8 @@ import spritey.core.Sheet;
 import spritey.core.filter.VisibleSpriteFilter;
 import spritey.core.node.Node;
 import spritey.rcp.SpriteyPlugin;
+import spritey.rcp.editors.draw2d.HazardBorder;
+import spritey.rcp.editors.tools.SpriteDragTracker;
 import spritey.rcp.utils.ImageFactory;
 import spritey.rcp.views.ViewUpdateListener;
 
@@ -79,8 +84,7 @@ public class SheetEditPart extends AbstractGraphicalEditPart implements
         sheet.setOpaque(isOpaque);
         sheet.setSize(size.width, size.height);
         sheet.setImage(image);
-
-        // TODO Draw two-color dashed outline/border similar to Gimp.
+        sheet.setBorder(new HazardBorder());
     }
 
     /**
@@ -109,6 +113,7 @@ public class SheetEditPart extends AbstractGraphicalEditPart implements
     @Override
     protected IFigure createFigure() {
         sheet = new ImageFigure();
+        sheet.setLayoutManager(new XYLayout());
         populateSheet(sheet, ((Node) getModel()).getModel());
         return sheet;
     }
@@ -182,6 +187,11 @@ public class SheetEditPart extends AbstractGraphicalEditPart implements
     @Override
     public void refreshView() {
         refresh();
+    }
+
+    @Override
+    public DragTracker getDragTracker(Request request) {
+        return new SpriteDragTracker(this);
     }
 
 }

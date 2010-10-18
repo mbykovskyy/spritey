@@ -38,6 +38,7 @@ public class Messages extends NLS {
     public static String ADDING_SPRITES;
     public static String PACKING_SPRITES;
     public static String DELETING_SPRITES;
+    public static String UPDATING_VIEWS;
 
     // General messages
     public static String INTERNAL_ERROR;

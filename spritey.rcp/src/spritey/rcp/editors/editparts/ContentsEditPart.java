@@ -23,18 +23,18 @@ import java.util.List;
 import org.eclipse.draw2d.Figure;
 import org.eclipse.draw2d.GridLayout;
 import org.eclipse.draw2d.IFigure;
+import org.eclipse.gef.DragTracker;
+import org.eclipse.gef.Request;
 import org.eclipse.gef.editparts.AbstractGraphicalEditPart;
 
-import spritey.core.Model;
 import spritey.core.node.Node;
-import spritey.core.node.event.NodeListener;
+import spritey.rcp.editors.tools.SpriteDragTracker;
 
 /**
  * ContentsEditPart is a contents node of the viewer that contains sprite
  * sheet's root node. Note that this is not a sprite sheet node itself.
  */
-public class ContentsEditPart extends AbstractGraphicalEditPart implements
-        NodeListener {
+public class ContentsEditPart extends AbstractGraphicalEditPart {
 
     /*
      * (non-Javadoc)
@@ -60,8 +60,7 @@ public class ContentsEditPart extends AbstractGraphicalEditPart implements
      */
     @Override
     protected void createEditPolicies() {
-        // TODO Auto-generated method stub
-
+        // Do nothing.
     }
 
     /*
@@ -74,86 +73,9 @@ public class ContentsEditPart extends AbstractGraphicalEditPart implements
         return Arrays.asList(((Node) getModel()).getChildren());
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.eclipse.gef.editparts.AbstractGraphicalEditPart#activate()
-     */
     @Override
-    public void activate() {
-        super.activate();
-
-        Node node = (Node) getModel();
-        node.addNodeListener(this);
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.eclipse.gef.editparts.AbstractGraphicalEditPart#deactivate()
-     */
-    @Override
-    public void deactivate() {
-        Node model = (Node) getModel();
-        model.removeNodeListener(this);
-
-        super.deactivate();
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see spritey.core.node.event.NodeListener#nameChanged(java.lang.String,
-     * java.lang.String)
-     */
-    @Override
-    public void nameChanged(String oldName, String newName) {
-        // Do nothing.
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * spritey.core.node.event.NodeListener#parentChanged(spritey.core.node.
-     * Node, spritey.core.node.Node)
-     */
-    @Override
-    public void parentChanged(Node oldParent, Node newParent) {
-        // Do nothing.
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * spritey.core.node.event.NodeListener#childAdded(spritey.core.node.Node)
-     */
-    @Override
-    public void childAdded(Node child) {
-        refresh();
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * spritey.core.node.event.NodeListener#childRemoved(spritey.core.node.Node)
-     */
-    @Override
-    public void childRemoved(Node child) {
-        refresh();
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see spritey.core.node.event.NodeListener#properitesChanged(spritey.core.
-     * Model, spritey.core.Model)
-     */
-    @Override
-    public void modelChanged(Model oldValue, Model newValue) {
-        // Do nothing.
+    public DragTracker getDragTracker(Request request) {
+        return new SpriteDragTracker((SheetEditPart) getChildren().get(0));
     }
 
 }

@@ -165,6 +165,14 @@
       <menuContribution
             allPopups="false"
             locationURI="toolbar:spritey.rcp.views.spriteTree">
+         <command
+               commandId="org.eclipse.ui.navigate.expandAll"
+               style="push">
+         </command>
+         <command
+               commandId="org.eclipse.ui.navigate.collapseAll"
+               style="push">
+         </command>
          <separator
                name="spritey.rcp.separator3"
                visible="true">

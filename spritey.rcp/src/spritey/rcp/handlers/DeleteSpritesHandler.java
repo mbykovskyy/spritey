@@ -49,6 +49,7 @@ import spritey.core.Sprite;
 import spritey.core.node.Node;
 import spritey.rcp.Messages;
 import spritey.rcp.SpriteyPlugin;
+import spritey.rcp.views.SelectionSynchronizer;
 import spritey.rcp.views.navigator.SpriteTree;
 
 /**
@@ -78,8 +79,13 @@ public class DeleteSpritesHandler extends AbstractHandler implements IHandler {
                 .getSelection();
 
         if ((selection != null) && (selection instanceof IStructuredSelection)) {
+            SelectionSynchronizer sync = SpriteyPlugin.getDefault()
+                    .getSelectionSynchronizer();
+
+            sync.deactivate();
             delete((IStructuredSelection) selection, new ProgressMonitorDialog(
                     shell));
+            sync.activate();
 
             if (!errorMessages.isEmpty()) {
                 displayErrorMessages(shell);
@@ -226,8 +232,10 @@ public class DeleteSpritesHandler extends AbstractHandler implements IHandler {
 
                 final SpriteyPlugin plugin = SpriteyPlugin.getDefault();
                 Node sheetNode = plugin.getRootNode().getChildren()[0];
-
                 plugin.getPacker().pack(sheetNode, true);
+
+                monitor.beginTask(Messages.UPDATING_VIEWS,
+                        IProgressMonitor.UNKNOWN);
 
                 Display.getDefault().syncExec(new Runnable() {
                     @Override
@@ -235,6 +243,7 @@ public class DeleteSpritesHandler extends AbstractHandler implements IHandler {
                         plugin.getViewUpdater().refreshViews();
                     }
                 });
+
                 monitor.done();
             }
         };

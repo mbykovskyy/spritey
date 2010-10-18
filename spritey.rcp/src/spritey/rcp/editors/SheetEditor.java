@@ -21,6 +21,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.gef.DefaultEditDomain;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.ui.parts.GraphicalEditor;
+import org.eclipse.swt.widgets.Composite;
 
 import spritey.rcp.SpriteyPlugin;
 import spritey.rcp.editors.editparts.ContentsEditPart;
@@ -53,10 +54,16 @@ public class SheetEditor extends GraphicalEditor {
      */
     @Override
     protected void initializeGraphicalViewer() {
-        // Setup the GEF contents node.
         EditPart part = new ContentsEditPart();
         part.setModel(SpriteyPlugin.getDefault().getRootNode());
         getGraphicalViewer().setContents(part);
+    }
+
+    @Override
+    public void createPartControl(Composite parent) {
+        super.createPartControl(parent);
+        SpriteyPlugin.getDefault().getSelectionSynchronizer()
+                .addSelectionProvider(getGraphicalViewer());
     }
 
     /*
@@ -67,8 +74,7 @@ public class SheetEditor extends GraphicalEditor {
      */
     @Override
     public void doSave(IProgressMonitor monitor) {
-        // TODO Auto-generated method stub
-
+        // Do nothing.
     }
 
 }

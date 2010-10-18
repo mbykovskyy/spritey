@@ -28,6 +28,7 @@ import spritey.core.node.Node;
 import spritey.core.node.NodeFactory;
 import spritey.core.packer.FirstFitStrategy;
 import spritey.core.packer.Packer;
+import spritey.rcp.views.SelectionSynchronizer;
 import spritey.rcp.views.ViewUpdateManager;
 
 /**
@@ -61,6 +62,7 @@ public class SpriteyPlugin extends AbstractUIPlugin {
     private NodeFactory nodeFactory;
     private Packer packer;
     private ViewUpdateManager viewUpdater;
+    private SelectionSynchronizer selectionSynchronizer;
 
     /**
      * The constructor
@@ -71,6 +73,8 @@ public class SpriteyPlugin extends AbstractUIPlugin {
         nodeFactory = new MapBasedNodeFactory();
         packer = new Packer(new FirstFitStrategy());
         viewUpdater = new ViewUpdateManager();
+        selectionSynchronizer = new SelectionSynchronizer();
+        selectionSynchronizer.activate();
     }
 
     /*
@@ -172,6 +176,15 @@ public class SpriteyPlugin extends AbstractUIPlugin {
      */
     public ViewUpdateManager getViewUpdater() {
         return viewUpdater;
+    }
+
+    /**
+     * Returns a selection synchronizer.
+     * 
+     * @return selection synchronizer.
+     */
+    public SelectionSynchronizer getSelectionSynchronizer() {
+        return selectionSynchronizer;
     }
 
     @Override
