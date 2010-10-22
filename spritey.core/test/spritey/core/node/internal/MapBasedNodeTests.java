@@ -1,7 +1,7 @@
 /**
  * This source file is part of Spritey - the sprite sheet creator.
  * 
- * Copyright 2010 Maksym Bykovskyy and Alan Morey.
+ * Copyright 2010 Maksym Bykovskyy.
  * 
  * Spritey is free software: you can redistribute it and/or modify it under the
  * terms of the GNU General Public License as published by the Free Software
@@ -381,19 +381,22 @@ public class MapBasedNodeTests {
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void setModelThatThrowsException() throws InvalidPropertyValueException {
+    public void setModelThatThrowsException()
+            throws InvalidPropertyValueException {
         final int PROPERTY = Sprite.NODE;
         final Object VALUE = node;
         final int ERROR_CODE = 2;
         final String ERROR_MESSAGE = "Node is invalid.";
 
         Model modelMock = mock(Sprite.class);
-        doThrow(new InvalidPropertyValueException(PROPERTY, VALUE, ERROR_CODE,
-                ERROR_MESSAGE)).when(modelMock).setProperty(PROPERTY, VALUE);
+        doThrow(
+                new InvalidPropertyValueException(PROPERTY, VALUE, ERROR_CODE,
+                        ERROR_MESSAGE)).when(modelMock).setProperty(PROPERTY,
+                VALUE);
 
         node.setModel(modelMock);
     }
-    
+
     @Test(expected = IllegalArgumentException.class)
     public void setUnsupportedModel() throws InvalidPropertyValueException {
         final int PROPERTY = Sprite.NODE;
@@ -402,8 +405,10 @@ public class MapBasedNodeTests {
         final String ERROR_MESSAGE = "Node is invalid.";
 
         Model modelMock = mock(Model.class);
-        doThrow(new InvalidPropertyValueException(PROPERTY, VALUE, ERROR_CODE,
-                ERROR_MESSAGE)).when(modelMock).setProperty(PROPERTY, VALUE);
+        doThrow(
+                new InvalidPropertyValueException(PROPERTY, VALUE, ERROR_CODE,
+                        ERROR_MESSAGE)).when(modelMock).setProperty(PROPERTY,
+                VALUE);
 
         node.setModel(modelMock);
     }

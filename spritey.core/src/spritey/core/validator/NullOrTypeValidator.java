@@ -1,7 +1,7 @@
 /**
  * This source file is part of Spritey - the sprite sheet creator.
  * 
- * Copyright 2010 Maksym Bykovskyy and Alan Morey.
+ * Copyright 2010 Maksym Bykovskyy.
  * 
  * Spritey is free software: you can redistribute it and/or modify it under the
  * terms of the GNU General Public License as published by the Free Software
@@ -16,7 +16,6 @@
  * Spritey. If not, see <http://www.gnu.org/licenses/>.
  */
 package spritey.core.validator;
-
 
 /**
  * Validates that the value is either <code>null</code> or of the specified
