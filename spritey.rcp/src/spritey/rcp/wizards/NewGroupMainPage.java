@@ -142,7 +142,7 @@ public class NewGroupMainPage extends WizardPage {
 
         Node sheet = plugin.getRootNode().getChild(Sheet.DEFAULT_NAME);
         if (sheet.contains(value)) {
-            setErrorMessage(NLS.bind(Messages.GROUP_NAME_EXISTS, value));
+            setErrorMessage(NLS.bind(Messages.MODEL_NAME_EXISTS, value));
             setPageComplete(false);
         } else {
             setErrorMessage(null);
@@ -177,7 +177,7 @@ public class NewGroupMainPage extends WizardPage {
 
         switch (e.getErrorCode()) {
         case UniqueNameValidator.NAME_NOT_UNIQUE:
-            message = NLS.bind(Messages.GROUP_NAME_EXISTS, e.getValue());
+            message = NLS.bind(Messages.MODEL_NAME_EXISTS, e.getValue());
             break;
         case StringLengthValidator.TOO_LONG:
         case StringLengthValidator.TOO_SHORT:

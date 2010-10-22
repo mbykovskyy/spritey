@@ -184,6 +184,8 @@ public class MapBasedNode implements Node, ModelListener {
      * 
      * @see spritey.core.node.Node#setParent(spritey.core.node.Node)
      */
+    // TODO Should this be private or protected? Users should only change node's
+    // parent via addChild().
     @Override
     public void setParent(Node parent) {
         if (this == parent) {
@@ -376,8 +378,10 @@ public class MapBasedNode implements Node, ModelListener {
             return false;
         }
 
-        fireChildRemoved(child);
+        child.removeNodeListener(childMapUpdater);
         child.setParent(null);
+
+        fireChildRemoved(child);
         return true;
     }
 

@@ -210,7 +210,7 @@ public class SpritePropertySource implements IPropertySource {
 
         switch (e.getErrorCode()) {
         case UniqueNameValidator.NAME_NOT_UNIQUE:
-            message[0] = NLS.bind(Messages.SPRITE_NAME_EXISTS, e.getValue());
+            message[0] = NLS.bind(Messages.MODEL_NAME_EXISTS, e.getValue());
             break;
         case StringLengthValidator.TOO_LONG:
         case StringLengthValidator.TOO_SHORT:

@@ -165,7 +165,7 @@ public class AddFolderHandler extends AbstractHandler implements IHandler {
                             }
                         });
                     } else {
-                        String message = NLS.bind(Messages.GROUP_NAME_EXISTS,
+                        String message = NLS.bind(Messages.MODEL_NAME_EXISTS,
                                 root.getName());
                         errorMessages.add(new Status(IStatus.WARNING,
                                 "unknown", message));
@@ -399,7 +399,7 @@ public class AddFolderHandler extends AbstractHandler implements IHandler {
 
         switch (e.getErrorCode()) {
         case UniqueNameValidator.NAME_NOT_UNIQUE:
-            message = NLS.bind(Messages.SPRITE_NAME_EXISTS, e.getValue());
+            message = NLS.bind(Messages.MODEL_NAME_EXISTS, e.getValue());
             break;
         case StringLengthValidator.TOO_LONG:
         case StringLengthValidator.TOO_SHORT:
@@ -428,7 +428,7 @@ public class AddFolderHandler extends AbstractHandler implements IHandler {
 
         switch (e.getErrorCode()) {
         case UniqueNameValidator.NAME_NOT_UNIQUE:
-            message = NLS.bind(Messages.GROUP_NAME_EXISTS, e.getValue());
+            message = NLS.bind(Messages.MODEL_NAME_EXISTS, e.getValue());
             break;
         case StringLengthValidator.TOO_LONG:
         case StringLengthValidator.TOO_SHORT:

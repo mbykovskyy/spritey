@@ -71,35 +71,29 @@
             labelProvider="spritey.rcp.views.navigator.SpriteTreeLabelProvider"
             name="Sprite Tree Data Provider">
          <triggerPoints>
-            <or>
-               <equals
-                     value="null">
-               </equals>
-               <instanceof
-                     value="spritey.core.node.Node">
-               </instanceof>
-            </or>
+            <instanceof
+                  value="spritey.core.node.Node">
+            </instanceof>
          </triggerPoints>
          <possibleChildren>
-            <or>
-               <instanceof
-                     value="spritey.core.node.Node">
-               </instanceof>
-               <equals
-                     value="null">
-               </equals>
-            </or>
+            <instanceof
+                  value="spritey.core.node.Node">
+            </instanceof>
          </possibleChildren>
          <enablement>
-            <or>
+            <instanceof
+                  value="spritey.core.node.Node">
+            </instanceof>
+         </enablement>
+         <dropAssistant
+               class="spritey.rcp.views.navigator.DropAssistant"
+               id="spritey.rcp.views.navigator.dropAssistant">
+            <possibleDropTargets>
                <instanceof
                      value="spritey.core.node.Node">
                </instanceof>
-               <equals
-                     value="null">
-               </equals>
-            </or>
-         </enablement>
+            </possibleDropTargets>
+         </dropAssistant>
       </navigatorContent>
    </extension>
    <extension

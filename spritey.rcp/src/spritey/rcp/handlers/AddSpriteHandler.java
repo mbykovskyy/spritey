@@ -166,7 +166,7 @@ public class AddSpriteHandler extends AbstractHandler implements IHandler {
             }
         } else {
             MessageDialog.openError(shell, Messages.ADD_SPRITE,
-                    NLS.bind(Messages.SPRITE_NAME_EXISTS, file.getName()));
+                    NLS.bind(Messages.MODEL_NAME_EXISTS, file.getName()));
         }
     }
 
@@ -175,7 +175,7 @@ public class AddSpriteHandler extends AbstractHandler implements IHandler {
 
         switch (e.getErrorCode()) {
         case UniqueNameValidator.NAME_NOT_UNIQUE:
-            message = NLS.bind(Messages.SPRITE_NAME_EXISTS, e.getValue());
+            message = NLS.bind(Messages.MODEL_NAME_EXISTS, e.getValue());
             break;
         case StringLengthValidator.TOO_LONG:
         case StringLengthValidator.TOO_SHORT:

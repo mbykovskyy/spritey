@@ -21,7 +21,6 @@ import spritey.core.Group;
 import spritey.core.Model;
 import spritey.core.Sprite;
 import spritey.core.node.Node;
-import spritey.core.validator.AbstractValidator;
 
 /**
  * Validates that the name is unique within model's parent. A parent can be a
@@ -39,7 +38,6 @@ public class UniqueNameValidator extends AbstractValidator {
 
     private Model model;
     private int nodeProperty;
-    private int nameProperty;
 
     /**
      * Constructor
@@ -50,7 +48,6 @@ public class UniqueNameValidator extends AbstractValidator {
     public UniqueNameValidator(Sprite model) {
         this.model = model;
         nodeProperty = Sprite.NODE;
-        nameProperty = Sprite.NAME;
     }
 
     /**
@@ -62,7 +59,6 @@ public class UniqueNameValidator extends AbstractValidator {
     public UniqueNameValidator(Group model) {
         this.model = model;
         nodeProperty = Group.NODE;
-        nameProperty = Group.NAME;
     }
 
     /*
@@ -80,7 +76,10 @@ public class UniqueNameValidator extends AbstractValidator {
 
                 if (null != parentNode) {
                     for (Node child : parentNode.getChildren()) {
-                        String childName = (String) child.getModel()
+                        Model model = child.getModel();
+                        int nameProperty = (model instanceof Sprite) ? Sprite.NAME
+                                : Group.NAME;
+                        String childName = (String) model
                                 .getProperty(nameProperty);
 
                         if (childName.equals(value)) {

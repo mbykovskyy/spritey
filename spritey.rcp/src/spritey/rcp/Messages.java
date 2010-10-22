@@ -47,6 +47,9 @@ public class Messages extends NLS {
     // IO messages
     public static String UNABLE_TO_LOAD_IMAGE;
 
+    // Model messages
+    public static String MODEL_NAME_EXISTS;
+
     // Sheet messages
     public static String SHEET_WIDTH_INVALID;
     public static String SHEET_HEIGHT_INVALID;
@@ -56,14 +59,12 @@ public class Messages extends NLS {
 
     // Sprite messages
     public static String SPRITE_NAME_INVALID;
-    public static String SPRITE_NAME_EXISTS;
     public static String SPRITE_DOES_NOT_FIT;
     public static String SPRITES_IMPORT_FAILED;
     public static String DELETE_SPRITES_PROBLEMS;
 
     // Group messages
     public static String GROUP_NAME_INVALID;
-    public static String GROUP_NAME_EXISTS;
 
     static {
         reloadMessages();
