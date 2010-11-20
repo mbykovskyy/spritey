@@ -48,11 +48,6 @@ public class StringLengthValidator extends AbstractValidator {
         this.max = max;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see spritey.core.validator.Validator#isValid(java.lang.Object)
-     */
     @Override
     public boolean isValid(Object value) {
         int code = getErrorCode();

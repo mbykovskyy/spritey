@@ -28,11 +28,6 @@ public class NotNullValidator extends AbstractValidator {
     // Messages
     private static final String M_NULL = "Object is null.";
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see spritey.core.validator.Validator#isValid(java.lang.Object)
-     */
     @Override
     public boolean isValid(Object value) {
         if (null == value) {

@@ -52,7 +52,7 @@ public class AddGroupHandler extends AbstractHandler implements IHandler {
 
     @Override
     public boolean isEnabled() {
-        return !SpriteyPlugin.getDefault().getRootNode().isLeaf();
+        return !SpriteyPlugin.getDefault().getRootModel().isLeaf();
     }
 
 }

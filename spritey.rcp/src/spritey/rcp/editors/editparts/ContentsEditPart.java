@@ -27,7 +27,7 @@ import org.eclipse.gef.DragTracker;
 import org.eclipse.gef.Request;
 import org.eclipse.gef.editparts.AbstractGraphicalEditPart;
 
-import spritey.core.node.Node;
+import spritey.core.Model;
 import spritey.rcp.editors.tools.SpriteDragTracker;
 
 /**
@@ -36,11 +36,6 @@ import spritey.rcp.editors.tools.SpriteDragTracker;
  */
 public class ContentsEditPart extends AbstractGraphicalEditPart {
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.eclipse.gef.editparts.AbstractGraphicalEditPart#createFigure()
-     */
     @Override
     protected IFigure createFigure() {
         GridLayout layout = new GridLayout();
@@ -53,24 +48,14 @@ public class ContentsEditPart extends AbstractGraphicalEditPart {
         return contents;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.eclipse.gef.editparts.AbstractEditPart#createEditPolicies()
-     */
     @Override
     protected void createEditPolicies() {
         // Do nothing.
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.eclipse.gef.editparts.AbstractEditPart#getModelChildren()
-     */
     @Override
     protected List<?> getModelChildren() {
-        return Arrays.asList(((Node) getModel()).getChildren());
+        return Arrays.asList(((Model) getModel()).getChildren());
     }
 
     @Override

@@ -67,11 +67,6 @@ public class SpriteDragTracker extends AbstractTool implements DragTracker {
         this.sheetEditPart = sheetEditPart;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.eclipse.gef.tools.AbstractTool#getCommandName()
-     */
     @Override
     protected String getCommandName() {
         return REQ_SELECTION;
@@ -160,6 +155,7 @@ public class SpriteDragTracker extends AbstractTool implements DragTracker {
         }
     }
 
+    @SuppressWarnings("unchecked")
     protected void handleMarqueeSelect() {
         hideSelectionFigure();
 
@@ -239,4 +235,5 @@ public class SpriteDragTracker extends AbstractTool implements DragTracker {
         handleFinished();
         return true;
     }
+
 }

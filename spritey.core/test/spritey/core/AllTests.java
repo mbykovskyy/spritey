@@ -20,20 +20,23 @@ package spritey.core;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
-import spritey.core.node.internal.MapBasedNodeTests;
 import spritey.core.packer.FirstFitStrategyTests;
 import spritey.core.packer.PackerTests;
+import spritey.core.validator.CharacterValidatorTests;
+import spritey.core.validator.FirstCharacterAlphaValidatorTests;
 import spritey.core.validator.NotNullValidatorTests;
 import spritey.core.validator.NullOrTypeValidatorTests;
 import spritey.core.validator.SizeValidatorTests;
 import spritey.core.validator.StringLengthValidatorTests;
 import spritey.core.validator.TypeValidatorTests;
+import spritey.core.validator.UniqueNameValidatorTests;
 
 @RunWith(Suite.class)
-@Suite.SuiteClasses({ SpriteTests.class, GroupTests.class, SheetTests.class,
-        MapBasedNodeTests.class, PackerTests.class,
-        FirstFitStrategyTests.class, NotNullValidatorTests.class,
-        NullOrTypeValidatorTests.class, SizeValidatorTests.class,
-        TypeValidatorTests.class, StringLengthValidatorTests.class })
+@Suite.SuiteClasses({ ModelTests.class, ModelFactoryTests.class,
+        PackerTests.class, FirstFitStrategyTests.class,
+        NotNullValidatorTests.class, NullOrTypeValidatorTests.class,
+        SizeValidatorTests.class, TypeValidatorTests.class,
+        StringLengthValidatorTests.class, CharacterValidatorTests.class,
+        FirstCharacterAlphaValidatorTests.class, UniqueNameValidatorTests.class })
 public class AllTests {
 }

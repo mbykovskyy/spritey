@@ -27,8 +27,6 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.handlers.HandlerUtil;
 
-import spritey.core.Sheet;
-import spritey.core.node.Node;
 import spritey.rcp.SpriteyPlugin;
 import spritey.rcp.dialogs.StaticWizardDialog;
 import spritey.rcp.editors.SheetEditor;
@@ -51,23 +49,17 @@ public class NewSpriteSheetHandler extends AbstractHandler implements IHandler {
                 new NewSpriteSheetWizard());
 
         if (wizard.open() != Window.CANCEL) {
-            Node sheet = SpriteyPlugin.getDefault().getRootNode()
-                    .getChild(Sheet.DEFAULT_NAME);
+            IWorkbenchWindow window = HandlerUtil
+                    .getActiveWorkbenchWindow(event);
+            SheetEditorInput input = new SheetEditorInput();
 
-            if (sheet != null) {
-                IWorkbenchWindow window = HandlerUtil
-                        .getActiveWorkbenchWindow(event);
-                SheetEditorInput input = new SheetEditorInput();
-
-                try {
-                    window.getActivePage().openEditor(input, SheetEditor.ID);
-                } catch (PartInitException e) {
-                    // TODO Log this exception as we do not expect it.
-                    e.printStackTrace();
-                }
+            try {
+                window.getActivePage().openEditor(input, SheetEditor.ID);
+            } catch (PartInitException e) {
+                // TODO Log this exception as we do not expect it.
+                e.printStackTrace();
             }
         }
-
         SpriteyPlugin.getDefault().getViewUpdater().refreshViews();
         return null;
     }

@@ -15,15 +15,13 @@
  * You should have received a copy of the GNU General Public License along with
  * Spritey. If not, see <http://www.gnu.org/licenses/>.
  */
-
 package spritey.rcp;
 
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
-
-import spritey.rcp.views.navigator.SpriteTreeLabelProviderTests;
+import org.junit.runners.Suite.SuiteClasses;
 
 @RunWith(Suite.class)
-@Suite.SuiteClasses({ SpriteTreeLabelProviderTests.class })
+@SuiteClasses({})
 public class AllTests {
 }

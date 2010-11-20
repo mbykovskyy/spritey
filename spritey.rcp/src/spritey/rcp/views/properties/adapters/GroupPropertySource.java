@@ -29,6 +29,7 @@ import org.eclipse.ui.views.properties.PropertyDescriptor;
 
 import spritey.core.Group;
 import spritey.core.Model;
+import spritey.core.Sheet;
 import spritey.core.exception.InvalidPropertyValueException;
 import spritey.core.validator.NotNullValidator;
 import spritey.core.validator.StringLengthValidator;
@@ -36,6 +37,7 @@ import spritey.core.validator.TypeValidator;
 import spritey.core.validator.UniqueNameValidator;
 import spritey.rcp.Messages;
 import spritey.rcp.SpriteyPlugin;
+import spritey.rcp.core.GroupConstants;
 import spritey.rcp.views.properties.TextPropertyDescriptorEx;
 
 /**
@@ -70,36 +72,18 @@ public class GroupPropertySource implements IPropertySource {
         propertyDescriptors = new IPropertyDescriptor[] { name };
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.eclipse.ui.views.properties.IPropertySource#getEditableValue()
-     */
     @Override
     public Object getEditableValue() {
         // TODO Auto-generated method stub
         return null;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * org.eclipse.ui.views.properties.IPropertySource#getPropertyDescriptors()
-     */
     @Override
     public IPropertyDescriptor[] getPropertyDescriptors() {
         return propertyDescriptors;
 
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * org.eclipse.ui.views.properties.IPropertySource#getPropertyValue(java
-     * .lang.Object)
-     */
     @Override
     public Object getPropertyValue(Object id) {
         Object value = null;
@@ -115,43 +99,23 @@ public class GroupPropertySource implements IPropertySource {
         return value;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * org.eclipse.ui.views.properties.IPropertySource#isPropertySet(java.lang
-     * .Object)
-     */
     @Override
     public boolean isPropertySet(Object id) {
         return false;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * org.eclipse.ui.views.properties.IPropertySource#resetPropertyValue(java
-     * .lang.Object)
-     */
     @Override
     public void resetPropertyValue(Object id) {
         // Do nothing.
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * org.eclipse.ui.views.properties.IPropertySource#setPropertyValue(java
-     * .lang.Object, java.lang.Object)
-     */
     @Override
     public void setPropertyValue(Object id, Object value) {
         try {
             switch ((Integer) id) {
             case NAME_ID:
                 model.setProperty(Group.NAME, value);
+                model.setProperty(GroupConstants.NEW_NAME, value);
                 break;
             default:
                 break;
@@ -168,11 +132,20 @@ public class GroupPropertySource implements IPropertySource {
 
         switch (e.getErrorCode()) {
         case UniqueNameValidator.NAME_NOT_UNIQUE:
-            message[0] = NLS.bind(Messages.MODEL_NAME_EXISTS, e.getValue());
+            Model parent = model.getParent();
+
+            if (parent instanceof Sheet) {
+                message[0] = NLS.bind(
+                        Messages.BATCH_RENAME_SHEET_CONTAINS_GROUP,
+                        e.getValue());
+            } else {
+                message[0] = NLS.bind(Messages.GROUP_NAME_EXISTS, e.getValue(),
+                        parent.getProperty(Group.NAME));
+            }
             break;
         case StringLengthValidator.TOO_LONG:
         case StringLengthValidator.TOO_SHORT:
-            message[0] = NLS.bind(Messages.GROUP_NAME_INVALID,
+            message[0] = NLS.bind(Messages.GROUP_NAME_INVALID_LENGTH,
                     Group.MIN_NAME_LENGTH, Group.MAX_NAME_LENGTH);
             break;
         case NotNullValidator.NULL:

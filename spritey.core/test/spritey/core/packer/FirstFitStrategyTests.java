@@ -34,6 +34,8 @@ import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 
 import spritey.core.Sheet;
 import spritey.core.Sprite;
@@ -44,17 +46,15 @@ import spritey.core.exception.InvalidPropertyValueException;
  */
 public class FirstFitStrategyTests {
 
-    Sheet sheetMock;
-
     FirstFitStrategy strategy;
+
+    @Mock
+    Sheet sheetMock;
 
     @Before
     public void initialize() {
-        final Dimension SHEET_SIZE = new Dimension(10, 10);
-
-        sheetMock = mock(Sheet.class);
-        doReturn(SHEET_SIZE).when(sheetMock).getProperty(Sheet.SIZE);
-
+        MockitoAnnotations.initMocks(this);
+        doReturn(new Dimension(10, 10)).when(sheetMock).getProperty(Sheet.SIZE);
         strategy = new FirstFitStrategy();
     }
 
@@ -337,11 +337,11 @@ public class FirstFitStrategyTests {
     }
 
     @Test
-    public void packTwoSpritesOneLocatedOneIsNot()
+    public void packTwoSpritesOneLocatedOneIsNotWithoutFlush()
             throws InvalidPropertyValueException {
         final Rectangle SPRITE1_BOUNDS = new Rectangle(0, 0, 3, 4);
         final Rectangle SPRITE2_BOUNDS = new Rectangle(-1, -1, 5, 5);
-        final Rectangle NEW_BOUNDS = new Rectangle(0, 4, 5, 5);
+        final Rectangle NEW_BOUNDS = new Rectangle(0, 0, 5, 5);
 
         Sprite sprite1Mock = mock(Sprite.class);
         doReturn(SPRITE1_BOUNDS).when(sprite1Mock).getProperty(Sprite.BOUNDS);
@@ -356,21 +356,13 @@ public class FirstFitStrategyTests {
         assertTrue(2 == sprites.length);
         verify(sprite1Mock, never()).setProperty(eq(Sprite.BOUNDS), any());
         assertEquals(sprite2Mock, sprites[1]);
-
-        // TODO This will fail because free zones have not been generated. So,
-        // sprite2 will be positioned at [0, 0]. Is this behaviour obvious?
-        // Should we recalculate free zones every time we pack sprites? This
-        // might make it quite slow. We'll leave this test failing as a reminder
-        // until we decide on how to handle this. But for now to recalculate
-        // free zones a client should flush the cache.
         verify(sprite2Mock).setProperty(Sprite.BOUNDS, NEW_BOUNDS);
 
         Rectangle[] freeZones = strategy.getFreeZones();
         assertNotNull(freeZones);
-        assertEquals(3, freeZones.length);
-        assertEquals(new Rectangle(0, 9, 10, 1), freeZones[0]);
-        assertEquals(new Rectangle(3, 0, 7, 4), freeZones[1]);
-        assertEquals(new Rectangle(5, 0, 5, 10), freeZones[2]);
+        assertEquals(2, freeZones.length);
+        assertEquals(new Rectangle(5, 0, 5, 10), freeZones[0]);
+        assertEquals(new Rectangle(0, 5, 10, 5), freeZones[1]);
     }
 
     @Test

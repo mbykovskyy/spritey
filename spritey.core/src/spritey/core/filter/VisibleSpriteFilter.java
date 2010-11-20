@@ -19,25 +19,18 @@ package spritey.core.filter;
 
 import java.awt.Rectangle;
 
+import spritey.core.Model;
 import spritey.core.Sprite;
-import spritey.core.node.Node;
 
 /**
  * Filter for extracting visible sprites.
  */
 public class VisibleSpriteFilter extends SpriteFilter {
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see spritey.core.filter.AbstractFilter#select(spritey.core.node.Node)
-     */
     @Override
-    public boolean select(Node node) {
-        if (super.select(node)) {
-            Rectangle bounds = (Rectangle) node.getModel().getProperty(
-                    Sprite.BOUNDS);
-
+    public boolean select(Model model) {
+        if (super.select(model)) {
+            Rectangle bounds = (Rectangle) model.getProperty(Sprite.BOUNDS);
             return (bounds.x >= 0) && (bounds.y >= 0);
         }
         return false;

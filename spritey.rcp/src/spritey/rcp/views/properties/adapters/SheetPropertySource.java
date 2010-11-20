@@ -30,7 +30,6 @@ import org.eclipse.ui.views.properties.TextPropertyDescriptor;
 import spritey.core.Model;
 import spritey.core.Sheet;
 import spritey.core.exception.InvalidPropertyValueException;
-import spritey.core.node.Node;
 import spritey.rcp.SpriteyPlugin;
 import spritey.rcp.views.properties.BackgroundPropertyDescriptor;
 import spritey.rcp.views.properties.HeightPropertyDescriptor;
@@ -91,36 +90,18 @@ public class SheetPropertySource implements IPropertySource {
                 height, bg };
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.eclipse.ui.views.properties.IPropertySource#getEditableValue()
-     */
     @Override
     public Object getEditableValue() {
         // TODO Auto-generated method stub
         return null;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * org.eclipse.ui.views.properties.IPropertySource#getPropertyDescriptors()
-     */
     @Override
     public IPropertyDescriptor[] getPropertyDescriptors() {
         return propertyDescriptors;
 
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * org.eclipse.ui.views.properties.IPropertySource#getPropertyValue(java
-     * .lang.Object)
-     */
     @Override
     public Object getPropertyValue(Object id) {
         Object value = null;
@@ -154,37 +135,16 @@ public class SheetPropertySource implements IPropertySource {
         return value;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * org.eclipse.ui.views.properties.IPropertySource#isPropertySet(java.lang
-     * .Object)
-     */
     @Override
     public boolean isPropertySet(Object id) {
         return false;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * org.eclipse.ui.views.properties.IPropertySource#resetPropertyValue(java
-     * .lang.Object)
-     */
     @Override
     public void resetPropertyValue(Object id) {
         // Do nothing.
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * org.eclipse.ui.views.properties.IPropertySource#setPropertyValue(java
-     * .lang.Object, java.lang.Object)
-     */
     @Override
     public void setPropertyValue(Object id, Object value) {
         try {
@@ -194,18 +154,18 @@ public class SheetPropertySource implements IPropertySource {
                 int height = ((Dimension) model.getProperty(Sheet.SIZE)).height;
                 model.setProperty(Sheet.SIZE, new Dimension(width, height));
 
-                Node sheetNode = SpriteyPlugin.getDefault().getRootNode()
+                Sheet sheet = (Sheet) SpriteyPlugin.getDefault().getRootModel()
                         .getChildren()[0];
-                SpriteyPlugin.getDefault().getPacker().pack(sheetNode, true);
+                SpriteyPlugin.getDefault().getPacker().pack(sheet, true);
                 break;
             case HEIGHT_ID:
                 width = ((Dimension) model.getProperty(Sheet.SIZE)).width;
                 height = (Integer) value;
                 model.setProperty(Sheet.SIZE, new Dimension(width, height));
 
-                sheetNode = SpriteyPlugin.getDefault().getRootNode()
+                sheet = (Sheet) SpriteyPlugin.getDefault().getRootModel()
                         .getChildren()[0];
-                SpriteyPlugin.getDefault().getPacker().pack(sheetNode, true);
+                SpriteyPlugin.getDefault().getPacker().pack(sheet, true);
                 break;
             case BACKGROUND_ID:
                 if (null != value) {

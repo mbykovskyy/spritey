@@ -72,17 +72,17 @@
             name="Sprite Tree Data Provider">
          <triggerPoints>
             <instanceof
-                  value="spritey.core.node.Node">
+                  value="spritey.core.Model">
             </instanceof>
          </triggerPoints>
          <possibleChildren>
             <instanceof
-                  value="spritey.core.node.Node">
+                  value="spritey.core.Model">
             </instanceof>
          </possibleChildren>
          <enablement>
             <instanceof
-                  value="spritey.core.node.Node">
+                  value="spritey.core.Model">
             </instanceof>
          </enablement>
          <dropAssistant
@@ -90,7 +90,7 @@
                id="spritey.rcp.views.navigator.dropAssistant">
             <possibleDropTargets>
                <instanceof
-                     value="spritey.core.node.Node">
+                     value="spritey.core.Model">
                </instanceof>
             </possibleDropTargets>
          </dropAssistant>
@@ -125,14 +125,9 @@
             name="&amp;New">
       </command>
       <command
-            defaultHandler="spritey.rcp.handlers.AddSpriteHandler"
-            id="spritey.command.addSprite"
-            name="Add Sprite">
-      </command>
-      <command
-            defaultHandler="spritey.rcp.handlers.AddFolderHandler"
-            id="spritey.command.addFolder"
-            name="Add Folder">
+            defaultHandler="spritey.rcp.handlers.AddSpritesHandler"
+            id="spritey.command.addSprites"
+            name="Add Sprites">
       </command>
       <command
             id="spritey.command.deleteSprites"
@@ -143,6 +138,11 @@
             id="spritey.command.addGroup"
             name="Add Group">
       </command>
+      <command
+            defaultHandler="spritey.rcp.handlers.SaveAsHandler"
+            id="spritey.command.saveAs"
+            name="&amp;Save As...">
+      </command>
    </extension>
    <extension
          point="org.eclipse.ui.menus">
@@ -152,6 +152,18 @@
                label="&amp;File">
             <command
                   commandId="spritey.command.newSpriteSheet"
+                  style="push">
+            </command>
+            <command
+                  commandId="spritey.command.saveAs"
+                  style="push">
+            </command>
+            <separator
+                  name="spritey.rcp.separator1"
+                  visible="true">
+            </separator>
+            <command
+                  commandId="org.eclipse.ui.file.exit"
                   style="push">
             </command>
          </menu>
@@ -172,13 +184,8 @@
                visible="true">
          </separator>
          <command
-               commandId="spritey.command.addSprite"
+               commandId="spritey.command.addSprites"
                icon="data/icons/add.png"
-               style="push">
-         </command>
-         <command
-               commandId="spritey.command.addFolder"
-               icon="data/icons/folder.png"
                style="push">
          </command>
          <command
@@ -203,7 +210,7 @@
          </adapter>
       </factory>
       <factory
-            adaptableType="spritey.core.node.Node"
+            adaptableType="spritey.core.Model"
             class="spritey.rcp.views.properties.adapters.PropertySourceAdapterFactory">
          <adapter
                type="org.eclipse.ui.views.properties.IPropertySource">
@@ -230,10 +237,13 @@
                      operator="or">
                   <or>
                      <instanceof
-                           value="spritey.core.node.Node">
+                           value="spritey.core.Sprite">
                      </instanceof>
                      <instanceof
                            value="spritey.rcp.editors.editparts.SpriteEditPart">
+                     </instanceof>
+                     <instanceof
+                           value="spritey.core.Group">
                      </instanceof>
                   </or>
                </iterate>

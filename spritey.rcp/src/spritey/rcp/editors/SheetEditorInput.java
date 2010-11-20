@@ -32,61 +32,32 @@ public class SheetEditorInput implements IEditorInput {
 
     private static final String NAME = "Sprite Sheet Editor";
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.eclipse.core.runtime.IAdaptable#getAdapter(java.lang.Class)
-     */
     @Override
+    @SuppressWarnings("rawtypes")
     public Object getAdapter(Class adapter) {
         return null;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.eclipse.ui.IEditorInput#exists()
-     */
     @Override
     public boolean exists() {
         return false;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.eclipse.ui.IEditorInput#getImageDescriptor()
-     */
     @Override
     public ImageDescriptor getImageDescriptor() {
         return ImageDescriptor.getMissingImageDescriptor();
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.eclipse.ui.IEditorInput#getName()
-     */
     @Override
     public String getName() {
         return NAME;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.eclipse.ui.IEditorInput#getPersistable()
-     */
     @Override
     public IPersistableElement getPersistable() {
         return null;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.eclipse.ui.IEditorInput#getToolTipText()
-     */
     @Override
     public String getToolTipText() {
         return NAME;

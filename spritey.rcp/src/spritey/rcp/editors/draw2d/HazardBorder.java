@@ -71,22 +71,11 @@ public class HazardBorder extends AbstractBorder {
                 SWT.LINE_CUSTOM, dash, DASH_LENGTH, 10);
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.eclipse.draw2d.Border#getInsets(org.eclipse.draw2d.IFigure)
-     */
     @Override
     public Insets getInsets(IFigure figure) {
         return new Insets(WIDTH);
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.eclipse.draw2d.Border#paint(org.eclipse.draw2d.IFigure,
-     * org.eclipse.draw2d.Graphics, org.eclipse.draw2d.geometry.Insets)
-     */
     @Override
     public void paint(IFigure figure, Graphics graphics, Insets insets) {
         tempRect.setBounds(getPaintRectangle(figure, insets));

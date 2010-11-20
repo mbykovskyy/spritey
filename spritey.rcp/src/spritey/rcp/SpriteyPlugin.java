@@ -22,12 +22,11 @@ import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
+import spritey.core.Model;
 import spritey.core.ModelFactory;
-import spritey.core.node.MapBasedNodeFactory;
-import spritey.core.node.Node;
-import spritey.core.node.NodeFactory;
 import spritey.core.packer.FirstFitStrategy;
 import spritey.core.packer.Packer;
+import spritey.rcp.core.Root;
 import spritey.rcp.views.SelectionSynchronizer;
 import spritey.rcp.views.ViewUpdateManager;
 
@@ -57,9 +56,8 @@ public class SpriteyPlugin extends AbstractUIPlugin {
     // The shared instance
     private static SpriteyPlugin plugin;
 
-    private Node rootNode;
+    private Model root;
     private ModelFactory modelFactory;
-    private NodeFactory nodeFactory;
     private Packer packer;
     private ViewUpdateManager viewUpdater;
     private SelectionSynchronizer selectionSynchronizer;
@@ -68,35 +66,20 @@ public class SpriteyPlugin extends AbstractUIPlugin {
      * The constructor
      */
     public SpriteyPlugin() {
-        rootNode = null;
+        root = null;
         modelFactory = new ModelFactory();
-        nodeFactory = new MapBasedNodeFactory();
         packer = new Packer(new FirstFitStrategy());
         viewUpdater = new ViewUpdateManager();
         selectionSynchronizer = new SelectionSynchronizer();
         selectionSynchronizer.activate();
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * org.eclipse.ui.plugin.AbstractUIPlugin#start(org.osgi.framework.BundleContext
-     * )
-     */
     @Override
     public void start(BundleContext context) throws Exception {
         super.start(context);
         plugin = this;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * org.eclipse.ui.plugin.AbstractUIPlugin#stop(org.osgi.framework.BundleContext
-     * )
-     */
     @Override
     public void stop(BundleContext context) throws Exception {
         plugin = null;
@@ -131,15 +114,15 @@ public class SpriteyPlugin extends AbstractUIPlugin {
      * <p>
      * This is similar to GEF tree structure. Root-node contains Contents-node.
      * A client has to define/implement Contents-node as opposed to Root-node.
+     * </p>
      * 
      * @return an instance of root node.
      */
-    public Node getRootNode() {
-        if (null == rootNode) {
-            rootNode = getNodeFactory().createNode("Root");
+    public Model getRootModel() {
+        if (null == root) {
+            root = new Root();
         }
-
-        return rootNode;
+        return root;
     }
 
     /**
@@ -149,15 +132,6 @@ public class SpriteyPlugin extends AbstractUIPlugin {
      */
     public ModelFactory getModelFactory() {
         return modelFactory;
-    }
-
-    /**
-     * Returns a default node factory.
-     * 
-     * @return an instance of a node factory.
-     */
-    public NodeFactory getNodeFactory() {
-        return nodeFactory;
     }
 
     /**

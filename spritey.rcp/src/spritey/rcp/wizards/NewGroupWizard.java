@@ -19,12 +19,8 @@ package spritey.rcp.wizards;
 
 import org.eclipse.jface.wizard.Wizard;
 
-import spritey.core.Group;
 import spritey.core.Model;
 import spritey.core.ModelFactory;
-import spritey.core.Sheet;
-import spritey.core.node.Node;
-import spritey.core.node.NodeFactory;
 import spritey.rcp.SpriteyPlugin;
 
 /**
@@ -34,34 +30,25 @@ public class NewGroupWizard extends Wizard {
 
     static final String TITLE = "New Group";
 
-    NewGroupMainPage mainPage;
+    NewGroupPage mainPage;
 
     @Override
     public void addPages() {
-        mainPage = new NewGroupMainPage();
+        mainPage = new NewGroupPage();
 
         setWindowTitle(TITLE);
         addPage(mainPage);
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.eclipse.jface.wizard.Wizard#performFinish()
-     */
     @Override
     public boolean performFinish() {
         SpriteyPlugin plugin = SpriteyPlugin.getDefault();
         ModelFactory modelFactory = plugin.getModelFactory();
-        NodeFactory nodeFactory = plugin.getNodeFactory();
 
         Model group = modelFactory.createGroup();
         mainPage.populateGroup(group);
 
-        String groupName = (String) group.getProperty(Group.NAME);
-        Node node = nodeFactory.createNode(groupName);
-        node.setModel(group);
-
-        return plugin.getRootNode().getChild(Sheet.DEFAULT_NAME).addChild(node);
+        return plugin.getRootModel().getChildren()[0].addChildren(group).length == 0;
     }
+
 }

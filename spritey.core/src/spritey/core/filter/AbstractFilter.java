@@ -22,7 +22,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import spritey.core.Model;
-import spritey.core.node.Node;
 
 /**
  * Abstract implementation of Filter. Each method simply iterates through the
@@ -33,84 +32,33 @@ import spritey.core.node.Node;
  */
 public abstract class AbstractFilter implements Filter {
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see spritey.core.filter.Filter#filterNodes(spritey.core.node.Node)
-     */
     @Override
-    public Node[] filterNodes(Node rootNode) {
-        List<Node> out = new ArrayList<Node>();
-        if (select(rootNode)) {
-            out.add(rootNode);
+    public Model[] filter(Model root) {
+        List<Model> out = new ArrayList<Model>();
+        if (select(root)) {
+            out.add(root);
         }
 
-        for (Node child : rootNode.getChildren()) {
-            out.addAll(Arrays.asList(filterNodes(child)));
+        for (Model child : root.getChildren()) {
+            out.addAll(Arrays.asList(filter(child)));
         }
 
-        return out.toArray(new Node[out.size()]);
+        return out.toArray(new Model[out.size()]);
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see spritey.core.filter.Filter#filterNodes(spritey.core.node.Node[])
-     */
     @Override
-    public Node[] filterNodes(Node[] nodes) {
-        List<Node> out = new ArrayList<Node>(nodes.length);
-        for (Node e : nodes) {
+    public Model[] filter(Model[] models) {
+        List<Model> out = new ArrayList<Model>(models.length);
+        for (Model e : models) {
             if (select(e)) {
                 out.add(e);
             }
         }
 
-        return out.toArray(new Node[out.size()]);
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see spritey.core.filter.Filter#filterModels(spritey.core.node.Node)
-     */
-    @Override
-    public Model[] filterModels(Node rootNode) {
-        List<Model> out = new ArrayList<Model>();
-        if (select(rootNode)) {
-            out.add(rootNode.getModel());
-        }
-
-        for (Node child : rootNode.getChildren()) {
-            out.addAll(Arrays.asList(filterModels(child)));
-        }
-
         return out.toArray(new Model[out.size()]);
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see spritey.core.filter.Filter#filterModels(spritey.core.node.Node[])
-     */
     @Override
-    public Model[] filterModels(Node[] nodes) {
-        List<Model> out = new ArrayList<Model>(nodes.length);
-        for (Node e : nodes) {
-            if (select(e)) {
-                out.add(e.getModel());
-            }
-        }
-
-        return out.toArray(new Model[out.size()]);
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see spritey.core.filter.Filter#select(spritey.core.node.Node)
-     */
-    @Override
-    public abstract boolean select(Node node);
+    public abstract boolean select(Model model);
 
 }

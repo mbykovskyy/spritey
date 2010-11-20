@@ -24,7 +24,6 @@ import spritey.core.Group;
 import spritey.core.Model;
 import spritey.core.Sheet;
 import spritey.core.Sprite;
-import spritey.core.node.Node;
 import spritey.rcp.editors.editparts.SheetEditPart;
 import spritey.rcp.editors.editparts.SpriteEditPart;
 
@@ -35,18 +34,17 @@ import spritey.rcp.editors.editparts.SpriteEditPart;
 public class PropertySourceAdapterFactory implements IAdapterFactory {
 
     @Override
+    @SuppressWarnings("rawtypes")
     public Object getAdapter(Object adaptableObject, Class adapterType) {
         if (adapterType == IPropertySource.class) {
             if (adaptableObject instanceof SheetEditPart) {
                 SheetEditPart part = (SheetEditPart) adaptableObject;
-                Node node = (Node) part.getModel();
-                return new SheetPropertySource(node.getModel());
+                return new SheetPropertySource((Model) part.getModel());
             } else if (adaptableObject instanceof SpriteEditPart) {
                 SpriteEditPart part = (SpriteEditPart) adaptableObject;
-                Node node = (Node) part.getModel();
-                return new SpritePropertySource(node.getModel());
-            } else if (adaptableObject instanceof Node) {
-                Model model = ((Node) adaptableObject).getModel();
+                return new SpritePropertySource((Model) part.getModel());
+            } else if (adaptableObject instanceof Model) {
+                Model model = (Model) adaptableObject;
 
                 if (model instanceof Sheet) {
                     return new SheetPropertySource(model);
@@ -62,6 +60,7 @@ public class PropertySourceAdapterFactory implements IAdapterFactory {
     }
 
     @Override
+    @SuppressWarnings("rawtypes")
     public Class[] getAdapterList() {
         return new Class[] { IPropertySource.class };
     }

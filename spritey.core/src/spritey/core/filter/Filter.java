@@ -18,55 +18,38 @@
 package spritey.core.filter;
 
 import spritey.core.Model;
-import spritey.core.node.Node;
 
 /**
  * A filter is used to extract a subset of elements.
  */
 public interface Filter {
-    /**
-     * Extracts a list of nodes from the specified tree.
-     * 
-     * @param rootNode
-     *        the root of the tree.
-     * @return a list of extracted nodes.
-     */
-    public Node[] filterNodes(Node rootNode);
-
-    /**
-     * Extracts a list of nodes from the specified list.
-     * 
-     * @param nodes
-     *        a list of nodes to filter.
-     * @return a list of extracted nodes.
-     */
-    public Node[] filterNodes(Node[] nodes);
 
     /**
      * Returns a list of models extracted from the specified tree.
      * 
-     * @param rootNode
+     * @param root
      *        the root of the tree.
      * @return a list of extracted models.
      */
-    public Model[] filterModels(Node rootNode);
+    public Model[] filter(Model root);
 
     /**
      * Returns a list of models extracted from the specified list.
      * 
-     * @param nodes
-     *        a list of nodes to filter.
+     * @param models
+     *        a list of models to filter.
      * @return a list of extracted models.
      */
-    public Model[] filterModels(Node[] nodes);
+    public Model[] filter(Model[] models);
 
     /**
      * Returns whether the given element makes it through this filter.
      * 
-     * @param node
-     *        the node to test.
+     * @param model
+     *        the model to test.
      * @return <code>true</code> if element is included in the filtered set, and
      *         <code>false</code> if excluded.
      */
-    public boolean select(Node node);
+    public boolean select(Model node);
+
 }

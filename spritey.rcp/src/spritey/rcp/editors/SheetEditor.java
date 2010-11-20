@@ -47,15 +47,10 @@ public class SheetEditor extends GraphicalEditor {
         getGraphicalViewer().setEditPartFactory(new GraphicalEditPartFactory());
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.eclipse.gef.ui.parts.GraphicalEditor#initializeGraphicalViewer()
-     */
     @Override
     protected void initializeGraphicalViewer() {
         EditPart part = new ContentsEditPart();
-        part.setModel(SpriteyPlugin.getDefault().getRootNode());
+        part.setModel(SpriteyPlugin.getDefault().getRootModel());
         getGraphicalViewer().setContents(part);
     }
 
@@ -66,12 +61,6 @@ public class SheetEditor extends GraphicalEditor {
                 .addSelectionProvider(getGraphicalViewer());
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.eclipse.ui.part.EditorPart#doSave(org.eclipse.core.runtime.
-     * IProgressMonitor)
-     */
     @Override
     public void doSave(IProgressMonitor monitor) {
         // Do nothing.

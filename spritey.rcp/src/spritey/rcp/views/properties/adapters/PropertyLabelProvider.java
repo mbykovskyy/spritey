@@ -34,11 +34,6 @@ public class PropertyLabelProvider extends LabelProvider {
         img = icon;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.eclipse.jface.viewers.ILabelProvider#getImage(java.lang.Object)
-     */
     @Override
     public Image getImage(Object element) {
         return img;

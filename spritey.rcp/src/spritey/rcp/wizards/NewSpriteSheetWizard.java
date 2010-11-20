@@ -21,9 +21,6 @@ import org.eclipse.jface.wizard.Wizard;
 
 import spritey.core.Model;
 import spritey.core.ModelFactory;
-import spritey.core.Sheet;
-import spritey.core.node.Node;
-import spritey.core.node.NodeFactory;
 import spritey.rcp.SpriteyPlugin;
 
 /**
@@ -43,23 +40,15 @@ public class NewSpriteSheetWizard extends Wizard {
         addPage(mainPage);
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.eclipse.jface.wizard.Wizard#performFinish()
-     */
     @Override
     public boolean performFinish() {
         SpriteyPlugin plugin = SpriteyPlugin.getDefault();
         ModelFactory modelFactory = plugin.getModelFactory();
-        NodeFactory nodeFactory = plugin.getNodeFactory();
 
         Model sheet = modelFactory.createSheet();
         mainPage.populateSheet(sheet);
 
-        Node node = nodeFactory.createNode(Sheet.DEFAULT_NAME);
-        node.setModel(sheet);
-
-        return plugin.getRootNode().addChild(node);
+        return plugin.getRootModel().addChildren(sheet).length == 0;
     }
+
 }

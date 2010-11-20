@@ -25,22 +25,27 @@ import static org.mockito.Mockito.verify;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 
+import spritey.core.Model;
 import spritey.core.Sheet;
 import spritey.core.Sprite;
-import spritey.core.node.Node;
 
 /**
  * Tests the implementation of Packer.
  */
 public class PackerTests {
 
-    Strategy strategyMock;
     Packer packer;
+
+    @Mock
+    Strategy strategyMock;
 
     @Before
     public void initialize() {
-        strategyMock = mock(Strategy.class);
+        MockitoAnnotations.initMocks(this);
+
         doThrow(new IllegalArgumentException()).when(strategyMock).pack(null,
                 null, false);
 
@@ -74,11 +79,9 @@ public class PackerTests {
     @Test
     public void packWithoutCacheFlush() throws Exception {
         Sheet sheetMock = mock(Sheet.class);
-        Node nodeMock = mock(Node.class);
-        doReturn(new Node[0]).when(nodeMock).getChildren();
-        doReturn(sheetMock).when(nodeMock).getModel();
+        doReturn(new Model[0]).when(sheetMock).getChildren();
 
-        packer.pack(nodeMock, false);
+        packer.pack(sheetMock, false);
 
         verify(strategyMock).pack(sheetMock, new Sprite[0], false);
     }

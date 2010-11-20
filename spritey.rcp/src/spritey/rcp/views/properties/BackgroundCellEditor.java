@@ -60,13 +60,6 @@ public class BackgroundCellEditor extends CellEditor {
         super(parent);
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * org.eclipse.jface.viewers.CellEditor#createControl(org.eclipse.swt.widgets
-     * .Composite)
-     */
     @Override
     protected Control createControl(Composite parent) {
         combo = new CCombo(parent, SWT.READ_ONLY);
@@ -162,32 +155,17 @@ public class BackgroundCellEditor extends CellEditor {
         }
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.eclipse.jface.viewers.CellEditor#doGetValue()
-     */
     @Override
     protected Object doGetValue() {
         return background;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.eclipse.jface.viewers.CellEditor#doSetFocus()
-     */
     @Override
     protected void doSetFocus() {
         combo.setFocus();
         combo.addFocusListener(getComboFocusListener());
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.eclipse.jface.viewers.CellEditor#doSetValue(java.lang.Object)
-     */
     @Override
     protected void doSetValue(Object value) {
         // We need this until bug #320200

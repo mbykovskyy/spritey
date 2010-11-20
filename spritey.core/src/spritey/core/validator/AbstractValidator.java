@@ -34,21 +34,11 @@ public abstract class AbstractValidator implements Validator {
         errorCode = NONE;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see spritey.core.validator.Validator#getMessage()
-     */
     @Override
     public String getMessage() {
         return message;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see spritey.core.validator.Validator#getErrorCode()
-     */
     @Override
     public int getErrorCode() {
         return errorCode;

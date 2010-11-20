@@ -18,27 +18,22 @@
 package spritey.core;
 
 /**
- * A data object that can be attached to a node. This model represents a
- * container that does not have any graphical representation but can contain a
- * collection of sprites or other groups.
+ * This model represents a container that does not have any graphical
+ * representation but can contain a collection of sprites or other groups.
  */
-public class Group extends AbstractModel {
+public class Group extends Model {
 
     /**
      * Group name property id. Has to be <code>java.lang.String</code> type.
      */
-    public final static int NAME = 100;
-
-    /**
-     * Node property id. Has to be <code>spritey.core.node.Node</code> type.
-     */
-    public final static int NODE = 101;
+    public static final int NAME = 100;
 
     // Defaults
-    public final static String DEFAULT_NAME = "New Group";
+    public static final String DEFAULT_NAME = "New Group";
 
     // Limits
-    public final static int MIN_NAME_LENGTH = 1;
-    public final static int MAX_NAME_LENGTH = 1024;
+    public static final int MIN_NAME_LENGTH = 1;
+    public static final int MAX_NAME_LENGTH = 1024;
+    public static final String LEGAL_CHARACTERS = Sprite.LEGAL_CHARACTERS;
 
 }

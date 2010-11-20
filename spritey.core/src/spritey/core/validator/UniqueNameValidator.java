@@ -20,7 +20,6 @@ package spritey.core.validator;
 import spritey.core.Group;
 import spritey.core.Model;
 import spritey.core.Sprite;
-import spritey.core.node.Node;
 
 /**
  * Validates that the name is unique within model's parent. A parent can be a
@@ -37,7 +36,6 @@ public class UniqueNameValidator extends AbstractValidator {
     private static final String M_NAME_NOT_UNIQUE = "Name is not unique.";
 
     private Model model;
-    private int nodeProperty;
 
     /**
      * Constructor
@@ -47,7 +45,6 @@ public class UniqueNameValidator extends AbstractValidator {
      */
     public UniqueNameValidator(Sprite model) {
         this.model = model;
-        nodeProperty = Sprite.NODE;
     }
 
     /**
@@ -58,35 +55,27 @@ public class UniqueNameValidator extends AbstractValidator {
      */
     public UniqueNameValidator(Group model) {
         this.model = model;
-        nodeProperty = Group.NODE;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see spritey.core.validator.Validator#isValid(java.lang.Object)
-     */
     @Override
     public boolean isValid(Object value) {
         if (value instanceof String) {
-            Node node = (Node) model.getProperty(nodeProperty);
+            Model parent = model.getParent();
 
-            if (null != node) {
-                Node parentNode = node.getParent();
+            if (null != parent) {
+                for (Model child : parent.getChildren()) {
+                    if (child == model) {
+                        continue;
+                    }
 
-                if (null != parentNode) {
-                    for (Node child : parentNode.getChildren()) {
-                        Model model = child.getModel();
-                        int nameProperty = (model instanceof Sprite) ? Sprite.NAME
-                                : Group.NAME;
-                        String childName = (String) model
-                                .getProperty(nameProperty);
+                    int nameProperty = (child instanceof Sprite) ? Sprite.NAME
+                            : Group.NAME;
+                    String childName = (String) child.getProperty(nameProperty);
 
-                        if (childName.equals(value)) {
-                            setErrorCode(NAME_NOT_UNIQUE);
-                            setMessage(M_NAME_NOT_UNIQUE);
-                            return false;
-                        }
+                    if ((null != childName) && childName.equals(value)) {
+                        setErrorCode(NAME_NOT_UNIQUE);
+                        setMessage(M_NAME_NOT_UNIQUE);
+                        return false;
                     }
                 }
             }

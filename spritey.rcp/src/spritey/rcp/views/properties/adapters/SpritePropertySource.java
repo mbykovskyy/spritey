@@ -29,7 +29,9 @@ import org.eclipse.ui.views.properties.IPropertyDescriptor;
 import org.eclipse.ui.views.properties.IPropertySource;
 import org.eclipse.ui.views.properties.PropertyDescriptor;
 
+import spritey.core.Group;
 import spritey.core.Model;
+import spritey.core.Sheet;
 import spritey.core.Sprite;
 import spritey.core.exception.InvalidPropertyValueException;
 import spritey.core.validator.NotNullValidator;
@@ -38,6 +40,7 @@ import spritey.core.validator.TypeValidator;
 import spritey.core.validator.UniqueNameValidator;
 import spritey.rcp.Messages;
 import spritey.rcp.SpriteyPlugin;
+import spritey.rcp.core.SpriteConstants;
 import spritey.rcp.views.properties.TextPropertyDescriptorEx;
 
 /**
@@ -194,6 +197,7 @@ public class SpritePropertySource implements IPropertySource {
             switch ((Integer) id) {
             case NAME_ID:
                 model.setProperty(Sprite.NAME, value);
+                model.setProperty(SpriteConstants.NEW_NAME, value);
                 break;
             default:
                 break;
@@ -210,11 +214,20 @@ public class SpritePropertySource implements IPropertySource {
 
         switch (e.getErrorCode()) {
         case UniqueNameValidator.NAME_NOT_UNIQUE:
-            message[0] = NLS.bind(Messages.MODEL_NAME_EXISTS, e.getValue());
+            Model parent = model.getParent();
+
+            if (parent instanceof Sheet) {
+                message[0] = NLS.bind(
+                        Messages.BATCH_RENAME_SHEET_CONTAINS_SPRITE,
+                        e.getValue());
+            } else {
+                message[0] = NLS.bind(Messages.SPRITE_NAME_EXISTS,
+                        e.getValue(), parent.getProperty(Group.NAME));
+            }
             break;
         case StringLengthValidator.TOO_LONG:
         case StringLengthValidator.TOO_SHORT:
-            message[0] = NLS.bind(Messages.SPRITE_NAME_INVALID,
+            message[0] = NLS.bind(Messages.SPRITE_NAME_INVALID_LENGTH,
                     Sprite.MIN_NAME_LENGTH, Sprite.MAX_NAME_LENGTH);
             break;
         case NotNullValidator.NULL:

@@ -34,7 +34,6 @@ import org.eclipse.swt.graphics.RGB;
 import spritey.core.Model;
 import spritey.core.Sheet;
 import spritey.core.filter.VisibleSpriteFilter;
-import spritey.core.node.Node;
 import spritey.rcp.SpriteyPlugin;
 import spritey.rcp.editors.draw2d.HazardBorder;
 import spritey.rcp.editors.tools.SpriteDragTracker;
@@ -105,57 +104,31 @@ public class SheetEditPart extends AbstractGraphicalEditPart implements
         freeImage(sheet.getImage());
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.eclipse.gef.editparts.AbstractGraphicalEditPart#createFigure()
-     */
     @Override
     protected IFigure createFigure() {
         sheet = new ImageFigure();
         sheet.setLayoutManager(new XYLayout());
-        populateSheet(sheet, ((Node) getModel()).getModel());
+        populateSheet(sheet, (Model) getModel());
         return sheet;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.eclipse.gef.editparts.AbstractEditPart#createEditPolicies()
-     */
     @Override
     protected void createEditPolicies() {
         // Do nothing.
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.eclipse.gef.editparts.AbstractEditPart#getModelChildren()
-     */
     @Override
     protected List<?> getModelChildren() {
-        Node[] sprites = new VisibleSpriteFilter()
-                .filterNodes((Node) getModel());
+        Model[] sprites = new VisibleSpriteFilter().filter((Model) getModel());
         return Arrays.asList(sprites);
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.eclipse.gef.editparts.AbstractGraphicalEditPart#activate()
-     */
     @Override
     public void activate() {
         super.activate();
         SpriteyPlugin.getDefault().getViewUpdater().addListener(this);
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.eclipse.gef.editparts.AbstractGraphicalEditPart#deactivate()
-     */
     @Override
     public void deactivate() {
         SpriteyPlugin.getDefault().getViewUpdater().removeListener(this);
@@ -164,26 +137,15 @@ public class SheetEditPart extends AbstractGraphicalEditPart implements
 
     @Override
     protected void refreshVisuals() {
-        populateSheet(sheet, ((Node) getModel()).getModel());
+        populateSheet(sheet, (Model) getModel());
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see spritey.rcp.views.ViewUpdateListener#updateView()
-     */
     @Override
     public void updateView() {
-        // if (event.getProperty() != Sheet.DESCRIPTION) {
+        // TODO Only refresh when changed property is not DESCRIPTION.
         refreshVisuals();
-        // }
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see spritey.rcp.views.ViewUpdateListener#refreshView()
-     */
     @Override
     public void refreshView() {
         refresh();

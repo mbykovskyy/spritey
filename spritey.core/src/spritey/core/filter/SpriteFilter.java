@@ -21,58 +21,41 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import spritey.core.Model;
 import spritey.core.Sprite;
-import spritey.core.node.Node;
 
 /**
  * Filter for extracting sprites.
  */
 public class SpriteFilter extends AbstractFilter {
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see spritey.core.filter.Filter#filterModels(spritey.core.node.Node)
-     */
     @Override
-    public Sprite[] filterModels(Node rootNode) {
+    public Sprite[] filter(Model root) {
         List<Sprite> out = new ArrayList<Sprite>();
-        if (select(rootNode)) {
-            out.add((Sprite) rootNode.getModel());
+        if (select(root)) {
+            out.add((Sprite) root);
         }
 
-        for (Node child : rootNode.getChildren()) {
-            out.addAll(Arrays.asList(filterModels(child)));
+        for (Model child : root.getChildren()) {
+            out.addAll(Arrays.asList(filter(child)));
         }
-
         return out.toArray(new Sprite[out.size()]);
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see spritey.core.filter.Filter#filterModels(spritey.core.node.Node[])
-     */
     @Override
-    public Sprite[] filterModels(Node[] nodes) {
-        List<Sprite> out = new ArrayList<Sprite>(nodes.length);
-        for (Node e : nodes) {
+    public Sprite[] filter(Model[] models) {
+        List<Sprite> out = new ArrayList<Sprite>(models.length);
+        for (Model e : models) {
             if (select(e)) {
-                out.add((Sprite) e.getModel());
+                out.add((Sprite) e);
             }
         }
-
         return out.toArray(new Sprite[out.size()]);
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see spritey.core.filter.AbstractFilter#select(spritey.core.node.Node)
-     */
     @Override
-    public boolean select(Node node) {
-        return (node.getModel() instanceof Sprite);
+    public boolean select(Model model) {
+        return (model instanceof Sprite);
     }
 
 }

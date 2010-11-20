@@ -19,6 +19,8 @@ package spritey.core;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Image;
+import java.awt.Rectangle;
 
 import spritey.core.validator.NotNullValidator;
 import spritey.core.validator.NullOrTypeValidator;
@@ -80,8 +82,10 @@ public class ModelFactory {
         sprite.addValidator(Sprite.NAME, new UniqueNameValidator(sprite));
 
         sprite.addValidator(Sprite.BOUNDS, notNullValidator);
+        sprite.addValidator(Sprite.BOUNDS, new TypeValidator(Rectangle.class));
 
         sprite.addValidator(Sprite.IMAGE, notNullValidator);
+        sprite.addValidator(Sprite.IMAGE, new TypeValidator(Image.class));
 
         return sprite;
     }

@@ -9,7 +9,8 @@ Export-Package: spritey.core,
  spritey.core.event,
  spritey.core.exception,
  spritey.core.filter,
- spritey.core.node;uses:="spritey.core.node.event,spritey.core",
- spritey.core.node.event;uses:="spritey.core.node,spritey.core",
+ spritey.core.io,
  spritey.core.packer,
  spritey.core.validator
+Bundle-ClassPath: libs/java-xmlbuilder-0.3.jar,
+ .

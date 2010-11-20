@@ -51,11 +51,6 @@ public class BackgroundPropertyLabelProvider extends LabelProvider {
         }
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.eclipse.jface.viewers.ILabelProvider#getImage(java.lang.Object)
-     */
     @Override
     public Image getImage(Object element) {
         if ((null == cachedImage) || (cachedElement != element)) {
@@ -78,11 +73,6 @@ public class BackgroundPropertyLabelProvider extends LabelProvider {
         return cachedImage;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.eclipse.jface.viewers.ILabelProvider#getText(java.lang.Object)
-     */
     @Override
     public String getText(Object element) {
         if (null == element) {

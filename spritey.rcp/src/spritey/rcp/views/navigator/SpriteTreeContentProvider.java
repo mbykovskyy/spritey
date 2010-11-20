@@ -18,121 +18,52 @@
 package spritey.rcp.views.navigator;
 
 import org.eclipse.jface.viewers.ITreeContentProvider;
-import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.Viewer;
 
-import spritey.core.node.Node;
-import spritey.rcp.SpriteyPlugin;
-import spritey.rcp.views.ViewUpdateListener;
+import spritey.core.Model;
 
 /**
- * Content provider for updating sprite tree view.
+ * Content provider for sprite tree.
  */
-public class SpriteTreeContentProvider implements ITreeContentProvider,
-        ViewUpdateListener {
+public class SpriteTreeContentProvider implements ITreeContentProvider {
 
-    private StructuredViewer viewer;
-
-    /**
-     * Default constructor
-     */
-    public SpriteTreeContentProvider() {
-        SpriteyPlugin.getDefault().getViewUpdater().addListener(this);
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * org.eclipse.jface.viewers.ITreeContentProvider#getChildren(java.lang.
-     * Object)
-     */
     @Override
-    public Object[] getChildren(Object parentElement) {
-        if (parentElement instanceof Node) {
-            return ((Node) parentElement).getChildren();
-        }
-        return new Object[0];
+    public void dispose() {
+        // Do nothing.
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * org.eclipse.jface.viewers.ITreeContentProvider#getParent(java.lang.Object
-     * )
-     */
     @Override
-    public Object getParent(Object element) {
-        if (element instanceof Node) {
-            return ((Node) element).getParent();
-        }
-        return null;
+    public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
+        // Do nothing.
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * org.eclipse.jface.viewers.ITreeContentProvider#hasChildren(java.lang.
-     * Object)
-     */
-    @Override
-    public boolean hasChildren(Object element) {
-        if (element instanceof Node) {
-            return ((Node) element).isBranch();
-        }
-        return false;
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * org.eclipse.jface.viewers.IStructuredContentProvider#getElements(java
-     * .lang.Object)
-     */
     @Override
     public Object[] getElements(Object inputElement) {
         return getChildren(inputElement);
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * org.eclipse.jface.viewers.IContentProvider#inputChanged(org.eclipse.jface
-     * .viewers.Viewer, java.lang.Object, java.lang.Object)
-     */
     @Override
-    public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
-        this.viewer = (StructuredViewer) viewer;
+    public Object[] getChildren(Object parentElement) {
+        if (parentElement instanceof Model) {
+            return ((Model) parentElement).getChildren();
+        }
+        return new Object[0];
     }
 
     @Override
-    public void dispose() {
-        SpriteyPlugin.getDefault().getViewUpdater().removeListener(this);
+    public Object getParent(Object element) {
+        if (element instanceof Model) {
+            return ((Model) element).getParent();
+        }
+        return null;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see spritey.rcp.views.ViewUpdateListener#refreshView()
-     */
     @Override
-    public void refreshView() {
-        viewer.refresh();
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see spritey.rcp.views.ViewUpdateListener#updateView()
-     */
-    @Override
-    public void updateView() {
-        // TODO change this to update().
-        viewer.refresh();
+    public boolean hasChildren(Object element) {
+        if (element instanceof Model) {
+            return ((Model) element).isBranch();
+        }
+        return false;
     }
 
 }

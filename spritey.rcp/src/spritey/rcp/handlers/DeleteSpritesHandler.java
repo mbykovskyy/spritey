@@ -46,9 +46,9 @@ import org.eclipse.ui.handlers.HandlerUtil;
 import spritey.core.Model;
 import spritey.core.Sheet;
 import spritey.core.Sprite;
-import spritey.core.node.Node;
 import spritey.rcp.Messages;
 import spritey.rcp.SpriteyPlugin;
+import spritey.rcp.core.SpriteConstants;
 import spritey.rcp.views.SelectionSynchronizer;
 import spritey.rcp.views.navigator.SpriteTree;
 
@@ -63,13 +63,6 @@ public class DeleteSpritesHandler extends AbstractHandler implements IHandler {
         errorMessages = new ArrayList<IStatus>();
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * org.eclipse.core.commands.IHandler#execute(org.eclipse.core.commands.
-     * ExecutionEvent)
-     */
     @Override
     public Object execute(final ExecutionEvent event) throws ExecutionException {
         IWorkbenchWindow window = HandlerUtil.getActiveWorkbenchWindow(event);
@@ -108,7 +101,7 @@ public class DeleteSpritesHandler extends AbstractHandler implements IHandler {
         if (errorMessages.size() > 1) {
             status = new MultiStatus("unknown", 0,
                     errorMessages.toArray(new IStatus[errorMessages.size()]),
-                    Messages.DELETE_SPRITES_PROBLEMS, null);
+                    Messages.SPRITE_DELETE_PROBLEMS, null);
         } else {
             status = errorMessages.get(0);
         }
@@ -147,10 +140,11 @@ public class DeleteSpritesHandler extends AbstractHandler implements IHandler {
                 // method is called. However, moving this to removeNotify() will
                 // only dispose visible images. Invisible images i.e. with
                 // negative x and y will not be disposed as they don't have an
-                // EditPart. But for now remove only invisible sprites here and
+                // EditPart. For now remove only invisible sprites here and
                 // remove visible sprites in SpriteEditPart.
                 if (model instanceof Sprite) {
-                    Image image = (Image) model.getProperty(Sprite.IMAGE);
+                    Image image = (Image) model
+                            .getProperty(SpriteConstants.SWT_IMAGE);
                     Rectangle bounds = (Rectangle) model
                             .getProperty(Sprite.BOUNDS);
 
@@ -162,21 +156,22 @@ public class DeleteSpritesHandler extends AbstractHandler implements IHandler {
             }
 
             /**
-             * Deletes the specified node and all its children.
+             * Deletes the specified model and all its children.
              * 
-             * @param node
-             *        the node to delete.
+             * @param model
+             *        the model to delete.
              * @param monitor
              *        the monitor to monitor progress.
              */
-            private void delete(final Node node, final IProgressMonitor monitor) {
+            private void delete(final Model model,
+                    final IProgressMonitor monitor) {
                 // Detach itself from the parent before destroying the model and
                 // children.
-                node.getParent().removeChild(node);
-                destroy(node.getModel());
+                model.getParent().removeChild(model);
+                destroy(model);
 
                 // If node is a group it needs to free its children.
-                for (Node child : node.getChildren()) {
+                for (Model child : model.getChildren()) {
                     // TODO Should we disallow cancelling. Cancelling this
                     // operation will not bring back deleted nodes. This may
                     // mislead the user to think that if the operation is
@@ -200,29 +195,27 @@ public class DeleteSpritesHandler extends AbstractHandler implements IHandler {
                 // group.
                 Object[] list = selection.toArray();
                 for (int i = list.length - 1; i >= 0; --i) {
-                    if (list[i] instanceof Node) {
-                        if (((Node) list[i]).getModel() instanceof Sheet) {
-                            // TODO Do we need to display this message? It
-                            // should be obvious to the user that sheet is not
-                            // allowed to be deleted. A better solution would
-                            // be to disable delete icon altogether.
-                            String message = NLS.bind(
-                                    Messages.DELETING_SHEET_DISALLOWED,
-                                    Sheet.DEFAULT_NAME);
-                            errorMessages.add(new Status(IStatus.INFO,
-                                    "unknown", message));
-                        } else {
-                            // TODO Should we disallow cancelling. Cancelling
-                            // this operation will not bring back deleted nodes.
-                            // This may mislead the user to think that if the
-                            // operation is cancelled then all sprites will
-                            // remain untouched. A solution could be to display
-                            // a warning message to warn the user that some
-                            // sprites were still deleted and provide a list of
-                            // deleted nodes.
-                            if (!monitor.isCanceled()) {
-                                delete((Node) list[i], monitor);
-                            }
+                    if (list[i] instanceof Sheet) {
+                        // TODO Do we need to display this message? It
+                        // should be obvious to the user that sheet is not
+                        // allowed to be deleted. A better solution would
+                        // be to disable delete icon altogether.
+                        String message = NLS.bind(
+                                Messages.DELETING_SHEET_DISALLOWED,
+                                Sheet.DEFAULT_NAME);
+                        errorMessages.add(new Status(IStatus.INFO, "unknown",
+                                message));
+                    } else {
+                        // TODO Should we disallow cancelling. Cancelling
+                        // this operation will not bring back deleted nodes.
+                        // This may mislead the user to think that if the
+                        // operation is cancelled then all sprites will
+                        // remain untouched. A solution could be to display
+                        // a warning message to warn the user that some
+                        // sprites were still deleted and provide a list of
+                        // deleted nodes.
+                        if (!monitor.isCanceled()) {
+                            delete((Model) list[i], monitor);
                         }
                     }
                 }
@@ -231,8 +224,8 @@ public class DeleteSpritesHandler extends AbstractHandler implements IHandler {
                         IProgressMonitor.UNKNOWN);
 
                 final SpriteyPlugin plugin = SpriteyPlugin.getDefault();
-                Node sheetNode = plugin.getRootNode().getChildren()[0];
-                plugin.getPacker().pack(sheetNode, true);
+                Sheet sheet = (Sheet) plugin.getRootModel().getChildren()[0];
+                plugin.getPacker().pack(sheet, true);
 
                 monitor.beginTask(Messages.UPDATING_VIEWS,
                         IProgressMonitor.UNKNOWN);
@@ -258,4 +251,5 @@ public class DeleteSpritesHandler extends AbstractHandler implements IHandler {
             e.printStackTrace();
         }
     }
+
 }

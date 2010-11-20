@@ -20,7 +20,6 @@ package spritey.core.packer;
 import spritey.core.Sheet;
 import spritey.core.Sprite;
 import spritey.core.filter.SpriteFilter;
-import spritey.core.node.Node;
 
 /**
  * A sprite sheet organizer for packing sprites according to the selected
@@ -74,8 +73,8 @@ public class Packer {
     /**
      * Arranges the specified tree according to the active strategy.
      * 
-     * @param sheetNode
-     *        the root of a tree. It has to be a sheet node.
+     * @param sheet
+     *        the root of a tree.
      * @param flushCache
      *        specifies whether cached values should be flushed.
      * @throws IllegalArgumentException
@@ -84,11 +83,11 @@ public class Packer {
      *         when <code>sheetNode</code> is null.
      * 
      */
-    public void pack(Node sheetNode, boolean flushCache)
+    public void pack(Sheet sheet, boolean flushCache)
             throws IllegalArgumentException {
-        validateArgument(sheetNode);
-        Sprite[] sprites = new SpriteFilter().filterModels(sheetNode);
-        strategy.pack((Sheet) sheetNode.getModel(), sprites, flushCache);
+        validateArgument(sheet);
+        Sprite[] sprites = new SpriteFilter().filter(sheet);
+        strategy.pack(sheet, sprites, flushCache);
     }
 
 }

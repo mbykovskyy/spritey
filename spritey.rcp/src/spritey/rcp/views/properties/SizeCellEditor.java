@@ -79,13 +79,6 @@ public class SizeCellEditor extends CellEditor {
         }
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * org.eclipse.jface.viewers.CellEditor#createControl(org.eclipse.swt.widgets
-     * .Composite)
-     */
     @Override
     protected Control createControl(Composite parent) {
         spinner = new Spinner(parent, SWT.NONE);
@@ -130,32 +123,17 @@ public class SizeCellEditor extends CellEditor {
         return spinnerFocusListener;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.eclipse.jface.viewers.CellEditor#doGetValue()
-     */
     @Override
     protected Object doGetValue() {
         return spinner.getSelection();
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.eclipse.jface.viewers.CellEditor#doSetFocus()
-     */
     @Override
     protected void doSetFocus() {
         spinner.setFocus();
         spinner.addFocusListener(getSpinnerFocusListener());
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.eclipse.jface.viewers.CellEditor#doSetValue(java.lang.Object)
-     */
     @Override
     protected void doSetValue(Object value) {
         spinner.setSelection((Integer) value);

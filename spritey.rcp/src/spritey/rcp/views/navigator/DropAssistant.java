@@ -27,10 +27,8 @@ import org.eclipse.swt.dnd.TransferData;
 import org.eclipse.ui.navigator.CommonDropAdapter;
 import org.eclipse.ui.navigator.CommonDropAdapterAssistant;
 
-import spritey.core.Group;
 import spritey.core.Model;
 import spritey.core.Sprite;
-import spritey.core.node.Node;
 import spritey.rcp.SpriteyPlugin;
 
 public class DropAssistant extends CommonDropAdapterAssistant {
@@ -47,12 +45,12 @@ public class DropAssistant extends CommonDropAdapterAssistant {
      *        the node to test against.
      * @return <code>true</code> when target is a child of the node.
      */
-    private boolean isChild(Object target, Node node) {
-        if (node.contains((Node) target)) {
+    private boolean isChild(Object target, Model model) {
+        if (model.contains((Model) target)) {
             return true;
         }
 
-        for (Node child : node.getChildren()) {
+        for (Model child : model.getChildren()) {
             if (isChild(target, child)) {
                 return true;
             }
@@ -71,15 +69,8 @@ public class DropAssistant extends CommonDropAdapterAssistant {
      * @return <code>true</code> if the name of the source node is unique within
      *         the target.
      */
-    private boolean isNameUnique(Node target, Node src) {
-        Model srcModel = src.getModel();
-
-        if (srcModel instanceof Sprite) {
-            return !target.contains((String) srcModel.getProperty(Sprite.NAME));
-        } else if (srcModel instanceof Group) {
-            return !target.contains((String) srcModel.getProperty(Group.NAME));
-        }
-        return false;
+    private boolean isNameUnique(Model target, Model src) {
+        return !target.contains(src);
     }
 
     /**
@@ -93,8 +84,7 @@ public class DropAssistant extends CommonDropAdapterAssistant {
      *         <code>false</code>.
      */
     private boolean isValid(Object target) {
-        if (!(target instanceof Node)
-                || (((Node) target).getModel() instanceof Sprite)) {
+        if (!(target instanceof Model) || (target instanceof Sprite)) {
             return false;
         }
 
@@ -102,10 +92,10 @@ public class DropAssistant extends CommonDropAdapterAssistant {
                 .getTransfer().getSelection();
 
         for (Object s : selection.toArray()) {
-            Node node = (Node) s;
+            Model node = (Model) s;
 
             if ((target == s) || (node.getParent() == target)
-                    || !isNameUnique((Node) target, node)
+                    || !isNameUnique((Model) target, node)
                     || isChild(target, node)) {
                 // Drop is not allowed when,
                 // 1. target is selected,
@@ -136,10 +126,10 @@ public class DropAssistant extends CommonDropAdapterAssistant {
                 .getTransfer().getSelection();
 
         for (Object s : selection.toArray()) {
-            Node src = (Node) s;
+            Model src = (Model) s;
 
             src.getParent().removeChild(src);
-            ((Node) target).addChild(src);
+            ((Model) target).addChildren(src);
         }
 
         SpriteyPlugin.getDefault().getViewUpdater().refreshViews();
@@ -147,4 +137,5 @@ public class DropAssistant extends CommonDropAdapterAssistant {
         dropTargetEvent.detail = DND.DROP_NONE;
         return Status.OK_STATUS;
     }
+
 }

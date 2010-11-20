@@ -21,10 +21,8 @@ import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPartFactory;
 import org.eclipse.gef.editparts.AbstractGraphicalEditPart;
 
-import spritey.core.Model;
 import spritey.core.Sheet;
 import spritey.core.Sprite;
-import spritey.core.node.Node;
 
 /**
  * A factory for creating sprite sheet and sprite graphical edit parts.
@@ -35,18 +33,13 @@ public class GraphicalEditPartFactory implements EditPartFactory {
     public EditPart createEditPart(EditPart context, Object model) {
         AbstractGraphicalEditPart part = null;
 
-        if (model instanceof Node) {
-            Model data = ((Node) model).getModel();
-
-            if (data instanceof Sheet) {
-                part = new SheetEditPart();
-                part.setModel(model);
-            } else if (data instanceof Sprite) {
-                part = new SpriteEditPart();
-                part.setModel(model);
-            }
+        if (model instanceof Sheet) {
+            part = new SheetEditPart();
+            part.setModel(model);
+        } else if (model instanceof Sprite) {
+            part = new SpriteEditPart();
+            part.setModel(model);
         }
-
         return part;
     }
 

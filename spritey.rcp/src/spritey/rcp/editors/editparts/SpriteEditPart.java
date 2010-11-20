@@ -36,7 +36,7 @@ import org.eclipse.swt.widgets.Display;
 
 import spritey.core.Model;
 import spritey.core.Sprite;
-import spritey.core.node.Node;
+import spritey.rcp.core.SpriteConstants;
 import spritey.rcp.editors.tools.SpriteDragTracker;
 
 /**
@@ -70,7 +70,7 @@ public class SpriteEditPart extends AbstractGraphicalEditPart {
         if ((bounds.x < 0) || (bounds.y < 0)) {
             sprite.setVisible(false);
         } else {
-            Image image = (Image) model.getProperty(Sprite.IMAGE);
+            Image image = (Image) model.getProperty(SpriteConstants.SWT_IMAGE);
             sprite.setImage(image);
             sprite.setVisible(true);
         }
@@ -82,23 +82,13 @@ public class SpriteEditPart extends AbstractGraphicalEditPart {
         }
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.eclipse.gef.editparts.AbstractGraphicalEditPart#createFigure()
-     */
     @Override
     protected IFigure createFigure() {
         sprite = new ImageFigure();
-        populateSprite(sprite, ((Node) getModel()).getModel());
+        populateSprite(sprite, (Model) getModel());
         return sprite;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.eclipse.gef.editparts.AbstractEditPart#createEditPolicies()
-     */
     @Override
     protected void createEditPolicies() {
         installEditPolicy(EditPolicy.SELECTION_FEEDBACK_ROLE,
@@ -119,14 +109,9 @@ public class SpriteEditPart extends AbstractGraphicalEditPart {
                 });
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.eclipse.gef.editparts.AbstractEditPart#getModelChildren()
-     */
     @Override
     protected List<?> getModelChildren() {
-        return Arrays.asList(((Node) getModel()).getChildren());
+        return Arrays.asList(((Model) getModel()).getChildren());
     }
 
     /**
@@ -147,11 +132,6 @@ public class SpriteEditPart extends AbstractGraphicalEditPart {
         freeImage(sprite.getImage());
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.eclipse.gef.editparts.AbstractGraphicalEditPart#activate()
-     */
     @Override
     public void activate() {
         super.activate();
@@ -159,11 +139,6 @@ public class SpriteEditPart extends AbstractGraphicalEditPart {
         // sprites.
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.eclipse.gef.editparts.AbstractGraphicalEditPart#deactivate()
-     */
     @Override
     public void deactivate() {
         // TODO remove from view update manager. At the moment sheet updates all
@@ -173,7 +148,7 @@ public class SpriteEditPart extends AbstractGraphicalEditPart {
 
     @Override
     protected void refreshVisuals() {
-        populateSprite(sprite, ((Node) getModel()).getModel());
+        populateSprite(sprite, (Model) getModel());
     }
 
     @Override

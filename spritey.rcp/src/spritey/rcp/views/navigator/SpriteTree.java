@@ -25,22 +25,18 @@ import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.navigator.CommonNavigator;
 
 import spritey.rcp.SpriteyPlugin;
+import spritey.rcp.views.ViewUpdateListener;
 
 /**
  * A hierarchical view of sprite sheet.
  */
-public class SpriteTree extends CommonNavigator {
+public class SpriteTree extends CommonNavigator implements ViewUpdateListener {
 
     public static final String ID = "spritey.rcp.views.spriteTree";
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.eclipse.ui.navigator.CommonNavigator#getInitialInput()
-     */
     @Override
     protected Object getInitialInput() {
-        return SpriteyPlugin.getDefault().getRootNode();
+        return SpriteyPlugin.getDefault().getRootModel();
     }
 
     @Override
@@ -55,6 +51,14 @@ public class SpriteTree extends CommonNavigator {
                 new CollapseAllHandler(getCommonViewer()));
         handlerService.activateHandler(ExpandAllHandler.COMMAND_ID,
                 new ExpandAllHandler(getCommonViewer()));
+
+        SpriteyPlugin.getDefault().getViewUpdater().addListener(this);
+    }
+
+    @Override
+    public void dispose() {
+        SpriteyPlugin.getDefault().getViewUpdater().removeListener(this);
+        super.dispose();
     }
 
     @Override
@@ -62,6 +66,17 @@ public class SpriteTree extends CommonNavigator {
         return new ActionGroup() {
             // Do nothing.
         };
+    }
+
+    @Override
+    public void refreshView() {
+        getCommonViewer().refresh();
+    }
+
+    @Override
+    public void updateView() {
+        // TODO change this to update().
+        getCommonViewer().refresh();
     }
 
 }

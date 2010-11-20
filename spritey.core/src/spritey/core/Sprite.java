@@ -20,38 +20,34 @@ package spritey.core;
 import java.awt.Rectangle;
 
 /**
- * A data object representing an image that can be attached to a node.
+ * Sprite is an image that can be drawn on sprite sheet's canvas.
  */
-public class Sprite extends AbstractModel {
+public class Sprite extends Model {
 
     /**
      * Sprite name property id. Has to be <code>java.lang.String</code> type.
      */
-    public final static int NAME = 300;
-
-    /**
-     * Node property id. Has to be <code>spritey.core.node.Node</code> type.
-     */
-    public final static int NODE = 301;
+    public static final int NAME = 300;
 
     /**
      * Sprite bounds property id. Has to be of <code>java.awt.Rectangle</code>
      * type. Sprite is not positioned when <code>x</code> and <code>y</code> are
      * negative.
      */
-    public final static int BOUNDS = 302;
+    public static final int BOUNDS = 301;
 
     /**
-     * Sprite image property id. Has to be of <code>TODO</code> type.
+     * Sprite image property id. Has to be of <code>java.awt.Image</code> type.
      */
-    public final static int IMAGE = 303;
+    public static final int IMAGE = 302;
 
     // Defaults
-    public final static String DEFAULT_NAME = "New Sprite";
-    public final static Rectangle DEFAULT_BOUNDS = new Rectangle(-1, -1, 0, 0);
+    public static final String DEFAULT_NAME = "New Sprite";
+    public static final Rectangle DEFAULT_BOUNDS = new Rectangle(-1, -1, 0, 0);
 
     // Limits
-    public final static int MIN_NAME_LENGTH = 1;
-    public final static int MAX_NAME_LENGTH = 1024;
+    public static final int MIN_NAME_LENGTH = 1;
+    public static final int MAX_NAME_LENGTH = 1024;
+    public static final String LEGAL_CHARACTERS = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_";
 
 }
