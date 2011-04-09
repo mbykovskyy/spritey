@@ -129,6 +129,9 @@ public class SpriteEditPart extends AbstractGraphicalEditPart {
     @Override
     public void removeNotify() {
         super.removeNotify();
+        // TODO Why is this here? When EditPart becomes invisible it will call
+        // removeNotify() which in turn will delete SWT image causing all sorts
+        // of abnormal behaviour.
         freeImage(sprite.getImage());
     }
 

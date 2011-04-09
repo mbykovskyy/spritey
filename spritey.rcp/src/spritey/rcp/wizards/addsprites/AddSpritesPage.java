@@ -218,6 +218,8 @@ public class AddSpritesPage extends WizardPage {
             @Override
             public void keyTraversed(TraverseEvent e) {
                 if (e.detail == SWT.TRAVERSE_RETURN) {
+                    e.doit = false;
+
                     // Validate directory field before trying to load its files.
                     if (validate()) {
                         loadFiles(new File(directoryText.getText().trim()));
@@ -269,6 +271,8 @@ public class AddSpritesPage extends WizardPage {
             @Override
             public void keyTraversed(TraverseEvent e) {
                 if (e.detail == SWT.TRAVERSE_RETURN) {
+                    e.doit = false;
+
                     String text = filesText.getText().trim();
                     if (text.isEmpty()) {
                         tree.setInput(null);

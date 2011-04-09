@@ -238,7 +238,6 @@ public class NewSpriteSheetMainPage extends WizardPage {
             sheet.setProperty(Sheet.SIZE, new Dimension(width, height));
             sheet.setProperty(Sheet.DESCRIPTION, commentText.getText());
             sheet.setProperty(Sheet.OPAQUE, isOpaque);
-            // TODO convert background color
             sheet.setProperty(Sheet.BACKGROUND, background);
         } catch (InvalidPropertyValueException e) {
             handleException(e);

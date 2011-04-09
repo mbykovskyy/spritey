@@ -230,6 +230,7 @@ public class DeleteSpritesHandler extends AbstractHandler implements IHandler {
                 monitor.beginTask(Messages.UPDATING_VIEWS,
                         IProgressMonitor.UNKNOWN);
 
+                // TODO This operation is very slow which leads to GUI freezing.
                 Display.getDefault().syncExec(new Runnable() {
                     @Override
                     public void run() {

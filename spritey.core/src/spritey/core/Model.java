@@ -341,4 +341,16 @@ public abstract class Model implements Properties, Node<Model> {
         nodeListeners.remove(listener);
     }
 
+    @Override
+    public String toString() {
+        StringBuilder builder = new StringBuilder(getClass().getName() + '[');
+
+        for (Map.Entry<Integer, Object> property : properties.entrySet()) {
+            builder.append(property.getKey()).append('=')
+                    .append(property.getValue()).append(',');
+        }
+        builder.replace(builder.lastIndexOf(","), builder.length(), "]");
+
+        return builder.toString();
+    }
 }

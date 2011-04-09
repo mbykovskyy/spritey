@@ -59,8 +59,9 @@ public class NewSpriteSheetHandler extends AbstractHandler implements IHandler {
                 // TODO Log this exception as we do not expect it.
                 e.printStackTrace();
             }
+
+            SpriteyPlugin.getDefault().getViewUpdater().refreshViews();
         }
-        SpriteyPlugin.getDefault().getViewUpdater().refreshViews();
         return null;
     }
 
