@@ -58,9 +58,9 @@ public class Sheet extends Model {
     // Limits
     public static final int MIN_DESCRIPTION_LENGTH = 0;
     public static final int MAX_DESCRIPTION_LENGTH = 1024;
-    public static final int MAX_WIDTH = 1024;
-    public static final int MAX_HEIGHT = 1024;
-    public static final int MIN_WIDTH = 0;
-    public static final int MIN_HEIGHT = 0;
+    public static final int MAX_WIDTH = 8192;
+    public static final int MAX_HEIGHT = 8192;
+    public static final int MIN_WIDTH = 1;
+    public static final int MIN_HEIGHT = 1;
 
 }

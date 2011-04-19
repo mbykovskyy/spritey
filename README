@@ -1,8 +1,5 @@
-Spritey is an open-source sprite sheet creator, written in Java on top of
-Eclipse Rich Client Platform (RCP). The application is devided into two modules,
-the core logic and the RCP. The core has been moved out of the RCP project to
-allow extensions such as various importers to be written independantly of the
-RCP and licensed under different licenses if necessary.
+Spritey is an open-source sprite sheet creator, written in Java with SWT and
+JFace front-end.
 
 This tool is distributed under GNU GPL version 3, which can be found in the file
 COPYING.
