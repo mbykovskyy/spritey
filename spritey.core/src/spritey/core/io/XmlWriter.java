@@ -1,7 +1,7 @@
 /**
  * This source file is part of Spritey - the sprite sheet creator.
  * 
- * Copyright 2010 Maksym Bykovskyy.
+ * Copyright 2011 Maksym Bykovskyy.
  * 
  * Spritey is free software: you can redistribute it and/or modify it under the
  * terms of the GNU General Public License as published by the Free Software
@@ -19,7 +19,7 @@ package spritey.core.io;
 
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Rectangle;
+import java.awt.Point;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -33,7 +33,8 @@ import javax.xml.transform.OutputKeys;
 import javax.xml.transform.TransformerException;
 
 import spritey.core.Group;
-import spritey.core.Model;
+import spritey.core.Messages;
+import spritey.core.Node;
 import spritey.core.Sheet;
 import spritey.core.Sprite;
 import spritey.core.filter.VisibleSpriteFilter;
@@ -50,16 +51,12 @@ public class XmlWriter implements Writer {
     private static final String SPRITE = "sprite";
     private static final String GROUP = "group";
 
-    protected void validate(Model node) {
-        if (null == node) {
-            throw new IllegalArgumentException("Node is null.");
-        }
-    }
-
     @Override
     public void write(Sheet sheet, File file) throws FileNotFoundException,
             IOException {
-        validate(sheet);
+        if (null == sheet) {
+            throw new IllegalArgumentException(Messages.NULL);
+        }
 
         try {
             write(build(sheet), file);
@@ -79,64 +76,61 @@ public class XmlWriter implements Writer {
      * 
      * @param builder
      *        the builder for generating XML.
-     * @param model
+     * @param node
      *        the model to generate XML for.
      */
-    protected void buildNode(XMLBuilder builder, Model model) {
-        if (model instanceof Sprite) {
-            Rectangle bounds = (Rectangle) model.getProperty(Sprite.BOUNDS);
+    protected void buildNode(XMLBuilder builder, Node node) {
+        if (node instanceof Sprite) {
+            Sprite sprite = (Sprite) node;
+            Point location = sprite.getLocation();
 
-            // Only add visible sprites.
-            if ((bounds.x > -1) && (bounds.y > -1)) {
-                String name = (String) model.getProperty(Sprite.NAME);
+            if (sprite.isVisible()) {
+                Dimension size = sprite.getSize();
+                String name = sprite.getName();
 
                 builder = builder.e(SPRITE).a("name", name)
-                        .a("x", String.valueOf(bounds.x))
-                        .a("y", String.valueOf(bounds.y))
-                        .a("width", String.valueOf(bounds.width))
-                        .a("height", String.valueOf(bounds.height)).up();
+                        .a("x", String.valueOf(location.x))
+                        .a("y", String.valueOf(location.y))
+                        .a("width", String.valueOf(size.width))
+                        .a("height", String.valueOf(size.height)).up();
             }
-        } else if (model instanceof Group) {
-            if (new VisibleSpriteFilter().filter(model).length > 0) {
-                String name = (String) model.getProperty(Group.NAME);
-                builder = builder.e(GROUP).a("name", name);
+        } else if (node instanceof Group) {
+            // Skip group when it doesn't contain at least one visible sprite.
+            if (new VisibleSpriteFilter().filter(node).length > 0) {
+                builder = builder.e(GROUP).a("name", node.getName());
 
-                for (Model child : model.getChildren()) {
+                for (Node child : node.getChildren()) {
                     buildNode(builder, child);
                 }
             }
         }
-
     }
 
     /**
      * Builds the XML for the specified tree.
      * 
-     * @param model
+     * @param sheet
      *        the sheet node.
      * @throws ParserConfigurationException
      * @throws FactoryConfigurationError
      * @throws TransformerException
      */
-    protected XMLBuilder build(Sheet model)
+    protected XMLBuilder build(Sheet sheet)
             throws ParserConfigurationException, FactoryConfigurationError {
-        Dimension size = (Dimension) model.getProperty(Sheet.SIZE);
-        Color bg = (Color) model.getProperty(Sheet.BACKGROUND);
-        String description = (String) model.getProperty(Sheet.DESCRIPTION);
-        boolean opaque = (Boolean) model.getProperty(Sheet.OPAQUE);
+        Color bg = sheet.getBackground();
 
-        String bgStr = opaque ? bg.getRed() + ", " + bg.getGreen() + ", "
-                + bg.getBlue() + ", 255" : "0, 0, 0, 0";
+        String bgStr = bg.getRed() + ", " + bg.getGreen() + ", " + bg.getBlue()
+                + ", " + bg.getAlpha();
 
         // @formatter:off
         XMLBuilder builder = XMLBuilder.create(SHEET)
-            .a("width", String.valueOf(size.width))
-            .a("height", String.valueOf(size.height))
+            .a("width", String.valueOf(sheet.getWidth()))
+            .a("height", String.valueOf(sheet.getHeight()))
             .a("background", bgStr)
-            .a("description", description);
+            .a("description", sheet.getDescription());
         // @formatter:on
 
-        for (Model child : model.getChildren()) {
+        for (Node child : sheet.getChildren()) {
             buildNode(builder, child);
         }
         return builder;
@@ -166,4 +160,5 @@ public class XmlWriter implements Writer {
         builder.toWriter(writer, p);
         writer.close();
     }
+
 }

@@ -1,7 +1,7 @@
 /**
  * This source file is part of Spritey - the sprite sheet creator.
  * 
- * Copyright 2010 Maksym Bykovskyy.
+ * Copyright 2011 Maksym Bykovskyy.
  * 
  * Spritey is free software: you can redistribute it and/or modify it under the
  * terms of the GNU General Public License as published by the Free Software
@@ -19,21 +19,27 @@ package spritey.core;
 
 /**
  * This model represents a container that does not have any graphical
- * representation but can contain a collection of sprites or other groups.
+ * representation but can contain a collection of sprites and groups.
  */
-public class Group extends Model {
+public class Group extends Node {
+
+    public static final String DEFAULT_NAME = Messages.GROUP_DEFAULT_NAME;
 
     /**
-     * Group name property id. Has to be <code>java.lang.String</code> type.
+     * Creates a new instance of a Group with DEFAULT_NAME.
      */
-    public static final int NAME = 100;
+    public Group() {
+        this(DEFAULT_NAME);
+    }
 
-    // Defaults
-    public static final String DEFAULT_NAME = "New Group";
-
-    // Limits
-    public static final int MIN_NAME_LENGTH = 1;
-    public static final int MAX_NAME_LENGTH = 1024;
-    public static final String LEGAL_CHARACTERS = Sprite.LEGAL_CHARACTERS;
+    /**
+     * Creates a new instance of a Group with a give name.
+     * 
+     * @param name
+     *        the name to give to a new group.
+     */
+    public Group(final String name) {
+        super(name);
+    }
 
 }

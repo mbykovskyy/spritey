@@ -1,7 +1,7 @@
 /**
  * This source file is part of Spritey - the sprite sheet creator.
  * 
- * Copyright 2010 Maksym Bykovskyy.
+ * Copyright 2011 Maksym Bykovskyy.
  * 
  * Spritey is free software: you can redistribute it and/or modify it under the
  * terms of the GNU General Public License as published by the Free Software
@@ -17,37 +17,135 @@
  */
 package spritey.core;
 
+import java.awt.Dimension;
+import java.awt.Image;
+import java.awt.Point;
 import java.awt.Rectangle;
 
 /**
- * Sprite is an image that can be drawn on sprite sheet's canvas.
+ * Sprite is an image that can be drawn on a canvas.
  */
-public class Sprite extends Model {
+public class Sprite extends Node {
+
+    public static final String DEFAULT_NAME = Messages.SPRITE_DEFAULT_NAME;
+    public static final Point DEFAULT_LOCATION = new Point(-1, -1);
+    public static final Dimension DEFAULT_SIZE = new Dimension(0, 0);
+
+    private Point location;
+    private Image image;
 
     /**
-     * Sprite name property id. Has to be <code>java.lang.String</code> type.
+     * Creates a new instance of Sprite with DEFAULT_NAME.
+     * 
+     * @param image
+     *        the image this sprite will represent.
      */
-    public static final int NAME = 300;
+    public Sprite(final Image image) {
+        this(DEFAULT_NAME, image);
+    }
 
     /**
-     * Sprite bounds property id. Has to be of <code>java.awt.Rectangle</code>
-     * type. Sprite is not positioned when <code>x</code> and <code>y</code> are
-     * negative.
+     * Creates a new instance of Sprite with the give name.
+     * 
+     * @param name
+     *        the name to give to the sprite.
+     * @param image
+     *        the image this sprite will represent.
      */
-    public static final int BOUNDS = 301;
+    public Sprite(final String name, final Image image) {
+        super(name);
+        setImage(image);
+        setLocation(DEFAULT_LOCATION);
+    }
 
     /**
-     * Sprite image property id. Has to be of <code>java.awt.Image</code> type.
+     * Returns coordinates where sprite is located.
+     * 
+     * @return sprite location.
      */
-    public static final int IMAGE = 302;
+    public Point getLocation() {
+        return location;
+    }
 
-    // Defaults
-    public static final String DEFAULT_NAME = "New Sprite";
-    public static final Rectangle DEFAULT_BOUNDS = new Rectangle(-1, -1, 0, 0);
+    /**
+     * Sets sprite location.
+     * 
+     * @param location
+     *        the location where sprite is position within a sprite sheet.
+     */
+    public void setLocation(final Point location) {
+        if ((null == getLocation()) || !getLocation().equals(location)) {
+            if (null == location) {
+                throw new IllegalArgumentException(Messages.NULL);
+            }
+            this.location = location;
+        }
+    }
 
-    // Limits
-    public static final int MIN_NAME_LENGTH = 1;
-    public static final int MAX_NAME_LENGTH = 1024;
-    public static final String LEGAL_CHARACTERS = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_";
+    /**
+     * Returns the image this sprite represents.
+     * 
+     * @return the sprite image.
+     */
+    public Image getImage() {
+        return image;
+    }
+
+    /**
+     * Sets sprite image.
+     * 
+     * @param image
+     *        the image to assign to this sprite.
+     * @throws IllegalArgumentException
+     *         when <code>image</code> or image size is <code>null</code>.
+     */
+    protected void setImage(final Image image) {
+        if ((null == getImage()) || (getImage() != image)) {
+            if (null == image) {
+                throw new IllegalArgumentException(Messages.NULL);
+            }
+            this.image = image;
+        }
+    }
+
+    /**
+     * Returns the sprite size.
+     * 
+     * @return the size.
+     */
+    public Dimension getSize() {
+        Image image = getImage();
+        if (null == image) {
+            return DEFAULT_SIZE;
+        }
+
+        int width = image.getWidth(null);
+        int height = image.getHeight(null);
+
+        if ((-1 == width) || (-1 == height)) {
+            throw new RuntimeException(
+                    Messages.SPRITE_IMAGE_NOT_FINISHED_LOADING);
+        }
+        return new Dimension(width, height);
+    }
+
+    /**
+     * Returns whether sprite is visible. i.e. fits the sprite sheet.
+     * 
+     * @return <code>true</code> if sprite fits the sprite sheet, otherwise
+     *         <code>false</code>.
+     */
+    public boolean isVisible() {
+        return (getLocation().x > -1) && (getLocation().y > -1);
+    }
+
+    /**
+     * Returns sprite's bounds.
+     * 
+     * @return sprite's bounds.
+     */
+    public Rectangle getBounds() {
+        return new Rectangle(getLocation(), getSize());
+    }
 
 }

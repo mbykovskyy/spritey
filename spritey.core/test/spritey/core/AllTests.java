@@ -1,7 +1,7 @@
 /**
  * This source file is part of Spritey - the sprite sheet creator.
  * 
- * Copyright 2010 Maksym Bykovskyy.
+ * Copyright 2011 Maksym Bykovskyy.
  * 
  * Spritey is free software: you can redistribute it and/or modify it under the
  * terms of the GNU General Public License as published by the Free Software
@@ -22,21 +22,9 @@ import org.junit.runners.Suite;
 
 import spritey.core.packer.FirstFitStrategyTests;
 import spritey.core.packer.PackerTests;
-import spritey.core.validator.CharacterValidatorTests;
-import spritey.core.validator.FirstCharacterAlphaValidatorTests;
-import spritey.core.validator.NotNullValidatorTests;
-import spritey.core.validator.NullOrTypeValidatorTests;
-import spritey.core.validator.SizeValidatorTests;
-import spritey.core.validator.StringLengthValidatorTests;
-import spritey.core.validator.TypeValidatorTests;
-import spritey.core.validator.UniqueNameValidatorTests;
 
 @RunWith(Suite.class)
-@Suite.SuiteClasses({ ModelTests.class, ModelFactoryTests.class,
-        PackerTests.class, FirstFitStrategyTests.class,
-        NotNullValidatorTests.class, NullOrTypeValidatorTests.class,
-        SizeValidatorTests.class, TypeValidatorTests.class,
-        StringLengthValidatorTests.class, CharacterValidatorTests.class,
-        FirstCharacterAlphaValidatorTests.class, UniqueNameValidatorTests.class })
+@Suite.SuiteClasses({ NodeTests.class, SheetTests.class, GroupTests.class,
+        SpriteTests.class, FirstFitStrategyTests.class, PackerTests.class })
 public class AllTests {
 }

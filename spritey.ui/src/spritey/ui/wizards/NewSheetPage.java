@@ -25,7 +25,6 @@ import static spritey.ui.ImageFactory.createColorImage;
 import java.awt.Color;
 
 import org.eclipse.jface.wizard.WizardPage;
-import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MenuAdapter;
 import org.eclipse.swt.events.MenuEvent;
@@ -33,6 +32,7 @@ import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.events.VerifyEvent;
 import org.eclipse.swt.events.VerifyListener;
 import org.eclipse.swt.graphics.Image;
@@ -60,25 +60,8 @@ import spritey.ui.Messages;
 public class NewSheetPage extends WizardPage {
 
     static final String NAME = "NEW_SPRITE_SHEET";
-
-    static final int DEFAULT_WIDTH = Sheet.DEFAULT_SIZE.width;
-    static final int MAX_WIDTH = Sheet.MAX_WIDTH;
-    static final int MIN_WIDTH = Sheet.MIN_WIDTH;
-
-    static final int DEFAULT_HEIGHT = Sheet.DEFAULT_SIZE.height;
-    static final int MAX_HEIGHT = Sheet.MAX_HEIGHT;
-    static final int MIN_HEIGHT = Sheet.MIN_HEIGHT;
-
-    static final RGB DEFAULT_BACKGROUND = new RGB(255, 0, 255);
     static final int IMAGE_WIDTH = 32;
     static final int IMAGE_HEIGHT = 16;
-
-    static final String DEFAULT_COMMENT = Sheet.DEFAULT_DESCRIPTION;
-    static final int MAX_DESCRIPTION_LENGTH = Sheet.MAX_DESCRIPTION_LENGTH;
-
-    static final int DECIMAL_DIGITS = 0;
-    static final int INCREMENT = 1;
-    static final int PAGE_INCREMENT = 10;
 
     private Text widthText;
     private Text heightText;
@@ -86,24 +69,19 @@ public class NewSheetPage extends WizardPage {
     private Button aspectRatioCheck;
     private Text commentText;
 
-    private boolean isOpaque;
+    private Sheet sheet;
     private Color background;
-
-    private boolean powerOfTwoChecked;
-    private boolean maintainRatioChecked;
 
     /**
      * Creates a new instance of NewSheetPage.
      */
     public NewSheetPage() {
         super(NAME);
-
         setTitle(Messages.NEW_SHEET_PAGE_TITLE);
         setDescription(Messages.NEW_SHEET_PAGE_DESCRIPTION);
 
-        isOpaque = true;
-        background = new Color(DEFAULT_BACKGROUND.red,
-                DEFAULT_BACKGROUND.green, DEFAULT_BACKGROUND.blue);
+        sheet = new Sheet();
+        background = sheet.getBackground();
     }
 
     @Override
@@ -130,20 +108,19 @@ public class NewSheetPage extends WizardPage {
         text = heightText.getText();
         int height = text.isEmpty() ? 0 : Integer.valueOf(text);
 
-        if ((width < MIN_WIDTH) || (width > MAX_WIDTH)) {
-            setErrorMessage(NLS.bind(
-                    Messages.NEW_SHEET_PAGE_MAX_WIDTH_INVALID_RANGE, MIN_WIDTH,
-                    MAX_WIDTH));
-        } else if ((height < MIN_HEIGHT) || (height > MAX_HEIGHT)) {
-            setErrorMessage(NLS.bind(
-                    Messages.NEW_SHEET_PAGE_MAX_HEIGHT_INVALID_RANGE,
-                    MIN_HEIGHT, MAX_HEIGHT));
-        } else if (powerOfTwoChecked && ((width & -width) != width)) {
-            setErrorMessage(Messages.NEW_SHEET_PAGE_MAX_WIDTH_INVALID_POWER_OF_TWO);
-        } else if (powerOfTwoChecked && ((height & -height) != height)) {
-            setErrorMessage(Messages.NEW_SHEET_PAGE_MAX_HEIGHT_INVALID_POWER_OF_TWO);
-        } else {
+        try {
+            sheet.setMaxWidth(width);
+            sheet.setMaxHeight(height);
+            sheet.setMaintainPowerOfTwo(powerOfTwoCheck.getSelection());
+            sheet.setMaintainAspectRatio(aspectRatioCheck.getSelection());
+            sheet.setBackground(background);
+            sheet.setDescription(commentText.getText());
+
             setErrorMessage(null);
+            setPageComplete(true);
+        } catch (IllegalArgumentException e) {
+            setErrorMessage(e.getMessage());
+            setPageComplete(false);
         }
     }
 
@@ -176,7 +153,7 @@ public class NewSheetPage extends WizardPage {
             }
         };
 
-        ModifyListener sizeValidator = new ModifyListener() {
+        ModifyListener sizeModifier = new ModifyListener() {
             @Override
             public void modifyText(ModifyEvent e) {
                 validateFields();
@@ -185,18 +162,18 @@ public class NewSheetPage extends WizardPage {
 
         widthText = new Text(container, SWT.BORDER);
         widthText.setTextLimit(4);
-        widthText.setText(String.valueOf(MAX_WIDTH));
+        widthText.setText(String.valueOf(Sheet.MAX_MAXIMUM_WIDTH));
         widthText.addVerifyListener(digitValidator);
-        widthText.addModifyListener(sizeValidator);
+        widthText.addModifyListener(sizeModifier);
 
         Label heightLabel = new Label(container, SWT.NONE);
         heightLabel.setText(Messages.NEW_SHEET_PAGE_MAX_HEIGHT);
 
         heightText = new Text(container, SWT.BORDER);
         heightText.setTextLimit(4);
-        heightText.setText(String.valueOf(MAX_HEIGHT));
+        heightText.setText(String.valueOf(Sheet.MAX_MAXIMUM_HEIGHT));
         heightText.addVerifyListener(digitValidator);
-        heightText.addModifyListener(sizeValidator);
+        heightText.addModifyListener(sizeModifier);
     }
 
     /**
@@ -213,24 +190,20 @@ public class NewSheetPage extends WizardPage {
         container.setLayout(layout);
         container.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 
-        powerOfTwoCheck = new Button(container, SWT.CHECK);
-        powerOfTwoCheck.setText(Messages.NEW_SHEET_PAGE_POWER_OF_TWO);
-        powerOfTwoCheck.addSelectionListener(new SelectionAdapter() {
+        SelectionListener selectionListener = new SelectionAdapter() {
             @Override
             public void widgetSelected(SelectionEvent e) {
-                powerOfTwoChecked = powerOfTwoCheck.getSelection();
                 validateFields();
             }
-        });
+        };
+
+        powerOfTwoCheck = new Button(container, SWT.CHECK);
+        powerOfTwoCheck.setText(Messages.NEW_SHEET_PAGE_POWER_OF_TWO);
+        powerOfTwoCheck.addSelectionListener(selectionListener);
 
         aspectRatioCheck = new Button(container, SWT.CHECK);
         aspectRatioCheck.setText(Messages.NEW_SHEET_PAGE_ASPECT_RATIO);
-        aspectRatioCheck.addSelectionListener(new SelectionAdapter() {
-            @Override
-            public void widgetSelected(SelectionEvent e) {
-                maintainRatioChecked = aspectRatioCheck.getSelection();
-            }
-        });
+        aspectRatioCheck.addSelectionListener(selectionListener);
     }
 
     /**
@@ -267,7 +240,9 @@ public class NewSheetPage extends WizardPage {
 
         final Image dropdownImage = Application.getImageRegistry().get(
                 DROP_DOWN_IMG_ID);
-        Image colorImage = createColorImage(DEFAULT_BACKGROUND, IMAGE_WIDTH,
+
+        Image colorImage = createColorImage(new RGB(background.getRed(),
+                background.getGreen(), background.getBlue()), IMAGE_WIDTH,
                 IMAGE_HEIGHT, true);
 
         final Button button = new Button(container, SWT.TOGGLE);
@@ -312,17 +287,16 @@ public class NewSheetPage extends WizardPage {
             public void widgetSelected(SelectionEvent e) {
                 RGB rbg = new ColorDialog(button.getShell()).open();
                 if (null != rbg) {
-                    Color color = new Color(rbg.red, rbg.green, rbg.blue);
+                    background = new Color(rbg.red, rbg.green, rbg.blue);
 
-                    if (!color.equals(background)) {
-                        background = color;
-                        isOpaque = true;
-
+                    if (!background.equals(sheet.getBackground())) {
                         Image colorImage = createColorImage(rbg, IMAGE_WIDTH,
                                 IMAGE_HEIGHT, true);
 
                         button.setImage(appendImage(colorImage, dropdownImage));
                         colorImage.dispose();
+
+                        validateFields();
                     }
                 }
             }
@@ -338,15 +312,16 @@ public class NewSheetPage extends WizardPage {
              */
             @Override
             public void widgetSelected(SelectionEvent e) {
-                if (isOpaque) {
+                if (!sheet.getBackground().equals(Sheet.TRANSPARENT_BACKGROUND)) {
                     Image checker = createCheckerImage(IMAGE_WIDTH,
                             IMAGE_HEIGHT, true);
 
                     button.setImage(appendImage(checker, dropdownImage));
                     checker.dispose();
 
-                    background = null;
-                    isOpaque = false;
+                    background = Sheet.TRANSPARENT_BACKGROUND;
+
+                    validateFields();
                 }
             }
         });
@@ -366,9 +341,15 @@ public class NewSheetPage extends WizardPage {
 
         commentText = new Text(parent, SWT.BORDER | SWT.MULTI | SWT.V_SCROLL
                 | SWT.WRAP);
-        commentText.setText(DEFAULT_COMMENT);
-        commentText.setTextLimit(MAX_DESCRIPTION_LENGTH);
+        commentText.setText(sheet.getDescription());
+        commentText.setTextLimit(Sheet.MAX_DESCRIPTION_LENGTH);
         commentText.setLayoutData(new GridData(GridData.FILL_BOTH));
+        commentText.addModifyListener(new ModifyListener() {
+            @Override
+            public void modifyText(ModifyEvent e) {
+                validateFields();
+            }
+        });
     }
 
 }

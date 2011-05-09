@@ -1,7 +1,7 @@
 /**
  * This source file is part of Spritey - the sprite sheet creator.
  * 
- * Copyright 2010 Maksym Bykovskyy.
+ * Copyright 2011 Maksym Bykovskyy.
  * 
  * Spritey is free software: you can redistribute it and/or modify it under the
  * terms of the GNU General Public License as published by the Free Software
@@ -17,9 +17,7 @@
  */
 package spritey.core.filter;
 
-import java.awt.Rectangle;
-
-import spritey.core.Model;
+import spritey.core.Node;
 import spritey.core.Sprite;
 
 /**
@@ -28,11 +26,8 @@ import spritey.core.Sprite;
 public class VisibleSpriteFilter extends SpriteFilter {
 
     @Override
-    public boolean select(Model model) {
-        if (super.select(model)) {
-            Rectangle bounds = (Rectangle) model.getProperty(Sprite.BOUNDS);
-            return (bounds.x >= 0) && (bounds.y >= 0);
-        }
-        return false;
+    public boolean select(Node node) {
+        return super.select(node) && ((Sprite) node).isVisible();
     }
+
 }

@@ -1,7 +1,7 @@
 /**
  * This source file is part of Spritey - the sprite sheet creator.
  * 
- * Copyright 2010 Maksym Bykovskyy.
+ * Copyright 2011 Maksym Bykovskyy.
  * 
  * Spritey is free software: you can redistribute it and/or modify it under the
  * terms of the GNU General Public License as published by the Free Software
@@ -17,6 +17,7 @@
  */
 package spritey.core.packer;
 
+import spritey.core.Messages;
 import spritey.core.Sheet;
 import spritey.core.Sprite;
 import spritey.core.filter.SpriteFilter;
@@ -44,7 +45,7 @@ public class Packer {
 
     private void validateArgument(Object obj) {
         if (null == obj) {
-            throw new IllegalArgumentException("Argument is null.");
+            throw new IllegalArgumentException(Messages.NULL);
         }
     }
 
@@ -86,7 +87,8 @@ public class Packer {
     public void pack(Sheet sheet, boolean flushCache)
             throws IllegalArgumentException {
         validateArgument(sheet);
-        Sprite[] sprites = new SpriteFilter().filter(sheet);
+        // TODO Casting will probably fail at runtime.
+        Sprite[] sprites = (Sprite[]) new SpriteFilter().filter(sheet);
         strategy.pack(sheet, sprites, flushCache);
     }
 

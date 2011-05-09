@@ -31,8 +31,16 @@ import spritey.ui.wizards.SpriteSheetWizard;
 public class Application {
 
     public static final String DROP_DOWN_IMG_ID = "drop_down";
+    public static final String ADD_IMG_ID = "add";
+    public static final String CREATE_GROUP_IMG_ID = "crate_group";
+    public static final String DELETE_IMG_ID = "delete";
+    public static final String FOLDER_IMG_ID = "folder";
 
     public static final String DROP_DOWN_IMG_PATH = "data/icons/dropdown.gif";
+    public static final String ADD_IMG_PATH = "data/icons/add.png";
+    public static final String CREATE_GROUP_IMG_PATH = "data/icons/create_group.png";
+    public static final String DELETE_IMG_PATH = "data/icons/cross.png";
+    public static final String FOLDER_IMG_PATH = "data/icons/folder.png";
 
     private static ImageRegistry imageRegistry;
 
@@ -59,6 +67,10 @@ public class Application {
      */
     private static void initializeImageRegistry(ImageRegistry reg) {
         reg.put(DROP_DOWN_IMG_ID, getImageDescriptor(DROP_DOWN_IMG_PATH));
+        reg.put(ADD_IMG_ID, getImageDescriptor(ADD_IMG_PATH));
+        reg.put(CREATE_GROUP_IMG_ID, getImageDescriptor(CREATE_GROUP_IMG_PATH));
+        reg.put(DELETE_IMG_ID, getImageDescriptor(DELETE_IMG_PATH));
+        reg.put(FOLDER_IMG_ID, getImageDescriptor(FOLDER_IMG_PATH));
     }
 
     /**

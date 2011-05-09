@@ -1,7 +1,7 @@
 /**
  * This source file is part of Spritey - the sprite sheet creator.
  * 
- * Copyright 2010 Maksym Bykovskyy.
+ * Copyright 2011 Maksym Bykovskyy.
  * 
  * Spritey is free software: you can redistribute it and/or modify it under the
  * terms of the GNU General Public License as published by the Free Software
@@ -17,11 +17,7 @@
  */
 package spritey.core.filter;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
-import spritey.core.Model;
+import spritey.core.Node;
 import spritey.core.Sprite;
 
 /**
@@ -30,31 +26,7 @@ import spritey.core.Sprite;
 public class SpriteFilter extends AbstractFilter {
 
     @Override
-    public Sprite[] filter(Model root) {
-        List<Sprite> out = new ArrayList<Sprite>();
-        if (select(root)) {
-            out.add((Sprite) root);
-        }
-
-        for (Model child : root.getChildren()) {
-            out.addAll(Arrays.asList(filter(child)));
-        }
-        return out.toArray(new Sprite[out.size()]);
-    }
-
-    @Override
-    public Sprite[] filter(Model[] models) {
-        List<Sprite> out = new ArrayList<Sprite>(models.length);
-        for (Model e : models) {
-            if (select(e)) {
-                out.add((Sprite) e);
-            }
-        }
-        return out.toArray(new Sprite[out.size()]);
-    }
-
-    @Override
-    public boolean select(Model model) {
+    public boolean select(Node model) {
         return (model instanceof Sprite);
     }
 

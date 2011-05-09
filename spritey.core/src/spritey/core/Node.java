@@ -1,7 +1,7 @@
 /**
  * This source file is part of Spritey - the sprite sheet creator.
  * 
- * Copyright 2010 Maksym Bykovskyy.
+ * Copyright 2011 Maksym Bykovskyy.
  * 
  * Spritey is free software: you can redistribute it and/or modify it under the
  * terms of the GNU General Public License as published by the Free Software
@@ -17,16 +17,70 @@
  */
 package spritey.core;
 
-import spritey.core.event.NodeChangeListener;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
- * The primary datatype for the entire sprite sheet model. It represent a single
- * node in a sprite tree. While this interface exposes methods for dealing with
- * children, not all objects can have children. For example, a sprite does not
- * have any children, therefore, it may choose to throw an exception when a
- * client tries to add a child or may simply ignore the call.
+ * A fundamental element out of which a tree is made. Each node has a unique
+ * name across its siblings.
  */
-public interface Node<T> {
+public abstract class Node {
+
+    public static final int MIN_NAME_LENGTH = 1;
+    public static final int MAX_NAME_LENGTH = 1024;
+
+    private String name;
+    private Node parent;
+    private final List<Node> children;
+
+    /**
+     * Creates a new instance of Node.
+     * 
+     * @param name
+     *        the name to give to the node.
+     * @throws IllegalArgumentException
+     *         when specified <code>name</code> is <code>null</code>.
+     */
+    protected Node(final String name) {
+        setName(name);
+        children = new ArrayList<Node>();
+    }
+
+    /**
+     * Sets node's name.
+     * 
+     * @param name
+     *        the new node name.
+     * @throws IllegalArgumentException
+     *         when either <code>name</code> is <code>null</code> or the length
+     *         of the specified <code>name</code> is less than MIN_NAME_LENGTH
+     *         or greater than MAX_NAME_LENGTH.
+     */
+    public void setName(final String name) {
+        if ((null == getName()) || !getName().equals(name)) {
+            if (null == name) {
+                throw new IllegalArgumentException(Messages.NULL);
+            } else if ((name.length() < MIN_NAME_LENGTH)
+                    || (name.length() > MAX_NAME_LENGTH)) {
+                throw new IllegalArgumentException(Messages.format(
+                        Messages.NAME_LENGTH_INVALID, MIN_NAME_LENGTH,
+                        MAX_NAME_LENGTH));
+            } else if ((null != getParent()) && getParent().contains(name)) {
+                throw new IllegalArgumentException(Messages.format(
+                        Messages.NAME_NOT_UNIQUE, name, getParent().getName()));
+            }
+            this.name = name;
+        }
+    }
+
+    /**
+     * Returns the name given to this node.
+     * 
+     * @return the name.
+     */
+    public String getName() {
+        return name;
+    }
 
     /**
      * Sets the node's parent. <code>parent</code> can be null but cannot be the
@@ -36,16 +90,30 @@ public interface Node<T> {
      *        the node to be set as a parent of this node.
      * @throws IllegalArgumentException
      *         when <code>parent</code> is the node itself. i.e.
-     *         <code>parent == this</code>.
+     *         <code>parent == this</code> or <code>parent</code> is a child of
+     *         this node.
      */
-    public void setParent(T parent);
+    protected void setParent(final Node parent) {
+        if (parent != getParent()) {
+            if (this == parent) {
+                throw new IllegalArgumentException(
+                        Messages.CANNOT_ASSIGN_ITSELF_AS_PARENT);
+            } else if (contains(parent)) {
+                throw new IllegalArgumentException(
+                        Messages.CANNOT_ASSIGN_CHILD_AS_PARENT);
+            }
+            this.parent = parent;
+        }
+    }
 
     /**
      * Returns the parent of this node.
      * 
      * @return the parent of this node.
      */
-    public T getParent();
+    public Node getParent() {
+        return parent;
+    }
 
     /**
      * Adds an array of children to this node. Nodes that are already children
@@ -57,14 +125,35 @@ public interface Node<T> {
      * @throws IllegalArgumentException
      *         when <code>children</code> is null.
      */
-    public T[] addChildren(T... children);
+    public Node[] addChildren(final Node... children) {
+        if (null == children) {
+            throw new IllegalArgumentException(Messages.NULL);
+        }
+
+        List<Node> skipped = new ArrayList<Node>();
+
+        for (Node child : children) {
+            if (null != child) {
+                if (!((this == child) || (child == getParent()) || contains(child
+                        .getName()))) {
+                    getChildrenList().add(child);
+                    child.setParent(this);
+                } else {
+                    skipped.add(child);
+                }
+            }
+        }
+        return skipped.toArray(new Node[skipped.size()]);
+    }
 
     /**
      * Returns node's children.
      * 
      * @return the node's children.
      */
-    public T[] getChildren();
+    public Node[] getChildren() {
+        return getChildrenList().toArray(new Node[getChildrenList().size()]);
+    }
 
     /**
      * Specifies whether node is a parent of the specified child. The comparison
@@ -74,10 +163,27 @@ public interface Node<T> {
      *        the child to check.
      * @return <code>true</code> if this node is a parent of the specified
      *         child.
-     * @throws IllegalArgumentException
-     *         when <code>child</code> is null.
      */
-    public boolean contains(T child);
+    protected boolean contains(final Node child) {
+        return getChildrenList().contains(child);
+    }
+
+    /**
+     * Specifies whether this node contains a child with the given name.
+     * 
+     * @param name
+     *        the name to test against.
+     * @return <code>true</code> if one of the children has a given name,
+     *         otherwise <code>false</code>.
+     */
+    protected boolean contains(final String name) {
+        for (Node child : getChildrenList()) {
+            if (child.getName().equals(name)) {
+                return true;
+            }
+        }
+        return false;
+    }
 
     /**
      * Specifies whether this node is a root. i.e. has not parent.
@@ -85,7 +191,9 @@ public interface Node<T> {
      * @return <code>true</code> if this node is a root, otherwise
      *         <code>false</code>.
      */
-    public boolean isRoot();
+    public boolean isRoot() {
+        return null == getParent();
+    }
 
     /**
      * Specifies whether this node is a branch. i.e. has at least one child.
@@ -93,7 +201,9 @@ public interface Node<T> {
      * @return <code>true</code> if this node is a branch, otherwise
      *         <code>false</code>.
      */
-    public boolean isBranch();
+    public boolean isBranch() {
+        return !isLeaf();
+    }
 
     /**
      * Specifies whether this node is a leaf. i.e. has no children.
@@ -101,12 +211,21 @@ public interface Node<T> {
      * @return <code>true</code> if this node is a leaf, otherwise
      *         <code>false</code>.
      */
-    public boolean isLeaf();
+    public boolean isLeaf() {
+        return getChildrenList().isEmpty();
+    }
 
     /**
      * Removes all children.
      */
-    public void removeAll();
+    public void removeAll() {
+        // Need to get a copy of children otherwise a
+        // ConcurrentModificationException is thrown when reading and removing
+        // children at the same time.
+        for (Node child : getChildren()) {
+            removeChild(child);
+        }
+    }
 
     /**
      * Removes the specified child from this node. The child will also loose
@@ -119,28 +238,26 @@ public interface Node<T> {
      * @throws IllegalArgumentException
      *         when <code>child</code> is null.
      */
-    public boolean removeChild(T child);
+    public boolean removeChild(final Node child) {
+        if (null == child) {
+            throw new IllegalArgumentException(Messages.NULL);
+        }
+
+        if (!getChildrenList().remove(child)) {
+            return false;
+        }
+
+        child.setParent(null);
+        return true;
+    }
 
     /**
-     * Adds node listener. No action is taken when the specified listener has
-     * already been added.
+     * Returns a mutable list of node's children.
      * 
-     * @param listener
-     *        the listener to add.
-     * @throws IllegalArgumentException
-     *         when the specified <code>listener</code> is null.
+     * @return a mutable list.
      */
-    public void addNodeChangeListener(NodeChangeListener<T> listener);
-
-    /**
-     * Removes node listener. No action is taken when the specified listener has
-     * never been added to the list.
-     * 
-     * @param listener
-     *        the listener to remove.
-     * @throws IllegalArgumentException
-     *         when the specified <code>listener</code> is null.
-     */
-    public void removeNodeChangeListener(NodeChangeListener<T> listener);
+    protected List<Node> getChildrenList() {
+        return children;
+    }
 
 }

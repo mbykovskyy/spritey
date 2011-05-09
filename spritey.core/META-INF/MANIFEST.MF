@@ -6,11 +6,8 @@ Bundle-Version: 1.0.0.qualifier
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Require-Bundle: org.junit4
 Export-Package: spritey.core,
- spritey.core.event,
- spritey.core.exception,
  spritey.core.filter,
  spritey.core.io,
- spritey.core.packer,
- spritey.core.validator
+ spritey.core.packer
 Bundle-ClassPath: libs/java-xmlbuilder-0.3.jar,
  .

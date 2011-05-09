@@ -1,7 +1,7 @@
 /**
  * This source file is part of Spritey - the sprite sheet creator.
  * 
- * Copyright 2010 Maksym Bykovskyy.
+ * Copyright 2011 Maksym Bykovskyy.
  * 
  * Spritey is free software: you can redistribute it and/or modify it under the
  * terms of the GNU General Public License as published by the Free Software
@@ -17,17 +17,15 @@
  */
 package spritey.core.packer;
 
-import java.awt.Dimension;
-import java.awt.Point;
 import java.awt.Rectangle;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import spritey.core.Messages;
 import spritey.core.Sheet;
 import spritey.core.Sprite;
-import spritey.core.exception.InvalidPropertyValueException;
 
 /**
  * This strategy tries to put each sprite into first smallest area it finds by
@@ -61,10 +59,11 @@ public class FirstFitStrategy implements Strategy {
      *        packed.
      */
     protected void flushCache(Sheet sheet) {
-        Dimension size = (Dimension) sheet.getProperty(Sheet.SIZE);
+        int width = sheet.getWidth();
+        int height = sheet.getHeight();
 
         freeZones.clear();
-        freeZones.add(new Rectangle(new Point(0, 0), size));
+        freeZones.add(new Rectangle(0, 0, width, height));
     }
 
     /**
@@ -129,8 +128,8 @@ public class FirstFitStrategy implements Strategy {
      * @return the difference.
      */
     protected List<Rectangle> subtract(Rectangle minuend, Rectangle subtrahend) {
-        validateNotNull(minuend, "Minuend rectangle is null.");
-        validateNotNull(subtrahend, "Subtrahend rectangle is null.");
+        validateNotNull(minuend, Messages.NULL);
+        validateNotNull(subtrahend, Messages.NULL);
 
         List<Rectangle> differences = new ArrayList<Rectangle>();
 
@@ -254,27 +253,17 @@ public class FirstFitStrategy implements Strategy {
      *        the sprite to position.
      */
     protected void computeLocation(Sprite sprite) {
-        Rectangle bounds = (Rectangle) sprite.getProperty(Sprite.BOUNDS);
-        Rectangle boundsCopy = (Rectangle) bounds.clone();
+        Rectangle bounds = sprite.getBounds();
 
-        for (Rectangle freeZone : freeZones) {
-            // Temporarily set location so we can check if sprite fits into a
-            // zone.
-            boundsCopy.setLocation(freeZone.getLocation());
+        for (Rectangle zone : freeZones) {
+            bounds.setLocation(zone.getLocation());
 
-            if (freeZone.contains(boundsCopy)) {
-                try {
-                    sprite.setProperty(Sprite.BOUNDS, boundsCopy);
-                } catch (InvalidPropertyValueException e) {
-                    // This exception should never happen unless we have a bug
-                    // somewhere, because this strategy will only position
-                    // sprite if it fits into remaining space.
-                    e.printStackTrace();
-                }
+            if (zone.contains(bounds)) {
+                sprite.setLocation(zone.getLocation());
 
                 // This will modify the freeZones list, but it is safe to call
                 // it here since we are breaking.
-                recalculateZones(boundsCopy);
+                recalculateZones(bounds);
                 break;
             }
         }
@@ -287,8 +276,8 @@ public class FirstFitStrategy implements Strategy {
      */
     @Override
     public void pack(Sheet sheet, Sprite[] sprites, boolean flushCache) {
-        validateNotNull(sheet, "Sheet is null.");
-        validateNotNull(sprites, "Sprites is null.");
+        validateNotNull(sheet, Messages.NULL);
+        validateNotNull(sprites, Messages.NULL);
 
         if (flushCache || (this.sheet != sheet)) {
             this.sheet = sheet;
@@ -298,15 +287,13 @@ public class FirstFitStrategy implements Strategy {
         List<Sprite> unlocatedSprites = new ArrayList<Sprite>();
 
         for (Sprite sprite : sprites) {
-            Rectangle bounds = (Rectangle) sprite.getProperty(Sprite.BOUNDS);
-
-            if ((bounds.x == -1) && (bounds.y == -1)) {
+            if (!sprite.isVisible()) {
                 // Unlocated sprites should be positioned last, after all
                 // located sprites have been positioned and free zones have been
                 // calculated.
                 unlocatedSprites.add(sprite);
             } else if (flushCache) {
-                recalculateZones(bounds);
+                recalculateZones(sprite.getBounds());
             }
         }
 

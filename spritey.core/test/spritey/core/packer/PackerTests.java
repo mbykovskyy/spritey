@@ -28,7 +28,7 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import spritey.core.Model;
+import spritey.core.Node;
 import spritey.core.Sheet;
 import spritey.core.Sprite;
 
@@ -79,7 +79,7 @@ public class PackerTests {
     @Test
     public void packWithoutCacheFlush() throws Exception {
         Sheet sheetMock = mock(Sheet.class);
-        doReturn(new Model[0]).when(sheetMock).getChildren();
+        doReturn(new Node[0]).when(sheetMock).getChildren();
 
         packer.pack(sheetMock, false);
 

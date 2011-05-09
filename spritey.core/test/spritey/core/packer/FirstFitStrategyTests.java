@@ -21,13 +21,12 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 
-import java.awt.Dimension;
+import java.awt.Point;
 import java.awt.Rectangle;
 import java.util.ArrayList;
 import java.util.List;
@@ -39,7 +38,6 @@ import org.mockito.MockitoAnnotations;
 
 import spritey.core.Sheet;
 import spritey.core.Sprite;
-import spritey.core.exception.InvalidPropertyValueException;
 
 /**
  * Tests the implementation of FirstFitStrategy.
@@ -49,12 +47,13 @@ public class FirstFitStrategyTests {
     FirstFitStrategy strategy;
 
     @Mock
-    Sheet sheetMock;
+    Sheet sheet;
 
     @Before
     public void initialize() {
         MockitoAnnotations.initMocks(this);
-        doReturn(new Dimension(10, 10)).when(sheetMock).getProperty(Sheet.SIZE);
+        doReturn(10).when(sheet).getWidth();
+        doReturn(10).when(sheet).getHeight();
         strategy = new FirstFitStrategy();
     }
 
@@ -169,20 +168,21 @@ public class FirstFitStrategyTests {
     }
 
     @Test
-    public void packOneSprite() throws InvalidPropertyValueException {
+    public void packOneSprite() {
         final Rectangle SPRITE_BOUNDS = new Rectangle(-1, -1, 3, 4);
-        final Rectangle NEW_BOUNDS = new Rectangle(0, 0, 3, 4);
+        final Point NEW_LOCATION = new Point(0, 0);
 
-        Sprite spriteMock = mock(Sprite.class);
-        doReturn(SPRITE_BOUNDS).when(spriteMock).getProperty(Sprite.BOUNDS);
+        Sprite sprite = mock(Sprite.class);
+        doReturn(false).when(sprite).isVisible();
+        doReturn(SPRITE_BOUNDS).when(sprite).getBounds();
 
-        Sprite[] sprites = new Sprite[] { spriteMock };
-        strategy.pack(sheetMock, sprites, false);
+        Sprite[] sprites = new Sprite[] { sprite };
+        strategy.pack(sheet, sprites, false);
 
         assertNotNull(sprites);
         assertEquals(1, sprites.length);
-        assertEquals(spriteMock, sprites[0]);
-        verify(spriteMock).setProperty(Sprite.BOUNDS, NEW_BOUNDS);
+        assertEquals(sprite, sprites[0]);
+        verify(sprite).setLocation(NEW_LOCATION);
 
         Rectangle[] freeZones = strategy.getFreeZones();
         assertNotNull(freeZones);
@@ -192,20 +192,21 @@ public class FirstFitStrategyTests {
     }
 
     @Test
-    public void packOneSpriteAfterFlush() throws InvalidPropertyValueException {
+    public void packOneSpriteAfterFlush() {
         final Rectangle SPRITE_BOUNDS = new Rectangle(-1, -1, 3, 4);
-        final Rectangle NEW_BOUNDS = new Rectangle(0, 0, 3, 4);
+        final Point NEW_LOCATION = new Point(0, 0);
 
-        Sprite spriteMock = mock(Sprite.class);
-        doReturn(SPRITE_BOUNDS).when(spriteMock).getProperty(Sprite.BOUNDS);
+        Sprite sprite = mock(Sprite.class);
+        doReturn(false).when(sprite).isVisible();
+        doReturn(SPRITE_BOUNDS).when(sprite).getBounds();
 
-        Sprite[] sprites = new Sprite[] { spriteMock };
-        strategy.pack(sheetMock, sprites, true);
+        Sprite[] sprites = new Sprite[] { sprite };
+        strategy.pack(sheet, sprites, true);
 
         assertNotNull(sprites);
         assertTrue(1 == sprites.length);
-        assertEquals(spriteMock, sprites[0]);
-        verify(spriteMock).setProperty(Sprite.BOUNDS, NEW_BOUNDS);
+        assertEquals(sprite, sprites[0]);
+        verify(sprite).setLocation(NEW_LOCATION);
 
         Rectangle[] freeZones = strategy.getFreeZones();
         assertNotNull(freeZones);
@@ -215,27 +216,29 @@ public class FirstFitStrategyTests {
     }
 
     @Test
-    public void packTwoSprites() throws InvalidPropertyValueException {
+    public void packTwoSprites() {
         final Rectangle SPRITE1_BOUNDS = new Rectangle(-1, -1, 3, 4);
         final Rectangle SPRITE2_BOUNDS = new Rectangle(-1, -1, 5, 5);
-        final Rectangle NEW_BOUNDS1 = new Rectangle(0, 0, 3, 4);
-        final Rectangle NEW_BOUNDS2 = new Rectangle(0, 4, 5, 5);
+        final Point NEW_LOCATION1 = new Point(0, 0);
+        final Point NEW_LOCATION2 = new Point(0, 4);
 
-        Sprite sprite1Mock = mock(Sprite.class);
-        doReturn(SPRITE1_BOUNDS).when(sprite1Mock).getProperty(Sprite.BOUNDS);
+        Sprite sprite1 = mock(Sprite.class);
+        doReturn(false).when(sprite1).isVisible();
+        doReturn(SPRITE1_BOUNDS).when(sprite1).getBounds();
 
-        Sprite sprite2Mock = mock(Sprite.class);
-        doReturn(SPRITE2_BOUNDS).when(sprite2Mock).getProperty(Sprite.BOUNDS);
+        Sprite sprite2 = mock(Sprite.class);
+        doReturn(false).when(sprite2).isVisible();
+        doReturn(SPRITE2_BOUNDS).when(sprite2).getBounds();
 
-        Sprite[] sprites = new Sprite[] { sprite1Mock, sprite2Mock };
-        strategy.pack(sheetMock, sprites, false);
+        Sprite[] sprites = new Sprite[] { sprite1, sprite2 };
+        strategy.pack(sheet, sprites, false);
 
         assertNotNull(sprites);
         assertTrue(2 == sprites.length);
-        assertEquals(sprite1Mock, sprites[0]);
-        verify(sprite1Mock).setProperty(Sprite.BOUNDS, NEW_BOUNDS1);
-        assertEquals(sprite2Mock, sprites[1]);
-        verify(sprite2Mock).setProperty(Sprite.BOUNDS, NEW_BOUNDS2);
+        assertEquals(sprite1, sprites[0]);
+        verify(sprite1).setLocation(NEW_LOCATION1);
+        assertEquals(sprite2, sprites[1]);
+        verify(sprite2).setLocation(NEW_LOCATION2);
 
         Rectangle[] freeZones = strategy.getFreeZones();
         assertNotNull(freeZones);
@@ -246,27 +249,29 @@ public class FirstFitStrategyTests {
     }
 
     @Test
-    public void packTwoSpritesAfterFlush() throws InvalidPropertyValueException {
+    public void packTwoSpritesAfterFlush() {
         final Rectangle SPRITE1_BOUNDS = new Rectangle(-1, -1, 3, 4);
         final Rectangle SPRITE2_BOUNDS = new Rectangle(-1, -1, 5, 5);
-        final Rectangle NEW_BOUNDS1 = new Rectangle(0, 0, 3, 4);
-        final Rectangle NEW_BOUNDS2 = new Rectangle(0, 4, 5, 5);
+        final Point NEW_LOCATION1 = new Point(0, 0);
+        final Point NEW_LOCATION2 = new Point(0, 4);
 
-        Sprite sprite1Mock = mock(Sprite.class);
-        doReturn(SPRITE1_BOUNDS).when(sprite1Mock).getProperty(Sprite.BOUNDS);
+        Sprite sprite1 = mock(Sprite.class);
+        doReturn(false).when(sprite1).isVisible();
+        doReturn(SPRITE1_BOUNDS).when(sprite1).getBounds();
 
-        Sprite sprite2Mock = mock(Sprite.class);
-        doReturn(SPRITE2_BOUNDS).when(sprite2Mock).getProperty(Sprite.BOUNDS);
+        Sprite sprite2 = mock(Sprite.class);
+        doReturn(false).when(sprite2).isVisible();
+        doReturn(SPRITE2_BOUNDS).when(sprite2).getBounds();
 
-        Sprite[] sprites = new Sprite[] { sprite1Mock, sprite2Mock };
-        strategy.pack(sheetMock, sprites, true);
+        Sprite[] sprites = new Sprite[] { sprite1, sprite2 };
+        strategy.pack(sheet, sprites, true);
 
         assertNotNull(sprites);
         assertTrue(2 == sprites.length);
-        assertEquals(sprite1Mock, sprites[0]);
-        verify(sprite1Mock).setProperty(Sprite.BOUNDS, NEW_BOUNDS1);
-        assertEquals(sprite2Mock, sprites[1]);
-        verify(sprite2Mock).setProperty(Sprite.BOUNDS, NEW_BOUNDS2);
+        assertEquals(sprite1, sprites[0]);
+        verify(sprite1).setLocation(NEW_LOCATION1);
+        assertEquals(sprite2, sprites[1]);
+        verify(sprite2).setLocation(NEW_LOCATION2);
 
         Rectangle[] freeZones = strategy.getFreeZones();
         assertNotNull(freeZones);
@@ -277,27 +282,28 @@ public class FirstFitStrategyTests {
     }
 
     @Test
-    public void packTwoSpritesOneFitsOneDoesNot()
-            throws InvalidPropertyValueException {
+    public void packTwoSpritesOneFitsOneDoesNot() {
         final Rectangle SPRITE1_BOUNDS = new Rectangle(-1, -1, 3, 4);
         final Rectangle SPRITE2_BOUNDS = new Rectangle(-1, -1, 15, 15);
-        final Rectangle NEW_BOUNDS = new Rectangle(0, 0, 3, 4);
+        final Point NEW_LOCATION1 = new Point(0, 0);
 
-        Sprite sprite1Mock = mock(Sprite.class);
-        doReturn(SPRITE1_BOUNDS).when(sprite1Mock).getProperty(Sprite.BOUNDS);
+        Sprite sprite1 = mock(Sprite.class);
+        doReturn(false).when(sprite1).isVisible();
+        doReturn(SPRITE1_BOUNDS).when(sprite1).getBounds();
 
-        Sprite sprite2Mock = mock(Sprite.class);
-        doReturn(SPRITE2_BOUNDS).when(sprite2Mock).getProperty(Sprite.BOUNDS);
+        Sprite sprite2 = mock(Sprite.class);
+        doReturn(false).when(sprite2).isVisible();
+        doReturn(SPRITE2_BOUNDS).when(sprite2).getBounds();
 
-        Sprite[] sprites = new Sprite[] { sprite1Mock, sprite2Mock };
-        strategy.pack(sheetMock, sprites, false);
+        Sprite[] sprites = new Sprite[] { sprite1, sprite2 };
+        strategy.pack(sheet, sprites, false);
 
         assertNotNull(sprites);
         assertTrue(2 == sprites.length);
-        assertEquals(sprite1Mock, sprites[0]);
-        verify(sprite1Mock).setProperty(Sprite.BOUNDS, NEW_BOUNDS);
-        assertEquals(sprite2Mock, sprites[1]);
-        verify(sprite2Mock, never()).setProperty(eq(Sprite.BOUNDS), any());
+        assertEquals(sprite1, sprites[0]);
+        verify(sprite1).setLocation(NEW_LOCATION1);
+        assertEquals(sprite2, sprites[1]);
+        verify(sprite2, never()).setLocation(any(Point.class));
 
         Rectangle[] freeZones = strategy.getFreeZones();
         assertNotNull(freeZones);
@@ -307,27 +313,28 @@ public class FirstFitStrategyTests {
     }
 
     @Test
-    public void packTwoSpritesOneFitsOneDoesNotAfterFlush()
-            throws InvalidPropertyValueException {
+    public void packTwoSpritesOneFitsOneDoesNotAfterFlush() {
         final Rectangle SPRITE1_BOUNDS = new Rectangle(-1, -1, 3, 4);
         final Rectangle SPRITE2_BOUNDS = new Rectangle(-1, -1, 15, 15);
-        final Rectangle NEW_BOUNDS = new Rectangle(0, 0, 3, 4);
+        final Point NEW_LOCATION1 = new Point(0, 0);
 
-        Sprite sprite1Mock = mock(Sprite.class);
-        doReturn(SPRITE1_BOUNDS).when(sprite1Mock).getProperty(Sprite.BOUNDS);
+        Sprite sprite1 = mock(Sprite.class);
+        doReturn(false).when(sprite1).isVisible();
+        doReturn(SPRITE1_BOUNDS).when(sprite1).getBounds();
 
-        Sprite sprite2Mock = mock(Sprite.class);
-        doReturn(SPRITE2_BOUNDS).when(sprite2Mock).getProperty(Sprite.BOUNDS);
+        Sprite sprite2 = mock(Sprite.class);
+        doReturn(false).when(sprite2).isVisible();
+        doReturn(SPRITE2_BOUNDS).when(sprite2).getBounds();
 
-        Sprite[] sprites = new Sprite[] { sprite1Mock, sprite2Mock };
-        strategy.pack(sheetMock, sprites, true);
+        Sprite[] sprites = new Sprite[] { sprite1, sprite2 };
+        strategy.pack(sheet, sprites, true);
 
         assertNotNull(sprites);
         assertTrue(2 == sprites.length);
-        assertEquals(sprite1Mock, sprites[0]);
-        verify(sprite1Mock).setProperty(Sprite.BOUNDS, NEW_BOUNDS);
-        assertEquals(sprite2Mock, sprites[1]);
-        verify(sprite2Mock, never()).setProperty(eq(Sprite.BOUNDS), any());
+        assertEquals(sprite1, sprites[0]);
+        verify(sprite1).setLocation(NEW_LOCATION1);
+        assertEquals(sprite2, sprites[1]);
+        verify(sprite2, never()).setLocation(any(Point.class));
 
         Rectangle[] freeZones = strategy.getFreeZones();
         assertNotNull(freeZones);
@@ -337,26 +344,27 @@ public class FirstFitStrategyTests {
     }
 
     @Test
-    public void packTwoSpritesOneLocatedOneIsNotWithoutFlush()
-            throws InvalidPropertyValueException {
+    public void packTwoSpritesOneLocatedOneIsNotWithoutFlush() {
         final Rectangle SPRITE1_BOUNDS = new Rectangle(0, 0, 3, 4);
         final Rectangle SPRITE2_BOUNDS = new Rectangle(-1, -1, 5, 5);
-        final Rectangle NEW_BOUNDS = new Rectangle(0, 0, 5, 5);
+        final Point NEW_LOCATION1 = new Point(0, 0);
 
-        Sprite sprite1Mock = mock(Sprite.class);
-        doReturn(SPRITE1_BOUNDS).when(sprite1Mock).getProperty(Sprite.BOUNDS);
+        Sprite sprite1 = mock(Sprite.class);
+        doReturn(true).when(sprite1).isVisible();
+        doReturn(SPRITE1_BOUNDS).when(sprite1).getBounds();
 
-        Sprite sprite2Mock = mock(Sprite.class);
-        doReturn(SPRITE2_BOUNDS).when(sprite2Mock).getProperty(Sprite.BOUNDS);
+        Sprite sprite2 = mock(Sprite.class);
+        doReturn(false).when(sprite2).isVisible();
+        doReturn(SPRITE2_BOUNDS).when(sprite2).getBounds();
 
-        Sprite[] sprites = new Sprite[] { sprite1Mock, sprite2Mock };
-        strategy.pack(sheetMock, sprites, false);
+        Sprite[] sprites = new Sprite[] { sprite1, sprite2 };
+        strategy.pack(sheet, sprites, false);
 
         assertNotNull(sprites);
         assertTrue(2 == sprites.length);
-        verify(sprite1Mock, never()).setProperty(eq(Sprite.BOUNDS), any());
-        assertEquals(sprite2Mock, sprites[1]);
-        verify(sprite2Mock).setProperty(Sprite.BOUNDS, NEW_BOUNDS);
+        verify(sprite1, never()).setLocation(any(Point.class));
+        assertEquals(sprite2, sprites[1]);
+        verify(sprite2).setLocation(NEW_LOCATION1);
 
         Rectangle[] freeZones = strategy.getFreeZones();
         assertNotNull(freeZones);
@@ -366,27 +374,28 @@ public class FirstFitStrategyTests {
     }
 
     @Test
-    public void packTwoSpritesOneLocatedOneIsNotAfterFlush()
-            throws InvalidPropertyValueException {
+    public void packTwoSpritesOneLocatedOneIsNotAfterFlush() {
         final Rectangle SPRITE1_BOUNDS = new Rectangle(0, 0, 3, 4);
         final Rectangle SPRITE2_BOUNDS = new Rectangle(-1, -1, 5, 5);
-        final Rectangle NEW_BOUNDS = new Rectangle(0, 4, 5, 5);
+        final Point NEW_LOCATION1 = new Point(0, 4);
 
-        Sprite sprite1Mock = mock(Sprite.class);
-        doReturn(SPRITE1_BOUNDS).when(sprite1Mock).getProperty(Sprite.BOUNDS);
+        Sprite sprite1 = mock(Sprite.class);
+        doReturn(true).when(sprite1).isVisible();
+        doReturn(SPRITE1_BOUNDS).when(sprite1).getBounds();
 
-        Sprite sprite2Mock = mock(Sprite.class);
-        doReturn(SPRITE2_BOUNDS).when(sprite2Mock).getProperty(Sprite.BOUNDS);
+        Sprite sprite2 = mock(Sprite.class);
+        doReturn(false).when(sprite2).isVisible();
+        doReturn(SPRITE2_BOUNDS).when(sprite2).getBounds();
 
-        Sprite[] sprites = new Sprite[] { sprite1Mock, sprite2Mock };
-        strategy.pack(sheetMock, sprites, true);
+        Sprite[] sprites = new Sprite[] { sprite1, sprite2 };
+        strategy.pack(sheet, sprites, true);
 
         assertNotNull(sprites);
         assertTrue(2 == sprites.length);
-        assertEquals(sprite1Mock, sprites[0]);
-        verify(sprite1Mock, never()).setProperty(eq(Sprite.BOUNDS), any());
-        assertEquals(sprite2Mock, sprites[1]);
-        verify(sprite2Mock).setProperty(Sprite.BOUNDS, NEW_BOUNDS);
+        assertEquals(sprite1, sprites[0]);
+        verify(sprite1, never()).setLocation(any(Point.class));
+        assertEquals(sprite2, sprites[1]);
+        verify(sprite2).setLocation(NEW_LOCATION1);
 
         Rectangle[] freeZones = strategy.getFreeZones();
         assertNotNull(freeZones);

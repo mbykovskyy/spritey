@@ -20,9 +20,9 @@ package spritey.ui;
 import org.eclipse.osgi.util.NLS;
 
 /**
- * Spritey message catalog.
+ * Spritey UI message catalog.
  */
-public class Messages extends NLS {
+public class Messages {
 
     private static final String BUNDLE_NAME = "spritey.ui.messages";
 
@@ -35,16 +35,10 @@ public class Messages extends NLS {
     public static String NEW_SHEET_PAGE_MAX_HEIGHT;
     public static String NEW_SHEET_PAGE_POWER_OF_TWO;
     public static String NEW_SHEET_PAGE_ASPECT_RATIO;
-
     public static String NEW_SHEET_PAGE_BACKGROUND;
     public static String NEW_SHEET_PAGE_COMMENT;
     public static String NEW_SHEET_PAGE_TRANSPARENT;
     public static String NEW_SHEET_PAGE_CHOOSE_COLOR;
-
-    public static String NEW_SHEET_PAGE_MAX_WIDTH_INVALID_RANGE;
-    public static String NEW_SHEET_PAGE_MAX_HEIGHT_INVALID_RANGE;
-    public static String NEW_SHEET_PAGE_MAX_WIDTH_INVALID_POWER_OF_TWO;
-    public static String NEW_SHEET_PAGE_MAX_HEIGHT_INVALID_POWER_OF_TWO;
 
     static {
         reloadMessages();

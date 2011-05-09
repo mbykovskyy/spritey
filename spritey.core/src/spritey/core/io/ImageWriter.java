@@ -1,7 +1,7 @@
 /**
  * This source file is part of Spritey - the sprite sheet creator.
  * 
- * Copyright 2010 Maksym Bykovskyy.
+ * Copyright 2011 Maksym Bykovskyy.
  * 
  * Spritey is free software: you can redistribute it and/or modify it under the
  * terms of the GNU General Public License as published by the Free Software
@@ -17,11 +17,8 @@
  */
 package spritey.core.io;
 
-import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.Graphics;
-import java.awt.Image;
-import java.awt.Rectangle;
+import java.awt.Point;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBuffer;
 import java.awt.image.IndexColorModel;
@@ -31,7 +28,8 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
-import spritey.core.Model;
+import spritey.core.Messages;
+import spritey.core.Node;
 import spritey.core.Sheet;
 import spritey.core.Sprite;
 import spritey.core.filter.VisibleSpriteFilter;
@@ -130,37 +128,37 @@ public class ImageWriter implements Writer {
     @Override
     public void write(Sheet sheet, File file) throws FileNotFoundException,
             IOException {
-        Dimension size = (Dimension) sheet.getProperty(Sheet.SIZE);
-        boolean isOpaque = (Boolean) sheet.getProperty(Sheet.OPAQUE);
+        int width = sheet.getWidth();
+        int height = sheet.getHeight();
+        boolean isOpaque = sheet.getBackground().getAlpha() == 255;
 
         BufferedImage image = null;
         if (isGif(file)) {
-            image = new BufferedImage(size.width, size.height,
+            image = new BufferedImage(width, height,
                     BufferedImage.TYPE_BYTE_INDEXED,
                     createIndexColorModelWithTransparency());
         } else if (!isOpaque && isPng(file)) {
-            image = new BufferedImage(size.width, size.height,
+            image = new BufferedImage(width, height,
                     BufferedImage.TYPE_INT_ARGB);
         } else {
-            image = new BufferedImage(size.width, size.height,
-                    BufferedImage.TYPE_INT_RGB);
+            image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
         }
 
         Graphics gfx = image.getGraphics();
 
         if (isOpaque) {
-            gfx.setColor((Color) sheet.getProperty(Sheet.BACKGROUND));
-            gfx.fillRect(0, 0, size.width, size.height);
+            gfx.setColor(sheet.getBackground());
+            gfx.fillRect(0, 0, width, height);
         }
 
-        for (Model child : new VisibleSpriteFilter().filter(sheet)) {
+        for (Node child : new VisibleSpriteFilter().filter(sheet)) {
             draw(child, gfx);
         }
 
         gfx.dispose();
 
         if (!ImageIO.write(image, getFileExt(file), file)) {
-            throw new IOException("No appropriate writer is found.");
+            throw new IOException(Messages.IMAGE_WRITER_NO_WRITER_FOUND);
         }
     }
 
@@ -172,16 +170,12 @@ public class ImageWriter implements Writer {
      * @param gfx
      *        graphics context to draw on.
      */
-    protected void draw(Model model, Graphics gfx) {
-        if (model instanceof Sprite) {
-            Image img = (Image) model.getProperty(Sprite.IMAGE);
-            Rectangle bounds = (Rectangle) model.getProperty(Sprite.BOUNDS);
-            gfx.drawImage(img, bounds.x, bounds.y, null);
+    protected void draw(Node node, Graphics gfx) {
+        if (node instanceof Sprite) {
+            Sprite sprite = (Sprite) node;
+            Point location = sprite.getLocation();
+            gfx.drawImage(sprite.getImage(), location.x, location.y, null);
         }
-        //
-        // for (Model child : model.getChildren()) {
-        // draw(child, gfx);
-        // }
     }
 
 }
