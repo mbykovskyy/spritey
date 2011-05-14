@@ -26,8 +26,8 @@ import spritey.core.Sprite;
 public class SpriteFilter extends AbstractFilter {
 
     @Override
-    public boolean select(Node model) {
-        return (model instanceof Sprite);
+    public boolean select(Node node) {
+        return (node instanceof Sprite);
     }
 
 }

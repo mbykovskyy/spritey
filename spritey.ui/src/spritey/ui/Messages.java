@@ -40,6 +40,32 @@ public class Messages {
     public static String NEW_SHEET_PAGE_TRANSPARENT;
     public static String NEW_SHEET_PAGE_CHOOSE_COLOR;
 
+    public static String ADD_SPRITES_PAGE_TITLE;
+    public static String ADD_SPRITES_PAGE_DESCRIPTION;
+    public static String ADD_SPRITES_ADD_SPRITES;
+    public static String ADD_SPRITES_ADD_FOLDER;
+    public static String ADD_SPRITES_CREATE_GROUP;
+    public static String ADD_SPRITES_DELETE;
+    public static String ADD_SPRITES_EXPAND_ALL;
+    public static String ADD_SPRITES_COLLAPSE_ALL;
+    public static String ADD_SPRITES_SELECT_ALL;
+    public static String ADD_SPRITES_NAME_COLUMN;
+    public static String ADD_SPRITES_SIZE_COLUMN;
+    public static String ADD_SPRITES_DELETE_GROUP_TITLE;
+    public static String ADD_SPRITES_DELETE_GROUPS_TITLE;
+    public static String ADD_SPRITES_DELETE_SPRITE_TITLE;
+    public static String ADD_SPRITES_DELETE_SPRITES_TITLE;
+    public static String ADD_SPRITES_DELETE_SELECTED_GROUP_QUESTION;
+    public static String ADD_SPRITES_DELETE_SELECTED_GROUPS_QUESTION;
+    public static String ADD_SPRITES_DELETE_SELECTED_SPRITE_QUESTION;
+    public static String ADD_SPRITES_DELETE_SELECTED_SPRITES_QUESTION;
+
+    public static String NEW_GROUP_WIZARD_TITLE;
+
+    public static String NEW_GROUP_PAGE_TITLE;
+    public static String NEW_GROUP_PAGE_DESCRIPTION;
+    public static String NEW_GROUP_NAME;
+
     static {
         reloadMessages();
     }

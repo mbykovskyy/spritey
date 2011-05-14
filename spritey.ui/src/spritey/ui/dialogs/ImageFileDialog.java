@@ -78,7 +78,8 @@ public class ImageFileDialog {
     /**
      * Opens the dialog.
      * 
-     * @return selected file.
+     * @return a string describing the absolute path of the first selected file,
+     *         or null if the dialog was cancelled or an error occurred.
      */
     public String open() {
         if ((style & SWT.OPEN) == SWT.OPEN) {

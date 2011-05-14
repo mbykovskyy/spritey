@@ -24,7 +24,7 @@ import java.util.List;
  * A fundamental element out of which a tree is made. Each node has a unique
  * name across its siblings.
  */
-public abstract class Node {
+public class Node {
 
     public static final int MIN_NAME_LENGTH = 1;
     public static final int MAX_NAME_LENGTH = 1024;
@@ -41,7 +41,7 @@ public abstract class Node {
      * @throws IllegalArgumentException
      *         when specified <code>name</code> is <code>null</code>.
      */
-    protected Node(final String name) {
+    public Node(final String name) {
         setName(name);
         children = new ArrayList<Node>();
     }
@@ -176,7 +176,7 @@ public abstract class Node {
      * @return <code>true</code> if one of the children has a given name,
      *         otherwise <code>false</code>.
      */
-    protected boolean contains(final String name) {
+    public boolean contains(final String name) {
         for (Node child : getChildrenList()) {
             if (child.getName().equals(name)) {
                 return true;

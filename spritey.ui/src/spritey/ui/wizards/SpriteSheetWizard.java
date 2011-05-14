@@ -20,19 +20,23 @@ package spritey.ui.wizards;
 import org.eclipse.jface.wizard.Wizard;
 
 import spritey.ui.Messages;
+import spritey.ui.pages.AddSpritesPage;
+import spritey.ui.pages.NewSheetPage;
 
 /**
  * A wizard for creating a sprite sheet.
  */
 public class SpriteSheetWizard extends Wizard {
 
-    NewSheetPage newSheetPage;
+    private NewSheetPage newSheetPage;
+    private AddSpritesPage addSpritesPage;
 
     /**
      * Creates a new instance of SpriteSheetWizard.
      */
     public SpriteSheetWizard() {
         newSheetPage = new NewSheetPage();
+        addSpritesPage = new AddSpritesPage(newSheetPage);
     }
 
     @Override
@@ -41,6 +45,7 @@ public class SpriteSheetWizard extends Wizard {
         setNeedsProgressMonitor(true);
 
         addPage(newSheetPage);
+        addPage(addSpritesPage);
     }
 
     @Override

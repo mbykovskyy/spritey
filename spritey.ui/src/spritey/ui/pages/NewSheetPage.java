@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License along with
  * Spritey. If not, see <http://www.gnu.org/licenses/>.
  */
-package spritey.ui.wizards;
+package spritey.ui.pages;
 
 import static spritey.ui.Application.DROP_DOWN_IMG_ID;
 import static spritey.ui.ImageFactory.appendImage;
@@ -101,7 +101,7 @@ public class NewSheetPage extends WizardPage {
     /**
      * Validates all fields and sets error message accordingly.
      */
-    private void validateFields() {
+    private void validatePage() {
         String text = widthText.getText();
         int width = text.isEmpty() ? 0 : Integer.valueOf(text);
 
@@ -156,7 +156,7 @@ public class NewSheetPage extends WizardPage {
         ModifyListener sizeModifier = new ModifyListener() {
             @Override
             public void modifyText(ModifyEvent e) {
-                validateFields();
+                validatePage();
             }
         };
 
@@ -193,7 +193,7 @@ public class NewSheetPage extends WizardPage {
         SelectionListener selectionListener = new SelectionAdapter() {
             @Override
             public void widgetSelected(SelectionEvent e) {
-                validateFields();
+                validatePage();
             }
         };
 
@@ -296,7 +296,7 @@ public class NewSheetPage extends WizardPage {
                         button.setImage(appendImage(colorImage, dropdownImage));
                         colorImage.dispose();
 
-                        validateFields();
+                        validatePage();
                     }
                 }
             }
@@ -321,7 +321,7 @@ public class NewSheetPage extends WizardPage {
 
                     background = Sheet.TRANSPARENT_BACKGROUND;
 
-                    validateFields();
+                    validatePage();
                 }
             }
         });
@@ -347,9 +347,18 @@ public class NewSheetPage extends WizardPage {
         commentText.addModifyListener(new ModifyListener() {
             @Override
             public void modifyText(ModifyEvent e) {
-                validateFields();
+                validatePage();
             }
         });
+    }
+
+    /**
+     * Returns a sprite sheet.
+     * 
+     * @return sprite sheet.
+     */
+    public Sheet getSheet() {
+        return sheet;
     }
 
 }

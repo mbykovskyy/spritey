@@ -30,17 +30,27 @@ import spritey.ui.wizards.SpriteSheetWizard;
 
 public class Application {
 
+    public static final String EXPAND_ALL_IMG_ID = "expand_all";
+    public static final String COLLAPSE_ALL_IMG_ID = "collapse_all";
     public static final String DROP_DOWN_IMG_ID = "drop_down";
     public static final String ADD_IMG_ID = "add";
     public static final String CREATE_GROUP_IMG_ID = "crate_group";
     public static final String DELETE_IMG_ID = "delete";
     public static final String FOLDER_IMG_ID = "folder";
+    public static final String SHEET_IMG_ID = "sheet";
+    public static final String GROUP_IMG_ID = "group";
+    public static final String SPRITE_IMG_ID = "sprite";
 
+    public static final String EXPAND_ALL_IMG_PATH = "data/icons/expand_all.gif";
+    public static final String COLLAPSE_ALL_IMG_PATH = "data/icons/collapse_all.gif";
     public static final String DROP_DOWN_IMG_PATH = "data/icons/dropdown.gif";
     public static final String ADD_IMG_PATH = "data/icons/add.png";
     public static final String CREATE_GROUP_IMG_PATH = "data/icons/create_group.png";
-    public static final String DELETE_IMG_PATH = "data/icons/cross.png";
+    public static final String DELETE_IMG_PATH = "data/icons/delete.png";
     public static final String FOLDER_IMG_PATH = "data/icons/folder.png";
+    public static final String SHEET_IMG_PATH = "data/icons/sheet.png";
+    public static final String GROUP_IMG_PATH = "data/icons/group.png";
+    public static final String SPRITE_IMG_PATH = "data/icons/sprite.png";
 
     private static ImageRegistry imageRegistry;
 
@@ -66,11 +76,16 @@ public class Application {
      *        the image registry to initialize.
      */
     private static void initializeImageRegistry(ImageRegistry reg) {
+        reg.put(COLLAPSE_ALL_IMG_ID, getImageDescriptor(COLLAPSE_ALL_IMG_PATH));
+        reg.put(EXPAND_ALL_IMG_ID, getImageDescriptor(EXPAND_ALL_IMG_PATH));
         reg.put(DROP_DOWN_IMG_ID, getImageDescriptor(DROP_DOWN_IMG_PATH));
         reg.put(ADD_IMG_ID, getImageDescriptor(ADD_IMG_PATH));
         reg.put(CREATE_GROUP_IMG_ID, getImageDescriptor(CREATE_GROUP_IMG_PATH));
         reg.put(DELETE_IMG_ID, getImageDescriptor(DELETE_IMG_PATH));
         reg.put(FOLDER_IMG_ID, getImageDescriptor(FOLDER_IMG_PATH));
+        reg.put(SHEET_IMG_ID, getImageDescriptor(SHEET_IMG_PATH));
+        reg.put(GROUP_IMG_ID, getImageDescriptor(GROUP_IMG_PATH));
+        reg.put(SPRITE_IMG_ID, getImageDescriptor(SPRITE_IMG_PATH));
     }
 
     /**

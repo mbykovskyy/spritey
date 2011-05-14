@@ -41,8 +41,7 @@ import org.mockito.Spy;
 public class NodeTests {
 
     @Spy
-    Node node = new Node("TEST_NODE") {
-    };
+    Node node = new Node("TEST_NODE");
 
     @Mock
     Node parent;
