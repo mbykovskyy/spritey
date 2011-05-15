@@ -164,7 +164,7 @@ public class Node {
      * @return <code>true</code> if this node is a parent of the specified
      *         child.
      */
-    protected boolean contains(final Node child) {
+    public boolean contains(final Node child) {
         return getChildrenList().contains(child);
     }
 

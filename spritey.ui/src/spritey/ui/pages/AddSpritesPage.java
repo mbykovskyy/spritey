@@ -23,6 +23,7 @@ import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.action.ToolBarManager;
+import org.eclipse.jface.util.LocalSelectionTransfer;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -34,6 +35,8 @@ import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.custom.ViewForm;
+import org.eclipse.swt.dnd.DND;
+import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Table;
@@ -54,6 +57,8 @@ import spritey.ui.actions.DeleteSpritesAction;
 import spritey.ui.actions.ExpandAllAction;
 import spritey.ui.actions.SelectAllTableAction;
 import spritey.ui.actions.SelectAllTreeAction;
+import spritey.ui.dnd.ViewerDragAssistant;
+import spritey.ui.dnd.ViewerDropAssistant;
 import spritey.ui.providers.GroupTreeContentProvider;
 import spritey.ui.providers.GroupTreeLabelProvider;
 import spritey.ui.providers.SpriteTableContentProvider;
@@ -128,6 +133,13 @@ public class AddSpritesPage extends WizardPageEx {
             }
         });
 
+        Transfer[] transfer = new Transfer[] { LocalSelectionTransfer
+                .getTransfer() };
+        groups.addDragSupport(DND.DROP_MOVE, transfer, new ViewerDragAssistant(
+                groups));
+        groups.addDropSupport(DND.DROP_MOVE, transfer, new ViewerDropAssistant(
+                groups));
+
         IAction addSprites = new AddSpritesAction(groups, this);
         IAction addFolder = new AddFolderAction(groups, this);
         IAction createGroup = new CreateGroupAction(groups);
@@ -173,6 +185,9 @@ public class AddSpritesPage extends WizardPageEx {
         sprites = new TableViewer(form, SWT.MULTI | SWT.FULL_SELECTION
                 | SWT.V_SCROLL | SWT.H_SCROLL);
         sprites.getTable().setHeaderVisible(true);
+        sprites.addDragSupport(DND.DROP_MOVE,
+                new Transfer[] { LocalSelectionTransfer.getTransfer() },
+                new ViewerDragAssistant(sprites));
 
         TableViewerColumn column = new TableViewerColumn(sprites, SWT.NONE);
         column.getColumn().setText(Messages.ADD_SPRITES_NAME_COLUMN);
