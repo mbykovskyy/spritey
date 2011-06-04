@@ -38,13 +38,17 @@ import org.eclipse.swt.custom.ViewForm;
 import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.Tree;
 
+import spritey.core.Group;
 import spritey.core.Node;
 import spritey.core.Sheet;
 import spritey.core.Sprite;
+import spritey.core.filter.AbstractFilter;
+import spritey.core.filter.Filter;
 import spritey.core.filter.SpriteFilter;
 import spritey.ui.Application;
 import spritey.ui.Messages;
@@ -59,8 +63,8 @@ import spritey.ui.actions.SelectAllTableAction;
 import spritey.ui.actions.SelectAllTreeAction;
 import spritey.ui.dnd.ViewerDragAssistant;
 import spritey.ui.dnd.ViewerDropAssistant;
-import spritey.ui.providers.GroupTreeContentProvider;
-import spritey.ui.providers.GroupTreeLabelProvider;
+import spritey.ui.providers.NodeTreeContentProvider;
+import spritey.ui.providers.NodeTreeLabelProvider;
 import spritey.ui.providers.SpriteTableContentProvider;
 
 /**
@@ -96,12 +100,18 @@ public class AddSpritesPage extends WizardPageEx {
 
     @Override
     public void createControl(Composite parent) {
-        SashForm sash = new SashForm(parent, SWT.SMOOTH);
+        FillLayout layout = new FillLayout();
+        layout.marginWidth = layout.marginHeight = 5;
+
+        Composite container = new Composite(parent, SWT.NONE);
+        container.setLayout(layout);
+
+        SashForm sash = new SashForm(container, SWT.SMOOTH);
         createLeftControls(sash);
         createRightControls(sash);
 
         sash.setWeights(new int[] { 1, 2 });
-        setControl(sash);
+        setControl(container);
     }
 
     /**
@@ -113,9 +123,16 @@ public class AddSpritesPage extends WizardPageEx {
     private void createLeftControls(Composite parent) {
         ViewForm form = new ViewForm(parent, SWT.BORDER | SWT.FLAT);
 
+        Filter filter = new AbstractFilter() {
+            @Override
+            public boolean select(Node node) {
+                return (node instanceof Sheet) || (node instanceof Group);
+            }
+        };
+
         groups = new TreeViewer(form, SWT.MULTI);
-        groups.setContentProvider(new GroupTreeContentProvider());
-        groups.setLabelProvider(new GroupTreeLabelProvider());
+        groups.setContentProvider(new NodeTreeContentProvider(filter));
+        groups.setLabelProvider(new NodeTreeLabelProvider());
         groups.setInput(getInitalInput());
         groups.addSelectionChangedListener(new ISelectionChangedListener() {
             @Override
@@ -191,7 +208,7 @@ public class AddSpritesPage extends WizardPageEx {
 
         TableViewerColumn column = new TableViewerColumn(sprites, SWT.NONE);
         column.getColumn().setText(Messages.ADD_SPRITES_NAME_COLUMN);
-        column.getColumn().setWidth(150);
+        column.getColumn().setWidth(250);
         column.setLabelProvider(new ColumnLabelProvider() {
             @Override
             public Image getImage(Object element) {

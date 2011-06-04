@@ -59,7 +59,7 @@ import spritey.ui.Messages;
  */
 public class NewSheetPage extends WizardPage {
 
-    static final String NAME = "NEW_SPRITE_SHEET";
+    static final String NAME = "NEW_SHEET";
     static final int IMAGE_WIDTH = 32;
     static final int IMAGE_HEIGHT = 16;
 

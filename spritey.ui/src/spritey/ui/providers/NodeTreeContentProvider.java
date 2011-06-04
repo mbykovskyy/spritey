@@ -20,26 +20,31 @@ package spritey.ui.providers;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 
-import spritey.core.Group;
 import spritey.core.Node;
-import spritey.core.Sheet;
-import spritey.core.filter.AbstractFilter;
 import spritey.core.filter.Filter;
 
 /**
- * Content provider for group tree.
+ * Content provider for Node tree.
  */
-public class GroupTreeContentProvider implements ITreeContentProvider {
+public class NodeTreeContentProvider implements ITreeContentProvider {
 
     private Filter filter;
 
-    public GroupTreeContentProvider() {
-        filter = new AbstractFilter() {
-            @Override
-            public boolean select(Node node) {
-                return (node instanceof Sheet) || (node instanceof Group);
-            }
-        };
+    /**
+     * Creates a new instance of NodeTreeContentProvider with no filter.
+     */
+    public NodeTreeContentProvider() {
+        // Do nothing.
+    }
+
+    /**
+     * Creates a new instance of NodeTreeContentProvider with given filter.
+     * 
+     * @param filter
+     *        the filter to apply to children.
+     */
+    public NodeTreeContentProvider(Filter filter) {
+        this.filter = filter;
     }
 
     @Override
@@ -58,9 +63,13 @@ public class GroupTreeContentProvider implements ITreeContentProvider {
     }
 
     @Override
-    public Object[] getChildren(Object parentElement) {
-        if (parentElement instanceof Node) {
-            return filter.filter(((Node) parentElement).getChildren());
+    public Object[] getChildren(Object parent) {
+        if (parent instanceof Node) {
+            Node[] children = ((Node) parent).getChildren();
+            if (null == filter) {
+                return children;
+            }
+            return filter.filter(children);
         }
         return new Object[0];
     }

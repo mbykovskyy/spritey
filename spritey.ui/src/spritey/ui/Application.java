@@ -40,6 +40,8 @@ public class Application {
     public static final String SHEET_IMG_ID = "sheet";
     public static final String GROUP_IMG_ID = "group";
     public static final String SPRITE_IMG_ID = "sprite";
+    public static final String EDIT_IMG_ID = "edit";
+    public static final String LOCK_IMG_ID = "lock";
 
     public static final String EXPAND_ALL_IMG_PATH = "data/icons/expand_all.gif";
     public static final String COLLAPSE_ALL_IMG_PATH = "data/icons/collapse_all.gif";
@@ -51,6 +53,8 @@ public class Application {
     public static final String SHEET_IMG_PATH = "data/icons/sheet.png";
     public static final String GROUP_IMG_PATH = "data/icons/group.png";
     public static final String SPRITE_IMG_PATH = "data/icons/sprite.png";
+    public static final String EDIT_IMG_PATH = "data/icons/edit.png";
+    public static final String LOCK_IMG_PATH = "data/icons/lock.png";
 
     private static ImageRegistry imageRegistry;
 
@@ -86,6 +90,8 @@ public class Application {
         reg.put(SHEET_IMG_ID, getImageDescriptor(SHEET_IMG_PATH));
         reg.put(GROUP_IMG_ID, getImageDescriptor(GROUP_IMG_PATH));
         reg.put(SPRITE_IMG_ID, getImageDescriptor(SPRITE_IMG_PATH));
+        reg.put(EDIT_IMG_ID, getImageDescriptor(EDIT_IMG_PATH));
+        reg.put(LOCK_IMG_ID, getImageDescriptor(LOCK_IMG_PATH));
     }
 
     /**

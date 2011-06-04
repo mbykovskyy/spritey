@@ -66,6 +66,26 @@ public class Messages {
     public static String NEW_GROUP_PAGE_DESCRIPTION;
     public static String NEW_GROUP_NAME;
 
+    public static String SAVE_AS_PAGE_TITLE;
+    public static String SAVE_AS_PAGE_NAME;
+    public static String SAVE_AS_PAGE_LOCATION;
+    public static String SAVE_AS_BROWSE;
+    public static String SAVE_AS_IMAGE;
+    public static String SAVE_AS_METADATA;
+    public static String SAVE_AS_OVERWRITE_EXISTING_FILES;
+    public static String SAVE_AS_ENTER_NAME;
+    public static String SAVE_AS_ENTER_LOCATION;
+    public static String SAVE_AS_FINISH;
+    public static String SAVE_AS_NAME_INVALID;
+    public static String SAVE_AS_LOCATION_INVALID;
+    public static String SAVE_AS_PACKING;
+    public static String SAVE_AS_SAVING;
+    public static String SAVE_AS_WRITING_FAILED;
+    public static String SAVE_AS_OPEN_FILE_FAILED;
+    public static String SAVE_AS_OVERWRITE_FILE;
+    public static String SAVE_AS_OPERATION_INVOCATION_ERROR;
+    public static String SAVE_AS_PROBLEMS_SAVING;
+
     static {
         reloadMessages();
     }

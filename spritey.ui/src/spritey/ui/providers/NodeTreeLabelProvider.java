@@ -25,12 +25,13 @@ import org.eclipse.swt.graphics.Image;
 import spritey.core.Group;
 import spritey.core.Node;
 import spritey.core.Sheet;
+import spritey.core.Sprite;
 import spritey.ui.Application;
 
 /**
- * Label provider for group tree.
+ * Label provider for Node tree.
  */
-public class GroupTreeLabelProvider extends BaseLabelProvider implements
+public class NodeTreeLabelProvider extends BaseLabelProvider implements
         ILabelProvider {
 
     @Override
@@ -41,6 +42,8 @@ public class GroupTreeLabelProvider extends BaseLabelProvider implements
             return reg.get(Application.SHEET_IMG_ID);
         } else if (element instanceof Group) {
             return reg.get(Application.GROUP_IMG_ID);
+        } else if (element instanceof Sprite) {
+            return reg.get(Application.SPRITE_IMG_ID);
         }
         return null;
     }

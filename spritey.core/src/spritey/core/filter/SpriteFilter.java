@@ -17,6 +17,10 @@
  */
 package spritey.core.filter;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import spritey.core.Node;
 import spritey.core.Sprite;
 
@@ -24,6 +28,32 @@ import spritey.core.Sprite;
  * Filter for extracting sprites.
  */
 public class SpriteFilter extends AbstractFilter {
+
+    @Override
+    public Sprite[] filter(Node root) {
+        List<Sprite> out = new ArrayList<Sprite>();
+        if (select(root)) {
+            out.add((Sprite) root);
+        }
+
+        for (Node child : root.getChildren()) {
+            out.addAll(Arrays.asList(filter(child)));
+        }
+
+        return out.toArray(new Sprite[out.size()]);
+    }
+
+    @Override
+    public Sprite[] filter(Node[] nodes) {
+        List<Sprite> out = new ArrayList<Sprite>(nodes.length);
+        for (Node e : nodes) {
+            if (select(e)) {
+                out.add((Sprite) e);
+            }
+        }
+
+        return out.toArray(new Sprite[out.size()]);
+    }
 
     @Override
     public boolean select(Node node) {
