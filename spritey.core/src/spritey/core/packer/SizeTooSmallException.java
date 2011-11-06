@@ -15,20 +15,34 @@
  * You should have received a copy of the GNU General Public License along with
  * Spritey. If not, see <http://www.gnu.org/licenses/>.
  */
-package spritey.core;
+package spritey.core.packer;
 
-import org.junit.runner.RunWith;
-import org.junit.runners.Suite;
+/**
+ * Signals that sprite sheet is too small to fit all sprites.
+ */
+public class SizeTooSmallException extends Exception {
 
-import spritey.core.packer.ClosestToOriginFitMaintainPowerOfTwoStrategyTests;
-import spritey.core.packer.ConstraintsTest;
-import spritey.core.packer.HighestFitMaintainRatioStrategyTests;
-import spritey.core.packer.HighestFitStrategyTests;
+    /**
+     * Auto-generated UID.
+     */
+    private static final long serialVersionUID = 8898174933215228502L;
 
-@RunWith(Suite.class)
-@Suite.SuiteClasses({ NodeTests.class, SheetTests.class, GroupTests.class,
-        SpriteTests.class, HighestFitStrategyTests.class,
-        ConstraintsTest.class, HighestFitMaintainRatioStrategyTests.class,
-        ClosestToOriginFitMaintainPowerOfTwoStrategyTests.class })
-public class AllTests {
+    /**
+     * Creates a new instance of SizeTooSmallException.
+     */
+    public SizeTooSmallException() {
+        super();
+    }
+
+    /**
+     * Creates a new instance of SizeTooSmallException with the specified
+     * message.
+     * 
+     * @param message
+     *        the message describing the reason for this exception.
+     */
+    public SizeTooSmallException(String message) {
+        super(message);
+    }
+
 }

@@ -18,7 +18,6 @@
 package spritey.core.packer;
 
 import spritey.core.Sheet;
-import spritey.core.Sprite;
 
 /**
  * A strategy for packing sprites.
@@ -27,22 +26,21 @@ public interface Strategy {
 
     /**
      * Arranges the specified list of sprites according to the rules implemented
-     * by clients. Clients have to implement this method and set the active
-     * strategy to their strategy if they want sprites to be organized the way
-     * the want.
+     * by clients.
      * 
      * @param sheet
-     *        a sprite sheet defining boundaries within which sprites should be
-     *        packed.
-     * @param sprites
-     *        a list of sprites to pack into sprite sheet.
-     * @param flushCache
-     *        specifies whether cached values should be flushed.
+     *        a sprite sheet to pack.
+     * @param constraints
+     *        the set of constraints that have to be obeyed when packing sprite
+     *        sheet.
      * @throws IllegalArgumentException
-     *         when <code>sprites</code> list is null.
+     *         when either <code>sheet</code> or <code>constraints</code> is
+     *         null.
+     * @throws SizeTooSmallException
+     *         when sheet size is too small to fit all sprites.
      * 
      */
-    public void pack(Sheet sheet, Sprite[] sprites, boolean flushCache)
-            throws IllegalArgumentException;
+    public void pack(Sheet sheet, Constraints constraints)
+            throws IllegalArgumentException, SizeTooSmallException;
 
 }

@@ -26,41 +26,25 @@ public class Sheet extends Node {
 
     public static final int MIN_DESCRIPTION_LENGTH = 0;
     public static final int MAX_DESCRIPTION_LENGTH = 1024;
-    public static final int MIN_MAXIMUM_WIDTH = 1;
-    public static final int MAX_MAXIMUM_WIDTH = 8192;
-    public static final int MIN_MAXIMUM_HEIGHT = 1;
-    public static final int MAX_MAXIMUM_HEIGHT = 8192;
-    public static final int MIN_WIDTH = MIN_MAXIMUM_WIDTH;
-    public static final int MIN_HEIGHT = MIN_MAXIMUM_HEIGHT;
 
     protected static final String DEFAULT_NAME = Messages.SHEET_DEFAULT_NAME;
     protected static final Color DEFAULT_BACKGROUND = new Color(255, 0, 255);
-    protected static final int DEFAULT_MAXIMUM_WIDTH = MAX_MAXIMUM_WIDTH;
-    protected static final int DEFAULT_MAXIMUM_HEIGHT = MAX_MAXIMUM_HEIGHT;
-    protected static final int DEFAULT_WIDTH = MIN_WIDTH;
-    protected static final int DEFAULT_HEIGHT = MIN_HEIGHT;
+    protected static final int DEFAULT_WIDTH = 0;
+    protected static final int DEFAULT_HEIGHT = 0;
     protected static final String DEFAULT_DESCRIPTION = Messages.SHEET_DEFAULT_DESCRIPTION;
-    protected static final boolean DEFAULT_MAINTAIN_POWER_OF_TWO = false;
-    protected static final boolean DEFAULT_MAINTAIN_ASPECT_RATIO = false;
 
     public static final Color TRANSPARENT_BACKGROUND = new Color(0, 0, 0, 0);
 
     private Color background;
-    private int maxWidth;
-    private int maxHeight;
     private int width;
     private int height;
     private String description;
-    private boolean maintainPowerOfTwo;
-    private boolean maintainAspectRatio;
 
     /**
      * Creates a new instance of <code>Sheet</code> with default settings.
      */
     public Sheet() {
-        this(DEFAULT_BACKGROUND, DEFAULT_MAXIMUM_WIDTH, DEFAULT_MAXIMUM_HEIGHT,
-                DEFAULT_MAINTAIN_POWER_OF_TWO, DEFAULT_MAINTAIN_ASPECT_RATIO,
-                DEFAULT_DESCRIPTION);
+        this(DEFAULT_BACKGROUND, DEFAULT_DESCRIPTION);
     }
 
     /**
@@ -68,26 +52,12 @@ public class Sheet extends Node {
      * 
      * @param background
      *        the background color.
-     * @param maxWidth
-     *        the maximum width.
-     * @param maxHeight
-     *        the maximum height.
-     * @param maintainPowerOfTwo
-     *        specifies whether size should be power of two.
-     * @param maintainAspectRatio
-     *        specifies whether size should maintain ratio.
      * @param description
      *        the short description or comment.
      */
-    public Sheet(final Color background, final int maxWidth,
-            final int maxHeight, final boolean maintainPowerOfTwo,
-            final boolean maintainAspectRatio, final String description) {
+    public Sheet(final Color background, final String description) {
         super(DEFAULT_NAME);
         setBackground(background);
-        setMaxWidth(maxWidth);
-        setMaxHeight(maxHeight);
-        setMaintainPowerOfTwo(maintainPowerOfTwo);
-        setMaintainAspectRatio(maintainAspectRatio);
         setDescription(description);
         setWidth(DEFAULT_WIDTH);
         setHeight(DEFAULT_HEIGHT);
@@ -120,76 +90,6 @@ public class Sheet extends Node {
     }
 
     /**
-     * Returns the maximum width of sprite sheet specified by the user.
-     * 
-     * @return the maximum width of the sprite sheet.
-     */
-    public int getMaxWidth() {
-        return maxWidth;
-    }
-
-    /**
-     * Sets the maximum width of the sprite sheet.
-     * 
-     * @param maxWidth
-     *        the maximum width to set.
-     * @throws IllegalArgumentException
-     *         when the given <code>maxWidth</code> is not within the
-     *         MIN_MAXIMUM_WIDTH and MAX_MAXIMUM_WIDTH range; or when sheet is
-     *         set to maintain power of two but <code>maxWidth</code> is not
-     *         power of two.
-     */
-    public void setMaxWidth(final int maxWidth) {
-        if (getMaxWidth() != maxWidth) {
-            if ((maxWidth < MIN_MAXIMUM_WIDTH)
-                    || (maxWidth > MAX_MAXIMUM_WIDTH)) {
-                throw new IllegalArgumentException(Messages.format(
-                        Messages.SHEET_MAX_WIDTH_INVALID_RANGE,
-                        MIN_MAXIMUM_WIDTH, MAX_MAXIMUM_WIDTH));
-            } else if (maintainPowerOfTwo() && !isPowerOfTwo(maxWidth)) {
-                throw new IllegalArgumentException(
-                        Messages.SHEET_MAX_WIDTH_INVALID_POWER_OF_TWO);
-            }
-            this.maxWidth = maxWidth;
-        }
-    }
-
-    /**
-     * Returns the maximum height of sprite sheet specified by the user.
-     * 
-     * @return the maximum height of the sprite sheet.
-     */
-    public int getMaxHeight() {
-        return maxHeight;
-    }
-
-    /**
-     * Sets the maximum height of the sprite sheet.
-     * 
-     * @param maxHeight
-     *        the maximum height to set.
-     * @throws IllegalArgumentException
-     *         when the given <code>maxHeight</code> is not within the
-     *         MIN_MAXIMUM_HEIGHT and MAX_MAXIMUM_HEIGHT range; or when sheet is
-     *         set to maintain power of two but <code>maxHeight</code> is not
-     *         power of two.
-     */
-    public void setMaxHeight(final int maxHeight) {
-        if (getMaxHeight() != maxHeight) {
-            if ((maxHeight < MIN_MAXIMUM_HEIGHT)
-                    || (maxHeight > MAX_MAXIMUM_HEIGHT)) {
-                throw new IllegalArgumentException(Messages.format(
-                        Messages.SHEET_MAX_HEIGHT_INVALID_RANGE,
-                        MIN_MAXIMUM_HEIGHT, MAX_MAXIMUM_HEIGHT));
-            } else if (maintainPowerOfTwo() && !isPowerOfTwo(maxHeight)) {
-                throw new IllegalArgumentException(
-                        Messages.SHEET_MAX_HEIGHT_INVALID_POWER_OF_TWO);
-            }
-            this.maxHeight = maxHeight;
-        }
-    }
-
-    /**
      * Returns the current width of the sprite sheet.
      * 
      * @return the current width.
@@ -204,20 +104,12 @@ public class Sheet extends Node {
      * @param width
      *        the current width.
      * @throws IllegalArgumentException
-     *         when given width is either less than minimum width allowed or
-     *         greater than maximum width specified by the user via
-     *         <code>setMaxWidth()</code>; or when sheet is set to maintain
-     *         power of two but <code>width</code> is not power of two.
+     *         when given width is negative.
      */
     public void setWidth(final int width) {
         if (getWidth() != width) {
-            if ((width < MIN_WIDTH) || (width > getMaxWidth())) {
-                throw new IllegalArgumentException(Messages.format(
-                        Messages.SHEET_WIDTH_INVALID_RANGE, MIN_WIDTH,
-                        getMaxWidth()));
-            } else if (maintainPowerOfTwo() && !isPowerOfTwo(width)) {
-                throw new IllegalArgumentException(
-                        Messages.SHEET_WIDTH_INVALID_POWER_OF_TWO);
+            if (width < 0) {
+                throw new IllegalArgumentException(Messages.SHEET_WIDTH_INVALID);
             }
             this.width = width;
         }
@@ -243,13 +135,9 @@ public class Sheet extends Node {
      */
     public void setHeight(final int height) {
         if (getHeight() != height) {
-            if ((height < MIN_HEIGHT) || (height > getMaxHeight())) {
-                throw new IllegalArgumentException(Messages.format(
-                        Messages.SHEET_HEIGHT_INVALID_RANGE, MIN_HEIGHT,
-                        getMaxHeight()));
-            } else if (maintainPowerOfTwo() && !isPowerOfTwo(height)) {
+            if (height < 0) {
                 throw new IllegalArgumentException(
-                        Messages.SHEET_HEIGHT_INVALID_POWER_OF_TWO);
+                        Messages.SHEET_HEIGHT_INVALID);
             }
             this.height = height;
         }
@@ -284,73 +172,6 @@ public class Sheet extends Node {
                 this.description = description;
             }
         }
-    }
-
-    /**
-     * Returns <code>true</code> if sprite sheet dimensions have to be power of
-     * two.
-     * 
-     * @return <code>true</code> if sprite sheet has to be power of two,
-     *         otherwise <code>false</code>.
-     */
-    public boolean maintainPowerOfTwo() {
-        return maintainPowerOfTwo;
-    }
-
-    /**
-     * Sets whether sprite sheet size has to be power of two.
-     * 
-     * @param isPowerOfTwo
-     *        specifies whether to keep sprite sheet size to be power of two.
-     */
-    public void setMaintainPowerOfTwo(final boolean isPowerOfTwo) {
-        if (maintainPowerOfTwo() != isPowerOfTwo) {
-            if (isPowerOfTwo) {
-                if (!isPowerOfTwo(getMaxWidth())) {
-                    throw new IllegalArgumentException(
-                            Messages.SHEET_MAX_WIDTH_INVALID_POWER_OF_TWO);
-                } else if (!isPowerOfTwo(getMaxHeight())) {
-                    throw new IllegalArgumentException(
-                            Messages.SHEET_MAX_HEIGHT_INVALID_POWER_OF_TWO);
-                }
-            }
-            maintainPowerOfTwo = isPowerOfTwo;
-        }
-    }
-
-    /**
-     * Returns <code>true</code> if sprite sheet has to maintain aspect ratio
-     * when resizing.
-     * 
-     * @return <code>true</code> is aspect ratio is maintained when sprite sheet
-     *         is resized, otherwise <code>false</code>.
-     */
-    public boolean maintainAspectRatio() {
-        return maintainAspectRatio;
-    }
-
-    /**
-     * Sets whether sprite sheet should maintain aspect ratio when resizing.
-     * 
-     * @param maintainRatio
-     *        specifies whether to maintain aspect ratio.
-     */
-    public void setMaintainAspectRatio(final boolean maintainRatio) {
-        if (maintainAspectRatio() != maintainRatio) {
-            maintainAspectRatio = maintainRatio;
-        }
-    }
-
-    /**
-     * Returns <code>true</code> if specified value is power of two.
-     * 
-     * @param value
-     *        the value to check.
-     * @return <code>true</code> if value is power of two, otherwise
-     *         <code>false</code>.
-     */
-    protected static boolean isPowerOfTwo(final int value) {
-        return (value & -value) == value;
     }
 
 }

@@ -85,6 +85,7 @@ public class Messages {
     public static String SAVE_AS_OVERWRITE_FILE;
     public static String SAVE_AS_OPERATION_INVOCATION_ERROR;
     public static String SAVE_AS_PROBLEMS_SAVING;
+    public static String SAVE_AS_ACCESS_DENIED;
 
     static {
         reloadMessages();

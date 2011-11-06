@@ -40,20 +40,23 @@ public class Messages {
 
     public static String SHEET_DEFAULT_NAME;
     public static String SHEET_DEFAULT_DESCRIPTION;
-    public static String SHEET_MAX_WIDTH_INVALID_RANGE;
-    public static String SHEET_MAX_HEIGHT_INVALID_RANGE;
-    public static String SHEET_MAX_WIDTH_INVALID_POWER_OF_TWO;
-    public static String SHEET_MAX_HEIGHT_INVALID_POWER_OF_TWO;
-    public static String SHEET_WIDTH_INVALID_RANGE;
-    public static String SHEET_HEIGHT_INVALID_RANGE;
-    public static String SHEET_WIDTH_INVALID_POWER_OF_TWO;
-    public static String SHEET_HEIGHT_INVALID_POWER_OF_TWO;
+    public static String SHEET_WIDTH_INVALID;
+    public static String SHEET_HEIGHT_INVALID;
     public static String SHEET_DESCRIPTION_LENGTH_INVALID;
 
     public static String SPRITE_DEFAULT_NAME;
     public static String SPRITE_IMAGE_NOT_FINISHED_LOADING;
 
+    public static String CONSTRAINTS_MAX_WIDTH_INVALID_RANGE;
+    public static String CONSTRAINTS_MAX_HEIGHT_INVALID_RANGE;
+    public static String CONSTRAINTS_MAX_WIDTH_INVALID_POWER_OF_TWO;
+    public static String CONSTRAINTS_MAX_HEIGHT_INVALID_POWER_OF_TWO;
+    public static String CONSTRAINTS_WIDTH_INVALID_POWER_OF_TWO;
+    public static String CONSTRAINTS_HEIGHT_INVALID_POWER_OF_TWO;
+
     public static String IMAGE_WRITER_NO_WRITER_FOUND;
+
+    public static String PACKER_SHEET_SIZE_TOO_SMALL;
 
     /**
      * Creates a formatted string by putting the given <code>args</code> into

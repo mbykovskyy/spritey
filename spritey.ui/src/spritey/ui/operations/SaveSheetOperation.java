@@ -35,8 +35,9 @@ import spritey.core.Sheet;
 import spritey.core.io.ImageWriter;
 import spritey.core.io.Writer;
 import spritey.core.io.XmlWriter;
-import spritey.core.packer.FirstFitStrategy;
+import spritey.core.packer.Constraints;
 import spritey.core.packer.Packer;
+import spritey.core.packer.SizeTooSmallException;
 import spritey.ui.Messages;
 
 /**
@@ -44,6 +45,7 @@ import spritey.ui.Messages;
  */
 public class SaveSheetOperation implements IRunnableWithProgress {
 
+    private static final String PLUGIN_ID = "SAVE_SHEET_OPERATION";
     private static final int TOTAL_WORK = 3;
 
     private Packer packer;
@@ -51,6 +53,7 @@ public class SaveSheetOperation implements IRunnableWithProgress {
     private OverwriteQuery overwriteQuery;
     private int overwrite;
 
+    private Constraints constraints;
     private Sheet sheet;
     private File imageFile;
     private File metadataFile;
@@ -67,14 +70,15 @@ public class SaveSheetOperation implements IRunnableWithProgress {
      * @param overwriteCallback
      *        the overwrite callback.
      */
-    public SaveSheetOperation(Sheet sheet, File imageFile, File metadataFile,
-            OverwriteQuery overwriteQuery) {
+    public SaveSheetOperation(Constraints constraints, Sheet sheet,
+            File imageFile, File metadataFile, OverwriteQuery overwriteQuery) {
+        this.constraints = constraints;
         this.sheet = sheet;
         this.imageFile = imageFile;
         this.metadataFile = metadataFile;
         this.overwriteQuery = overwriteQuery;
 
-        packer = new Packer(new FirstFitStrategy());
+        packer = new Packer();
         overwrite = -1;
         errors = new ArrayList<IStatus>();
     }
@@ -114,10 +118,10 @@ public class SaveSheetOperation implements IRunnableWithProgress {
         try {
             writer.write(sheet, file);
         } catch (FileNotFoundException e) {
-            errors.add(new Status(IStatus.ERROR, null, NLS.bind(
+            errors.add(new Status(IStatus.ERROR, PLUGIN_ID, NLS.bind(
                     Messages.SAVE_AS_OPEN_FILE_FAILED, file.getPath())));
         } catch (IOException e) {
-            errors.add(new Status(IStatus.ERROR, null, NLS.bind(
+            errors.add(new Status(IStatus.ERROR, PLUGIN_ID, NLS.bind(
                     Messages.SAVE_AS_WRITING_FAILED, file.getPath())));
         }
 
@@ -132,12 +136,26 @@ public class SaveSheetOperation implements IRunnableWithProgress {
         monitor.beginTask("", TOTAL_WORK);
         monitor.subTask(Messages.SAVE_AS_PACKING);
 
-        packer.pack(sheet, false);
+        // Profiling
+        long start = System.currentTimeMillis();
+
+        try {
+            packer.pack(sheet, constraints);
+        } catch (SizeTooSmallException e) {
+            errors.add(new Status(IStatus.ERROR, PLUGIN_ID, e.getMessage()));
+            monitor.setCanceled(true);
+            return;
+        }
+
+        long finish = System.currentTimeMillis();
+        System.out.println((finish - start) / 1000.0);
+
         monitor.worked(1);
 
         save(imageFile, new ImageWriter(), monitor);
         monitor.worked(1);
 
+        // TODO Remove hard-coded xml writer.
         save(metadataFile, new XmlWriter(), monitor);
         monitor.worked(1);
 
@@ -145,16 +163,21 @@ public class SaveSheetOperation implements IRunnableWithProgress {
     }
 
     /**
-     * Returns the status of this operation. If there were errors, the result is
-     * a multi-status object containing status object for each error. If there
-     * were no errors, the result is a status object with error code
-     * <code>OK</code>.
+     * Returns the status of this operation. If there were multiple problems,
+     * the result is a multi-status object containing status object for each
+     * error. If there were no errors, the result is a status object with error
+     * code <code>OK</code>.
      * 
-     * @return the status the status object containing errors for each error.
+     * @return the status object containing error descriptions for each problem.
      */
     public IStatus getStatus() {
+        if (errors.size() == 1) {
+            return errors.get(0);
+        }
+
         IStatus[] status = new IStatus[errors.size()];
         errors.toArray(status);
+
         return new MultiStatus(Messages.SPRITE_SHEET_WIZARD_TITLE, IStatus.OK,
                 status, Messages.SAVE_AS_PROBLEMS_SAVING, null);
     }

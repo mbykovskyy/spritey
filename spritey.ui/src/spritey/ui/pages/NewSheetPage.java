@@ -51,6 +51,7 @@ import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Text;
 
 import spritey.core.Sheet;
+import spritey.core.packer.Constraints;
 import spritey.ui.Application;
 import spritey.ui.Messages;
 
@@ -69,6 +70,7 @@ public class NewSheetPage extends WizardPage {
     private Button aspectRatioCheck;
     private Text commentText;
 
+    private Constraints constraints;
     private Sheet sheet;
     private Color background;
 
@@ -80,6 +82,7 @@ public class NewSheetPage extends WizardPage {
         setTitle(Messages.NEW_SHEET_PAGE_TITLE);
         setDescription(Messages.NEW_SHEET_PAGE_DESCRIPTION);
 
+        constraints = new Constraints();
         sheet = new Sheet();
         background = sheet.getBackground();
     }
@@ -109,10 +112,11 @@ public class NewSheetPage extends WizardPage {
         int height = text.isEmpty() ? 0 : Integer.valueOf(text);
 
         try {
-            sheet.setMaxWidth(width);
-            sheet.setMaxHeight(height);
-            sheet.setMaintainPowerOfTwo(powerOfTwoCheck.getSelection());
-            sheet.setMaintainAspectRatio(aspectRatioCheck.getSelection());
+            constraints.setMaxWidth(width);
+            constraints.setMaxHeight(height);
+            constraints.setMaintainPowerOfTwo(powerOfTwoCheck.getSelection());
+            constraints.setMaintainAspectRatio(aspectRatioCheck.getSelection());
+
             sheet.setBackground(background);
             sheet.setDescription(commentText.getText());
 
@@ -162,7 +166,7 @@ public class NewSheetPage extends WizardPage {
 
         widthText = new Text(container, SWT.BORDER);
         widthText.setTextLimit(4);
-        widthText.setText(String.valueOf(Sheet.MAX_MAXIMUM_WIDTH));
+        widthText.setText(String.valueOf(Constraints.MAX_MAXIMUM_WIDTH));
         widthText.addVerifyListener(digitValidator);
         widthText.addModifyListener(sizeModifier);
 
@@ -171,7 +175,7 @@ public class NewSheetPage extends WizardPage {
 
         heightText = new Text(container, SWT.BORDER);
         heightText.setTextLimit(4);
-        heightText.setText(String.valueOf(Sheet.MAX_MAXIMUM_HEIGHT));
+        heightText.setText(String.valueOf(Constraints.MAX_MAXIMUM_HEIGHT));
         heightText.addVerifyListener(digitValidator);
         heightText.addModifyListener(sizeModifier);
     }
@@ -359,6 +363,15 @@ public class NewSheetPage extends WizardPage {
      */
     public Sheet getSheet() {
         return sheet;
+    }
+
+    /**
+     * Returns constraints set for sprite sheet packer.
+     * 
+     * @return the constraints.
+     */
+    public Constraints getConstraints() {
+        return constraints;
     }
 
 }

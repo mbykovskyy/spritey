@@ -109,14 +109,25 @@ public class SpriteSheetWizard extends Wizard {
 
         try {
             SaveSheetOperation op = new SaveSheetOperation(
-                    newSheetPage.getSheet(), saveAsPage.getImageFile(),
-                    saveAsPage.getMetadataFile(), callback);
+                    newSheetPage.getConstraints(), newSheetPage.getSheet(),
+                    saveAsPage.getImageFile(), saveAsPage.getMetadataFile(),
+                    callback);
             getContainer().run(true, true, op);
 
             IStatus status = op.getStatus();
             if (!status.isOK()) {
-                ErrorDialog.openError(getContainer().getShell(),
-                        Messages.SPRITE_SHEET_WIZARD_TITLE, null, status);
+                // To make dialogs consistent throughout the application,
+                // display a custom error dialog with details button only when
+                // there are multiple problems. Otherwise display an OS native
+                // dialog.
+                if (status.isMultiStatus()) {
+                    ErrorDialog.openError(getContainer().getShell(),
+                            Messages.SPRITE_SHEET_WIZARD_TITLE, null, status);
+                } else {
+                    MessageDialog.open(MessageDialog.ERROR, getContainer()
+                            .getShell(), Messages.SPRITE_SHEET_WIZARD_TITLE,
+                            status.getMessage(), SWT.SHEET);
+                }
                 return false;
             }
         } catch (InterruptedException e) {
@@ -130,7 +141,7 @@ public class SpriteSheetWizard extends Wizard {
             e.printStackTrace();
             return false;
         }
-        return true;
+        return false;
     }
 
 }

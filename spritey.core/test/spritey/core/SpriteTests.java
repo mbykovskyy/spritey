@@ -111,6 +111,28 @@ public class SpriteTests {
     }
 
     @Test
+    public void getArea() {
+        when(image.getWidth(null)).thenReturn(5);
+        when(image.getHeight(null)).thenReturn(6);
+
+        assertEquals(30, sprite.getArea());
+    }
+
+    @Test
+    public void getAreaWhenImageIsNull() {
+        when(sprite.getImage()).thenReturn(null);
+
+        assertEquals(0, sprite.getArea());
+    }
+
+    @Test(expected = RuntimeException.class)
+    public void getAreaWhenImageHasNotFinishedLoading() {
+        when(image.getWidth(null)).thenReturn(-1);
+        when(image.getHeight(null)).thenReturn(-1);
+        sprite.getArea();
+    }
+
+    @Test
     public void isVisible() {
         when(sprite.getLocation()).thenReturn(new Point(0, 0));
         assertTrue(sprite.isVisible());

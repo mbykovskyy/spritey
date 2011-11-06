@@ -18,9 +18,11 @@
 package spritey.ui.pages;
 
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 
 import org.eclipse.jface.wizard.WizardPage;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
@@ -76,22 +78,23 @@ public class SaveAsPage extends WizardPage {
             setDescription(Messages.SAVE_AS_ENTER_NAME);
             setPageComplete(false);
         } else if (!isNameValid(name)) {
-            if ((null == getErrorMessage())
-                    || !getErrorMessage().equals(Messages.SAVE_AS_NAME_INVALID)) {
-                setErrorMessage(Messages.SAVE_AS_NAME_INVALID);
-                setPageComplete(false);
-            }
+            setErrorMessage(Messages.SAVE_AS_NAME_INVALID);
+            setPageComplete(false);
         } else if (location.isEmpty()) {
             setErrorMessage(null);
             setDescription(Messages.SAVE_AS_ENTER_LOCATION);
             setPageComplete(false);
         } else if (!new File(location).isDirectory()) {
-            if ((null == getErrorMessage())
-                    || !getErrorMessage().equals(
-                            Messages.SAVE_AS_LOCATION_INVALID)) {
-                setErrorMessage(Messages.SAVE_AS_LOCATION_INVALID);
-                setPageComplete(false);
-            }
+            setErrorMessage(Messages.SAVE_AS_LOCATION_INVALID);
+            setPageComplete(false);
+        } else if (!isWritable(getImageFile())) {
+            setErrorMessage(NLS.bind(Messages.SAVE_AS_ACCESS_DENIED,
+                    getImageFile().getAbsolutePath()));
+            setPageComplete(false);
+        } else if (!isWritable(getMetadataFile())) {
+            setErrorMessage(NLS.bind(Messages.SAVE_AS_ACCESS_DENIED,
+                    getMetadataFile().getAbsolutePath()));
+            setPageComplete(false);
         } else {
             setErrorMessage(null);
             setDescription(Messages.SAVE_AS_FINISH);
@@ -119,6 +122,30 @@ public class SaveAsPage extends WizardPage {
             }
         } catch (IOException e) {
             // Do nothing.
+        }
+        return false;
+    }
+
+    /**
+     * Returns <code>true</code> if the specified file is writable.
+     * 
+     * @param file
+     *        the file to test.
+     * @return <code>true</code> if file is writable, otherwise
+     *         <code>false</code>.
+     */
+    private boolean isWritable(File file) {
+        boolean shouldDelete = !file.exists();
+
+        try {
+            new FileWriter(file, true).close();
+
+            if (shouldDelete) {
+                file.delete();
+            }
+            return true;
+        } catch (IOException e) {
+            // Access denied.
         }
         return false;
     }
@@ -206,6 +233,11 @@ public class SaveAsPage extends WizardPage {
         GridData data = new GridData();
         data.horizontalSpan = 2;
         imageCombo.setLayoutData(data);
+        imageCombo.addModifyListener(new ModifyListener() {
+            public void modifyText(ModifyEvent e) {
+                validate();
+            }
+        });
     }
 
     /**
@@ -224,6 +256,11 @@ public class SaveAsPage extends WizardPage {
         GridData data = new GridData();
         data.horizontalSpan = 2;
         metadataCombo.setLayoutData(data);
+        metadataCombo.addModifyListener(new ModifyListener() {
+            public void modifyText(ModifyEvent e) {
+                validate();
+            }
+        });
     }
 
     /**

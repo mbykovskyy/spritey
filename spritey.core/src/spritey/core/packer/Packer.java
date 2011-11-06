@@ -17,79 +17,36 @@
  */
 package spritey.core.packer;
 
-import spritey.core.Messages;
 import spritey.core.Sheet;
-import spritey.core.Sprite;
-import spritey.core.filter.SpriteFilter;
 
 /**
- * A sprite sheet organizer for packing sprites according to the selected
- * strategy.
+ * A packer for packing sprites.
  */
 public class Packer {
 
-    private Strategy strategy;
-
     /**
-     * Constructor.
-     * 
-     * @param defaultStrategy
-     *        the default strategy.
-     * @throws IllegalArgumentException
-     *         when the <code>defaultStrategy</code> is null.
-     */
-    public Packer(Strategy defaultStrategy) throws IllegalArgumentException {
-        validateArgument(defaultStrategy);
-        strategy = defaultStrategy;
-    }
-
-    private void validateArgument(Object obj) {
-        if (null == obj) {
-            throw new IllegalArgumentException(Messages.NULL);
-        }
-    }
-
-    /**
-     * Changes packer strategy to the specified one.
-     * 
-     * @param strategy
-     *        the strategy to use for organizing sprites.
-     * @throws IllegalArgumentException
-     *         when the <code>strategy</code> is null.
-     */
-    public void setStrategy(Strategy strategy) throws IllegalArgumentException {
-        validateArgument(strategy);
-        this.strategy = strategy;
-    }
-
-    /**
-     * Returns active strategy.
-     * 
-     * @return active strategy.
-     */
-    public Strategy getStrategy() {
-        return strategy;
-    }
-
-    /**
-     * Arranges the specified tree according to the active strategy.
+     * Packs the specified sheet while obeying the constraints.
      * 
      * @param sheet
-     *        the root of a tree.
-     * @param flushCache
-     *        specifies whether cached values should be flushed.
+     *        a sprite sheet to pack.
+     * @param constraints
+     *        the set of constraints that have to be obeyed when packing sprite
+     *        sheet.
      * @throws IllegalArgumentException
-     *         when the root node does not have sheet model attached to it.
-     * @throws IllegalArgumentException
-     *         when <code>sheetNode</code> is null.
-     * 
+     *         when either <code>sheet</code> or <code>constraints</code> is
+     *         null.
+     * @throws SizeTooSmallException
+     *         when sheet size is too small to fit all sprites.
      */
-    public void pack(Sheet sheet, boolean flushCache)
-            throws IllegalArgumentException {
-        validateArgument(sheet);
-        // TODO Casting will probably fail at runtime.
-        Sprite[] sprites = (Sprite[]) new SpriteFilter().filter(sheet);
-        strategy.pack(sheet, sprites, flushCache);
+    public void pack(Sheet sheet, Constraints constraints)
+            throws IllegalArgumentException, SizeTooSmallException {
+        if (constraints.maintainAspectRatio()) {
+            new HighestFitMaintainRatioStrategy().pack(sheet, constraints);
+        } else if (constraints.maintainPowerOfTwo()) {
+            new ClosestToOriginFitMaintainPowerOfTwoStrategy().pack(sheet, constraints);
+        } else {
+            new HighestFitStrategy().pack(sheet, constraints);
+        }
     }
 
 }

@@ -130,6 +130,16 @@ public class Sprite extends Node {
     }
 
     /**
+     * Returns the area of the sprite.
+     * 
+     * @return the sprite area.
+     */
+    public int getArea() {
+        Dimension size = getSize();
+        return size.width * size.height;
+    }
+
+    /**
      * Returns whether sprite is visible. i.e. fits the sprite sheet.
      * 
      * @return <code>true</code> if sprite fits the sprite sheet, otherwise
