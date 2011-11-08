@@ -23,15 +23,23 @@ import java.awt.Rectangle;
 import spritey.core.Messages;
 
 /**
- * This packer tries to put each sprite as high as possible by dividing empty
- * area into zones. Zones are sorted according to their Y position in ascending
- * order, then sprite is tested against each zone. When sprite doesn't fist into
- * any zone the highest zone is expanded just enough to fit the sprite and the
- * size is adjusted to maintain aspect ratio. Redundant zones i.e. zones
- * completely covered by other zones, are removed.
+ * This strategy tries to put each sprite as high as possible by sorting free
+ * zones according to their Y position in ascending order. When sprite doesn't
+ * fit into any zone the highest zone is expanded just enough to fit the sprite
+ * and size is adjusted to maintain aspect ratio.
  */
-public class HighestFitMaintainRatioStrategy extends HighestFitStrategy {
+public class HighestFitMaintainAspectRatioStrategy extends HighestFitStrategy {
 
+    /**
+     * Tries to expand the highest zone which can fit the specified rectangle.
+     * When no zones can be expanded either width or height is expanded. Size is
+     * then adjusted to maintain aspect ratio.
+     * 
+     * @param rect
+     *        the rectangle that has to fit after the expansion.
+     * @throws SizeTooSmallException
+     *         when sheet size is too small to fit all sprites.
+     */
     @Override
     protected Dimension expandBy(Rectangle rect) throws SizeTooSmallException {
         Dimension maxSize = constraints.getMaxSize();

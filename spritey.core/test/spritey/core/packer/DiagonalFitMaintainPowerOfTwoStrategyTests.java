@@ -35,11 +35,11 @@ import spritey.core.Sheet;
 import spritey.core.Sprite;
 
 /**
- * Tests the implementation of ClosestToOriginFitMaintainPowerOfTwoStrategy.
+ * Tests the implementation of DiagonalFitMaintainPowerOfTwoStrategy.
  */
-public class ClosestToOriginFitMaintainPowerOfTwoStrategyTests {
+public class DiagonalFitMaintainPowerOfTwoStrategyTests {
 
-    ClosestToOriginFitMaintainPowerOfTwoStrategy strategy;
+    DiagonalFitMaintainPowerOfTwoStrategy strategy;
 
     @Mock
     Sheet sheet;
@@ -47,7 +47,7 @@ public class ClosestToOriginFitMaintainPowerOfTwoStrategyTests {
     @Before
     public void initialize() {
         MockitoAnnotations.initMocks(this);
-        strategy = new ClosestToOriginFitMaintainPowerOfTwoStrategy();
+        strategy = new DiagonalFitMaintainPowerOfTwoStrategy();
     }
 
     @Test
@@ -138,6 +138,38 @@ public class ClosestToOriginFitMaintainPowerOfTwoStrategyTests {
         doReturn(sprites).when(sheet).getChildren();
 
         strategy.pack(sheet, new Constraints(4, 8, true, false));
+    }
+
+    @Test
+    public void packTwoSpritesWithMaxWidth() throws SizeTooSmallException {
+        final Point UNSET = new Point(-1, -1);
+        final Dimension SPRITE1_SIZE = new Dimension(8, 4);
+        final Dimension SPRITE2_SIZE = new Dimension(8, 4);
+
+        final Rectangle SPRITE1_BOUNDS = new Rectangle(UNSET, SPRITE1_SIZE);
+        final Rectangle SPRITE2_BOUNDS = new Rectangle(UNSET, SPRITE2_SIZE);
+        final Point NEW_LOCATION1 = new Point(0, 0);
+        final Point NEW_LOCATION2 = new Point(0, 4);
+
+        Sprite sprite1 = mock(Sprite.class);
+        doReturn(SPRITE1_SIZE).when(sprite1).getSize();
+        doReturn(SPRITE1_BOUNDS).when(sprite1).getBounds();
+        doReturn(new Node[0]).when(sprite1).getChildren();
+
+        Sprite sprite2 = mock(Sprite.class);
+        doReturn(SPRITE2_SIZE).when(sprite2).getSize();
+        doReturn(SPRITE2_BOUNDS).when(sprite2).getBounds();
+        doReturn(new Node[0]).when(sprite2).getChildren();
+
+        Sprite[] sprites = new Sprite[] { sprite1, sprite2 };
+        doReturn(sprites).when(sheet).getChildren();
+
+        strategy.pack(sheet, new Constraints(8, 8, true, false));
+
+        verify(sprite1).setLocation(NEW_LOCATION1);
+        verify(sprite2).setLocation(NEW_LOCATION2);
+        verify(sheet).setWidth(8);
+        verify(sheet).setHeight(8);
     }
 
 }

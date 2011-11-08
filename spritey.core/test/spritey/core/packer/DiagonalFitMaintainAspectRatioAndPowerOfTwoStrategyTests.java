@@ -35,11 +35,12 @@ import spritey.core.Sheet;
 import spritey.core.Sprite;
 
 /**
- * Tests the implementation of HighestFitMaintainRatioStrategy.
+ * Tests the implementation of
+ * DiagonalFitMaintainAspectRatioAndPowerOfTwoStrategy.
  */
-public class HighestFitMaintainRatioStrategyTests {
+public class DiagonalFitMaintainAspectRatioAndPowerOfTwoStrategyTests {
 
-    HighestFitMaintainRatioStrategy strategy;
+    DiagonalFitMaintainAspectRatioAndPowerOfTwoStrategy strategy;
 
     @Mock
     Sheet sheet;
@@ -47,7 +48,7 @@ public class HighestFitMaintainRatioStrategyTests {
     @Before
     public void initialize() {
         MockitoAnnotations.initMocks(this);
-        strategy = new HighestFitMaintainRatioStrategy();
+        strategy = new DiagonalFitMaintainAspectRatioAndPowerOfTwoStrategy();
     }
 
     @Test
@@ -62,11 +63,11 @@ public class HighestFitMaintainRatioStrategyTests {
         Sprite[] sprites = new Sprite[] { sprite };
         doReturn(sprites).when(sheet).getChildren();
 
-        strategy.pack(sheet, new Constraints(10, 50, false, true));
+        strategy.pack(sheet, new Constraints(16, 32, true, true));
 
         verify(sprite).setLocation(NEW_LOCATION);
-        verify(sheet).setWidth(6);
-        verify(sheet).setHeight(30);
+        verify(sheet).setWidth(8);
+        verify(sheet).setHeight(16);
     }
 
     @Test(expected = SizeTooSmallException.class)
@@ -80,19 +81,19 @@ public class HighestFitMaintainRatioStrategyTests {
         Sprite[] sprites = new Sprite[] { sprite };
         doReturn(sprites).when(sheet).getChildren();
 
-        strategy.pack(sheet, new Constraints(2, 6, false, true));
+        strategy.pack(sheet, new Constraints(2, 8, true, true));
     }
 
     @Test
     public void packTwoSprites() throws SizeTooSmallException {
         final Point UNSET = new Point(-1, -1);
-        final Dimension SPRITE1_SIZE = new Dimension(6, 6);
-        final Dimension SPRITE2_SIZE = new Dimension(5, 4);
+        final Dimension SPRITE1_SIZE = new Dimension(60, 60);
+        final Dimension SPRITE2_SIZE = new Dimension(70, 10);
 
         final Rectangle SPRITE1_BOUNDS = new Rectangle(UNSET, SPRITE1_SIZE);
         final Rectangle SPRITE2_BOUNDS = new Rectangle(UNSET, SPRITE2_SIZE);
-        final Point NEW_LOCATION1 = new Point(0, 0);
-        final Point NEW_LOCATION2 = new Point(6, 0);
+        final Point NEW_LOCATION1 = new Point(0, 10);
+        final Point NEW_LOCATION2 = new Point(0, 0);
 
         Sprite sprite1 = mock(Sprite.class);
         doReturn(SPRITE1_SIZE).when(sprite1).getSize();
@@ -107,12 +108,12 @@ public class HighestFitMaintainRatioStrategyTests {
         Sprite[] sprites = new Sprite[] { sprite1, sprite2 };
         doReturn(sprites).when(sheet).getChildren();
 
-        strategy.pack(sheet, new Constraints(20, 20, false, true));
+        strategy.pack(sheet, new Constraints(128, 128, true, true));
 
         verify(sprite1).setLocation(NEW_LOCATION1);
         verify(sprite2).setLocation(NEW_LOCATION2);
-        verify(sheet).setWidth(11);
-        verify(sheet).setHeight(11);
+        verify(sheet).setWidth(128);
+        verify(sheet).setHeight(128);
     }
 
     @Test(expected = SizeTooSmallException.class)
@@ -137,22 +138,19 @@ public class HighestFitMaintainRatioStrategyTests {
         Sprite[] sprites = new Sprite[] { sprite1, sprite2 };
         doReturn(sprites).when(sheet).getChildren();
 
-        strategy.pack(sheet, new Constraints(6, 7, false, true));
+        strategy.pack(sheet, new Constraints(4, 8, true, true));
     }
 
     @Test
-    public void packThirdSpriteAfterExpanding() throws SizeTooSmallException {
+    public void packTwoSpritesWithMaxWidth() throws SizeTooSmallException {
         final Point UNSET = new Point(-1, -1);
-        final Dimension SPRITE1_SIZE = new Dimension(6, 6);
-        final Dimension SPRITE2_SIZE = new Dimension(5, 4);
-        final Dimension SPRITE3_SIZE = new Dimension(3, 3);
+        final Dimension SPRITE1_SIZE = new Dimension(8, 4);
+        final Dimension SPRITE2_SIZE = new Dimension(8, 4);
 
         final Rectangle SPRITE1_BOUNDS = new Rectangle(UNSET, SPRITE1_SIZE);
         final Rectangle SPRITE2_BOUNDS = new Rectangle(UNSET, SPRITE2_SIZE);
-        final Rectangle SPRITE3_BOUNDS = new Rectangle(UNSET, SPRITE3_SIZE);
         final Point NEW_LOCATION1 = new Point(0, 0);
-        final Point NEW_LOCATION2 = new Point(6, 0);
-        final Point NEW_LOCATION3 = new Point(6, 4);
+        final Point NEW_LOCATION2 = new Point(0, 4);
 
         Sprite sprite1 = mock(Sprite.class);
         doReturn(SPRITE1_SIZE).when(sprite1).getSize();
@@ -164,53 +162,15 @@ public class HighestFitMaintainRatioStrategyTests {
         doReturn(SPRITE2_BOUNDS).when(sprite2).getBounds();
         doReturn(new Node[0]).when(sprite2).getChildren();
 
-        Sprite sprite3 = mock(Sprite.class);
-        doReturn(SPRITE3_SIZE).when(sprite3).getSize();
-        doReturn(SPRITE3_BOUNDS).when(sprite3).getBounds();
-        doReturn(new Node[0]).when(sprite3).getChildren();
-
-        Sprite[] sprites = new Sprite[] { sprite1, sprite2, sprite3 };
+        Sprite[] sprites = new Sprite[] { sprite1, sprite2 };
         doReturn(sprites).when(sheet).getChildren();
 
-        strategy.pack(sheet, new Constraints(20, 20, false, true));
+        strategy.pack(sheet, new Constraints(8, 8, true, true));
 
         verify(sprite1).setLocation(NEW_LOCATION1);
         verify(sprite2).setLocation(NEW_LOCATION2);
-        verify(sprite3).setLocation(NEW_LOCATION3);
-        verify(sheet).setWidth(11);
-        verify(sheet).setHeight(11);
-    }
-
-    @Test(expected = SizeTooSmallException.class)
-    public void packThreeSpritesThirdDoesNotFit() throws SizeTooSmallException {
-        final Point UNSET = new Point(-1, -1);
-        final Dimension SPRITE1_SIZE = new Dimension(6, 6);
-        final Dimension SPRITE2_SIZE = new Dimension(5, 4);
-        final Dimension SPRITE3_SIZE = new Dimension(3, 3);
-
-        final Rectangle SPRITE1_BOUNDS = new Rectangle(UNSET, SPRITE1_SIZE);
-        final Rectangle SPRITE2_BOUNDS = new Rectangle(UNSET, SPRITE2_SIZE);
-        final Rectangle SPRITE3_BOUNDS = new Rectangle(UNSET, SPRITE3_SIZE);
-
-        Sprite sprite1 = mock(Sprite.class);
-        doReturn(SPRITE1_SIZE).when(sprite1).getSize();
-        doReturn(SPRITE1_BOUNDS).when(sprite1).getBounds();
-        doReturn(new Node[0]).when(sprite1).getChildren();
-
-        Sprite sprite2 = mock(Sprite.class);
-        doReturn(SPRITE2_SIZE).when(sprite2).getSize();
-        doReturn(SPRITE2_BOUNDS).when(sprite2).getBounds();
-        doReturn(new Node[0]).when(sprite2).getChildren();
-
-        Sprite sprite3 = mock(Sprite.class);
-        doReturn(SPRITE3_SIZE).when(sprite3).getSize();
-        doReturn(SPRITE3_BOUNDS).when(sprite3).getBounds();
-        doReturn(new Node[0]).when(sprite3).getChildren();
-
-        Sprite[] sprites = new Sprite[] { sprite1, sprite2, sprite3 };
-        doReturn(sprites).when(sheet).getChildren();
-
-        strategy.pack(sheet, new Constraints(11, 6, false, true));
+        verify(sheet).setWidth(8);
+        verify(sheet).setHeight(8);
     }
 
 }

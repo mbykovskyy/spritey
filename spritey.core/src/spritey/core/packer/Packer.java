@@ -40,13 +40,22 @@ public class Packer {
      */
     public void pack(Sheet sheet, Constraints constraints)
             throws IllegalArgumentException, SizeTooSmallException {
-        if (constraints.maintainAspectRatio()) {
-            new HighestFitMaintainRatioStrategy().pack(sheet, constraints);
-        } else if (constraints.maintainPowerOfTwo()) {
-            new ClosestToOriginFitMaintainPowerOfTwoStrategy().pack(sheet, constraints);
+        boolean maintainAspectRatio = constraints.maintainAspectRatio();
+        boolean maintainPowerOfTwo = constraints.maintainPowerOfTwo();
+
+        Strategy strategy = null;
+
+        if (maintainAspectRatio && maintainPowerOfTwo) {
+            strategy = new DiagonalFitMaintainAspectRatioAndPowerOfTwoStrategy();
+        } else if (maintainAspectRatio) {
+            strategy = new HighestFitMaintainAspectRatioStrategy();
+        } else if (maintainPowerOfTwo) {
+            strategy = new DiagonalFitMaintainPowerOfTwoStrategy();
         } else {
-            new HighestFitStrategy().pack(sheet, constraints);
+            strategy = new HighestFitStrategy();
         }
+
+        strategy.pack(sheet, constraints);
     }
 
 }

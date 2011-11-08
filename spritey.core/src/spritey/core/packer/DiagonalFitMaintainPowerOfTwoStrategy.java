@@ -29,32 +29,12 @@ import java.util.List;
 import spritey.core.Messages;
 
 /**
- * This packer tries to put each sprite as close to the top-left origin as
- * possible by dividing empty area into zones. Zones are sorted according to
- * their distance from the top-left corner in ascending order, then sprite is
- * tested against each zone. When sprite doesn't fist into any zone the closest
- * zone is expanded just enough to fit the sprite and the size is adjusted to
- * the next power of two. Redundant zones i.e. zones completely covered by other
- * zones, are removed.
+ * This packer tries to put each sprite as close to the top-left corner as
+ * possible by sorting free zones by the distance from the origin in ascending
+ * order. When sprite doesn't fit into any zone the closest zone is expanded
+ * just enough to fit the sprite and size is adjusted to the next power of two.
  */
-public class ClosestToOriginFitMaintainPowerOfTwoStrategy extends HighestFitStrategy {
-
-    /**
-     * Sorts the specified list of rectangles by the closest to the top-left
-     * origin.
-     * 
-     * @param zones
-     *        the list of zones to sort.
-     */
-    @Override
-    protected void sortZones(List<Rectangle> zones) {
-        Collections.sort(zones, new Comparator<Rectangle>() {
-            @Override
-            public int compare(Rectangle r1, Rectangle r2) {
-                return (r1.x + r1.y) - (r2.x + r2.y);
-            }
-        });
-    }
+public class DiagonalFitMaintainPowerOfTwoStrategy extends WidestFirstStrategy {
 
     /**
      * Adjusts the value to expand the width by to make the end result be the
@@ -65,7 +45,7 @@ public class ClosestToOriginFitMaintainPowerOfTwoStrategy extends HighestFitStra
      * @return the value to expand the width by to make the end result be the
      *         power of two.
      */
-    private int adjustWidth(int width) {
+    protected int adjustWidth(int width) {
         int nextWidth = currentSize.width + width;
 
         return isPowerOfTwo(nextWidth) ? width : nextPowerOfTwo(nextWidth)
@@ -81,13 +61,40 @@ public class ClosestToOriginFitMaintainPowerOfTwoStrategy extends HighestFitStra
      * @return the value to expand the height by to make the end result be the
      *         power of two.
      */
-    private int adjustHeight(int height) {
+    protected int adjustHeight(int height) {
         int nextHeight = currentSize.height + height;
 
         return isPowerOfTwo(nextHeight) ? height : nextPowerOfTwo(nextHeight)
                 - currentSize.height;
     }
 
+    /**
+     * Sorts the specified list of rectangles by the closest to the top-left
+     * corner.
+     * 
+     * @param zones
+     *        the list of zones to sort.
+     */
+    @Override
+    protected void sortZones(List<Rectangle> zones) {
+        Collections.sort(zones, new Comparator<Rectangle>() {
+            @Override
+            public int compare(Rectangle r1, Rectangle r2) {
+                return (r1.x + r1.y) - (r2.x + r2.y);
+            }
+        });
+    }
+
+    /**
+     * Tries to expand zone closest to the top-left corner. When no zones can be
+     * expanded either width or height is expanded. Size is then adjusted to
+     * power of two.
+     * 
+     * @param rect
+     *        the rectangle that has to fit after the expansion.
+     * @throws SizeTooSmallException
+     *         when sheet size is too small to fit all sprites.
+     */
     @Override
     protected Dimension expandBy(Rectangle rect) throws SizeTooSmallException {
         Dimension maxSize = constraints.getMaxSize();
@@ -129,17 +136,19 @@ public class ClosestToOriginFitMaintainPowerOfTwoStrategy extends HighestFitStra
         // height, what ever is the smallest, one last time. It could be the
         // case that we almost reached the maximum size of one dimension and the
         // other dimension does not have any expandable zones.
-        boolean canExpandWidth = (nextPowerOfTwo(currentSize.width + rect.width) <= maxSize.width);
-        boolean canExpandHeight = (nextPowerOfTwo(currentSize.height
-                + rect.height) <= maxSize.height);
+        boolean canExpandWidth = (currentSize.width + adjustWidth(rect.width) <= maxSize.width);
+        boolean canExpandHeight = (currentSize.height
+                + adjustHeight(rect.height) <= maxSize.height);
         boolean shouldExpandHeight = currentSize.width > currentSize.height;
 
         if ((canExpandHeight && shouldExpandHeight)
                 || (canExpandHeight && !canExpandWidth)) {
             if (rect.width > currentSize.width) {
-                if (nextPowerOfTwo(rect.width) <= maxSize.width) {
-                    return new Dimension(adjustWidth(rect.width
-                            - currentSize.width), adjustHeight(rect.height));
+                int expandWidthBy = adjustWidth(rect.width - currentSize.width);
+
+                if (currentSize.width + expandWidthBy <= maxSize.width) {
+                    return new Dimension(expandWidthBy,
+                            adjustHeight(rect.height));
                 }
                 // Rectangle width is bigger than maximum width.
                 throw new SizeTooSmallException(
@@ -148,9 +157,12 @@ public class ClosestToOriginFitMaintainPowerOfTwoStrategy extends HighestFitStra
             return new Dimension(0, adjustHeight(rect.height));
         } else if (canExpandWidth) {
             if (rect.height > currentSize.height) {
-                if (nextPowerOfTwo(rect.height) <= maxSize.height) {
+                int expandHeightBy = adjustHeight(rect.height
+                        - currentSize.height);
+
+                if (currentSize.height + expandHeightBy <= maxSize.height) {
                     return new Dimension(adjustWidth(rect.width),
-                            adjustHeight(rect.height - currentSize.height));
+                            expandHeightBy);
                 }
                 // Rectangle height is bigger than maximum height. We have to
                 // terminate packing as not all sprites can fit into sprite

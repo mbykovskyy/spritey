@@ -20,15 +20,18 @@ package spritey.core;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
-import spritey.core.packer.ClosestToOriginFitMaintainPowerOfTwoStrategyTests;
 import spritey.core.packer.ConstraintsTest;
-import spritey.core.packer.HighestFitMaintainRatioStrategyTests;
+import spritey.core.packer.DiagonalFitMaintainAspectRatioAndPowerOfTwoStrategyTests;
+import spritey.core.packer.DiagonalFitMaintainPowerOfTwoStrategyTests;
+import spritey.core.packer.HighestFitMaintainAspectRatioStrategyTests;
 import spritey.core.packer.HighestFitStrategyTests;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses({ NodeTests.class, SheetTests.class, GroupTests.class,
         SpriteTests.class, HighestFitStrategyTests.class,
-        ConstraintsTest.class, HighestFitMaintainRatioStrategyTests.class,
-        ClosestToOriginFitMaintainPowerOfTwoStrategyTests.class })
+        ConstraintsTest.class,
+        HighestFitMaintainAspectRatioStrategyTests.class,
+        DiagonalFitMaintainPowerOfTwoStrategyTests.class,
+        DiagonalFitMaintainAspectRatioAndPowerOfTwoStrategyTests.class })
 public class AllTests {
 }
