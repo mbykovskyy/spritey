@@ -33,8 +33,8 @@ import org.eclipse.osgi.util.NLS;
 
 import spritey.core.Sheet;
 import spritey.core.io.ImageWriter;
+import spritey.core.io.MetadataWriter;
 import spritey.core.io.Writer;
-import spritey.core.io.XmlWriter;
 import spritey.core.packer.Constraints;
 import spritey.core.packer.Packer;
 import spritey.core.packer.SizeTooSmallException;
@@ -155,8 +155,7 @@ public class SaveSheetOperation implements IRunnableWithProgress {
         save(imageFile, new ImageWriter(), monitor);
         monitor.worked(1);
 
-        // TODO Remove hard-coded xml writer.
-        save(metadataFile, new XmlWriter(), monitor);
+        save(metadataFile, new MetadataWriter(), monitor);
         monitor.worked(1);
 
         monitor.done();

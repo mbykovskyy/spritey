@@ -20,6 +20,7 @@ package spritey.core;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
+import spritey.core.io.MetadataWriterTests;
 import spritey.core.packer.ConstraintsTest;
 import spritey.core.packer.DiagonalFitMaintainAspectRatioAndPowerOfTwoStrategyTests;
 import spritey.core.packer.DiagonalFitMaintainPowerOfTwoStrategyTests;
@@ -32,6 +33,7 @@ import spritey.core.packer.HighestFitStrategyTests;
         ConstraintsTest.class,
         HighestFitMaintainAspectRatioStrategyTests.class,
         DiagonalFitMaintainPowerOfTwoStrategyTests.class,
-        DiagonalFitMaintainAspectRatioAndPowerOfTwoStrategyTests.class })
+        DiagonalFitMaintainAspectRatioAndPowerOfTwoStrategyTests.class,
+        MetadataWriterTests.class })
 public class AllTests {
 }

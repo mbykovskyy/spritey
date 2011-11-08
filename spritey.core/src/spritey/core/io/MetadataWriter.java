@@ -21,30 +21,38 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
+import spritey.core.Messages;
 import spritey.core.Sheet;
 
 /**
- * Writer for exporting sprite sheet to a disk.
+ * Writer for saving sprite sheet image to disk.
  */
-public interface Writer {
+public class MetadataWriter extends AbstractWriter {
 
     /**
-     * Writes the specified tree to a disk.
+     * Returns <code>true</code> if the specified file is XML.
      * 
-     * @param sheet
-     *        the sheet node.
      * @param file
-     *        the file to write to.
-     * @throws IllegalArgumentException
-     *         when either <code>sheet</code> or <code>file</code> is null.
-     * @throws FileNotFoundException
-     *         if the file exists but is a directory rather than a regular file,
-     *         does not exist but cannot be created, or cannot be opened for any
-     *         other reason.
-     * @throws IOException
-     *         when problem occurres during writing.
+     *        the file to check.
+     * @return <code>true</code> if the file is XML, otherwise
+     *         <code>false</code>.
      */
-    public void write(Sheet sheet, File file) throws FileNotFoundException,
-            IOException;
+    protected boolean isXml(File file) {
+        return getFileExt(file).equalsIgnoreCase("xml");
+    }
+
+    @Override
+    public void write(Sheet sheet, File file) throws IllegalArgumentException,
+            FileNotFoundException, IOException {
+        validateNotNull(sheet, Messages.NULL);
+        validateNotNull(file, Messages.NULL);
+
+        if (isXml(file)) {
+            new XmlWriter().write(sheet, file);
+        } else {
+            throw new RuntimeException("Unsupported file extension. "
+                    + getFileExt(file) + " is currently not supported.");
+        }
+    }
 
 }

@@ -18,33 +18,37 @@
 package spritey.core.io;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-
-import spritey.core.Sheet;
 
 /**
- * Writer for exporting sprite sheet to a disk.
+ * AbstractWriter defining common behaviour for exporting sprite sheet to a
+ * disk.
  */
-public interface Writer {
+public abstract class AbstractWriter implements Writer {
 
     /**
-     * Writes the specified tree to a disk.
+     * Validates that the specified object is not null.
      * 
-     * @param sheet
-     *        the sheet node.
-     * @param file
-     *        the file to write to.
-     * @throws IllegalArgumentException
-     *         when either <code>sheet</code> or <code>file</code> is null.
-     * @throws FileNotFoundException
-     *         if the file exists but is a directory rather than a regular file,
-     *         does not exist but cannot be created, or cannot be opened for any
-     *         other reason.
-     * @throws IOException
-     *         when problem occurres during writing.
+     * @param o
+     *        the object to validate.
+     * @param msg
+     *        the exception message.
      */
-    public void write(Sheet sheet, File file) throws FileNotFoundException,
-            IOException;
+    protected void validateNotNull(Object o, String msg) {
+        if (null == o) {
+            throw new IllegalArgumentException(msg);
+        }
+    }
+
+    /**
+     * Returns the file extension.
+     * 
+     * @param file
+     *        the file to get extension for.
+     * @return file extension.
+     */
+    protected String getFileExt(File file) {
+        String[] parts = file.getName().split("\\.");
+        return parts.length < 2 ? "" : parts[parts.length - 1];
+    }
 
 }

@@ -37,19 +37,7 @@ import spritey.core.filter.VisibleSpriteFilter;
 /**
  * Writer for saving sprite sheet image to disk.
  */
-public class ImageWriter implements Writer {
-
-    /**
-     * Returns the file extension.
-     * 
-     * @param file
-     *        the file to get extension for.
-     * @return file extension.
-     */
-    protected String getFileExt(File file) {
-        String[] parts = file.getName().split("\\.");
-        return parts[parts.length - 1];
-    }
+public class ImageWriter extends AbstractWriter {
 
     /**
      * Returns <code>true</code> if the specified file is GIF.
@@ -126,8 +114,11 @@ public class ImageWriter implements Writer {
     }
 
     @Override
-    public void write(Sheet sheet, File file) throws FileNotFoundException,
-            IOException {
+    public void write(Sheet sheet, File file) throws IllegalArgumentException,
+            FileNotFoundException, IOException {
+        validateNotNull(sheet, Messages.NULL);
+        validateNotNull(file, Messages.NULL);
+
         int width = sheet.getWidth();
         int height = sheet.getHeight();
         boolean isOpaque = sheet.getBackground().getAlpha() == 255;
