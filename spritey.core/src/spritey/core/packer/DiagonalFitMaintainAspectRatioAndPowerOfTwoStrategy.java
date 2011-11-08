@@ -17,8 +17,6 @@
  */
 package spritey.core.packer;
 
-import static spritey.core.packer.Constraints.isPowerOfTwo;
-
 import java.awt.Dimension;
 import java.awt.Rectangle;
 
@@ -38,13 +36,6 @@ public class DiagonalFitMaintainAspectRatioAndPowerOfTwoStrategy extends
     protected Dimension expandBy(Rectangle rect) throws SizeTooSmallException {
         Dimension maxSize = constraints.getMaxSize();
         float ratio = constraints.getAspectRatio();
-
-        // A quick check to make sure ratio will keep sheet size to the power of
-        // two.
-        if (!isPowerOfTwo((int) (1 / ratio))) {
-            throw new RuntimeException("Invalid aspect ratio. " + ratio
-                    + " does not make size the power of two.");
-        }
 
         for (Rectangle zone : freeZones) {
             boolean canExpandWidth = (zone.x + zone.width == currentSize.width);
