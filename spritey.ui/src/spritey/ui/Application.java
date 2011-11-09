@@ -17,9 +17,6 @@
  */
 package spritey.ui;
 
-import java.net.MalformedURLException;
-import java.net.URL;
-
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.jface.wizard.WizardDialog;
@@ -43,18 +40,18 @@ public class Application {
     public static final String EDIT_IMG_ID = "edit";
     public static final String LOCK_IMG_ID = "lock";
 
-    public static final String EXPAND_ALL_IMG_PATH = "data/icons/expand_all.gif";
-    public static final String COLLAPSE_ALL_IMG_PATH = "data/icons/collapse_all.gif";
-    public static final String DROP_DOWN_IMG_PATH = "data/icons/dropdown.gif";
-    public static final String ADD_IMG_PATH = "data/icons/add.png";
-    public static final String CREATE_GROUP_IMG_PATH = "data/icons/create_group.png";
-    public static final String DELETE_IMG_PATH = "data/icons/delete.png";
-    public static final String FOLDER_IMG_PATH = "data/icons/folder.png";
-    public static final String SHEET_IMG_PATH = "data/icons/sheet.png";
-    public static final String GROUP_IMG_PATH = "data/icons/group.png";
-    public static final String SPRITE_IMG_PATH = "data/icons/sprite.png";
-    public static final String EDIT_IMG_PATH = "data/icons/edit.png";
-    public static final String LOCK_IMG_PATH = "data/icons/lock.png";
+    public static final String EXPAND_ALL_IMG_PATH = "icons/expand_all.gif";
+    public static final String COLLAPSE_ALL_IMG_PATH = "icons/collapse_all.gif";
+    public static final String DROP_DOWN_IMG_PATH = "icons/dropdown.gif";
+    public static final String ADD_IMG_PATH = "icons/add.png";
+    public static final String CREATE_GROUP_IMG_PATH = "icons/create_group.png";
+    public static final String DELETE_IMG_PATH = "icons/delete.png";
+    public static final String FOLDER_IMG_PATH = "icons/folder.png";
+    public static final String SHEET_IMG_PATH = "icons/sheet.png";
+    public static final String GROUP_IMG_PATH = "icons/group.png";
+    public static final String SPRITE_IMG_PATH = "icons/sprite.png";
+    public static final String EDIT_IMG_PATH = "icons/edit.png";
+    public static final String LOCK_IMG_PATH = "icons/lock.png";
 
     private static ImageRegistry imageRegistry;
 
@@ -103,15 +100,8 @@ public class Application {
      *         <code>null</code>.
      */
     private static ImageDescriptor getImageDescriptor(String path) {
-        URL url = null;
-
-        try {
-            url = new URL("file:" + path);
-        } catch (MalformedURLException e) {
-            return null;
-        }
-
-        return ImageDescriptor.createFromURL(url);
+        return ImageDescriptor.createFromURL(Application.class
+                .getResource(path));
     }
 
     public static void main(String[] args) {
