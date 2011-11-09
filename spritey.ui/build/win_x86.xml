@@ -9,6 +9,7 @@
     <property name="libs.dir" value="${build.dir}/libs"/>
     <property name="spritey.ui.dir" value="${basedir}/.."/>
     <property name="spritey.core.dir" value="${spritey.ui.dir}/../spritey.core"/>
+    <property name="git.dir" value="${spritey.ui.dir}/.."/>
     
     <target name="clean">
         <delete dir="${ant.project.name}"/>
@@ -34,6 +35,7 @@
         <copy file="${spritey.ui.dir}/libs/org.eclipse.swt_3.6.0.v3650b.jar" todir="${libs.dir}"/>
         <copy file="${spritey.ui.dir}/libs/org.eclipse.swt.win32.win32.x86_3.6.0.v3650b.jar" todir="${libs.dir}"/>
         <copy file="${spritey.ui.dir}/libs/org.eclipse.core.commands_3.6.0.I20100512-1500.jar" todir="${libs.dir}"/>
+        <copy file="${git.dir}/COPYING" todir="${build.dir}"/>
     </target>
 
     <target name="zip" depends="jar">
