@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project name="build" default="all">
+    <property file="common.properties" />
+    
+    <target name="clean">
+        <delete dir="${build.arch}"/>
+    </target>
+        
+    <target name="init">
+        <mkdir dir="${libs.dir}"/>
+    </target>
+        
+    <target name="jar" depends="clean, init">
+        <jar destfile="${build.dir}/${app.name}.jar">
+            <manifest>
+                <attribute name="Main-Class" value="spritey.ui.Application"/>
+                <attribute name="Class-Path" value=". libs/java-xmlbuilder-0.3.jar libs/${swt.jar} libs/org.eclipse.equinox.common_3.6.0.v20100503.jar libs/org.eclipse.jface_3.6.0.I20100601-0800.jar libs/org.eclipse.osgi_3.6.0.v20100517.jar libs/org.eclipse.core.commands_3.6.0.I20100512-1500.jar"/>
+            </manifest>
+            <fileset dir="${spritey.core.dir}/bin"/>
+            <fileset dir="${spritey.ui.dir}/bin"/>
+        </jar>
+        <copy file="${spritey.core.dir}/libs/java-xmlbuilder-0.3.jar" todir="${libs.dir}"/>
+        <copy file="${spritey.ui.dir}/libs/${swt.jar}" todir="${libs.dir}"/>
+        <copy file="${spritey.ui.dir}/libs/org.eclipse.equinox.common_3.6.0.v20100503.jar" todir="${libs.dir}"/>
+        <copy file="${spritey.ui.dir}/libs/org.eclipse.jface_3.6.0.I20100601-0800.jar" todir="${libs.dir}"/>
+        <copy file="${spritey.ui.dir}/libs/org.eclipse.osgi_3.6.0.v20100517.jar" todir="${libs.dir}"/>
+        <copy file="${spritey.ui.dir}/libs/org.eclipse.core.commands_3.6.0.I20100512-1500.jar" todir="${libs.dir}"/>
+        <copy file="${git.dir}/COPYING" todir="${build.dir}"/>
+    </target>
+
+    <target name="zip" depends="jar">
+        <zip destfile="${build.arch}/${build.name}.zip" basedir="${build.arch}/${build.name}"/>
+        <delete dir="${build.arch}/${build.name}"/>
+    </target>
+    
+    <target name="win-x86">
+        <antcall target="zip" inheritAll="false"><param file="win-x86.properties"/></antcall>
+    </target>
+    
+    <target name="linux-gtk-x86">
+        <antcall target="zip" inheritAll="false"><param file="linux-gtk-x86.properties"/></antcall>
+    </target>
+    
+    <target name="macosx-x86">
+        <antcall target="zip" inheritAll="false"><param file="macosx-x86.properties"/></antcall>
+    </target>
+    
+    <target name="all" depends="win-x86, linux-gtk-x86, macosx-x86">
+    </target>
+</project>

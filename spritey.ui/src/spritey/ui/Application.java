@@ -17,6 +17,9 @@
  */
 package spritey.ui;
 
+import java.io.FileNotFoundException;
+import java.io.PrintStream;
+
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.jface.wizard.WizardDialog;
@@ -104,11 +107,34 @@ public class Application {
                 .getResource(path));
     }
 
+    /**
+     * Redirects "standard" output and error streams to the specified file.
+     * 
+     * @param filename
+     *        the name of the file to redirect streams to.
+     * @throws FileNotFoundException
+     *         If the given file object does not denote an existing, writable
+     *         regular file and a new regular file of that name cannot be
+     *         created, or if some other error occurs while opening or creating
+     *         the file
+     */
+    private static void redirectSystemStreams(String filename)
+            throws FileNotFoundException {
+        PrintStream logger = new PrintStream(filename);
+        System.setOut(logger);
+        System.setErr(logger);
+    }
+
     public static void main(String[] args) {
+        try {
+            redirectSystemStreams("spritey.log");
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
         WizardDialog w = new ModelessWizardDialog(new Shell(),
                 new SpriteSheetWizard());
         w.setPageSize(750, 495);
         w.open();
     }
-
 }
