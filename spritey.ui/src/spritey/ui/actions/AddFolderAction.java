@@ -60,11 +60,14 @@ public class AddFolderAction extends LoadSpritesAction {
 
         if (null != path) {
             Node[] sprites = loadSprites(path);
-            Node parent = (Node) getSelection().getFirstElement();
 
-            parent.addChildren(sprites);
-            refreshAndSelect((Object[]) sprites);
-            getPage().validatePage();
+            if (sprites.length > 0) {
+                Node parent = (Node) getSelection().getFirstElement();
+
+                parent.addChildren(sprites);
+                refreshAndSelect((Object[]) sprites);
+                getPage().validatePage();
+            }
         }
     }
 

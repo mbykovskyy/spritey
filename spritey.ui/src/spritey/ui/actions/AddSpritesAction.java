@@ -60,11 +60,14 @@ public class AddSpritesAction extends LoadSpritesAction {
 
         if (null != dialog.open()) {
             Node[] sprites = loadSprites(dialog.getFilePaths());
-            Node parent = (Node) getSelection().getFirstElement();
 
-            parent.addChildren(sprites);
-            refreshAndSelect(parent);
-            getPage().validatePage();
+            if (sprites.length > 0) {
+                Node parent = (Node) getSelection().getFirstElement();
+
+                parent.addChildren(sprites);
+                refreshAndSelect(parent);
+                getPage().validatePage();
+            }
         }
     }
 

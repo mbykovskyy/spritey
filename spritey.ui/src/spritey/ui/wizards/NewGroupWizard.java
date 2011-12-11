@@ -30,8 +30,6 @@ public class NewGroupWizard extends Wizard {
 
     private NewGroupPage mainPage;
 
-    private Node parent;
-
     /**
      * Creates a new group wizard.
      * 
@@ -39,14 +37,13 @@ public class NewGroupWizard extends Wizard {
      *        the node to which a new group should be added.
      */
     public NewGroupWizard(Node parent) {
-        this.parent = parent;
+        mainPage = new NewGroupPage(parent);
+
+        setWindowTitle(Messages.NEW_GROUP_WIZARD_TITLE);
     }
 
     @Override
     public void addPages() {
-        mainPage = new NewGroupPage(parent);
-
-        setWindowTitle(Messages.NEW_GROUP_WIZARD_TITLE);
         addPage(mainPage);
     }
 

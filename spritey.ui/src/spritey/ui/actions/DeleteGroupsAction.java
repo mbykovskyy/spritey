@@ -25,6 +25,7 @@ import spritey.core.Group;
 import spritey.core.Node;
 import spritey.core.Sheet;
 import spritey.core.filter.AbstractFilter;
+import spritey.ui.InternalError;
 import spritey.ui.Messages;
 import spritey.ui.pages.WizardPageEx;
 
@@ -56,7 +57,7 @@ public class DeleteGroupsAction extends DeleteAction {
         IStructuredSelection selection = getSelection();
 
         if (!(selection.getFirstElement() instanceof Group)) {
-            throw new RuntimeException("Expected selection of groups.");
+            throw new InternalError("Expected selection of groups.");
         }
 
         String title = selection.size() > 1 ? Messages.ADD_SPRITES_DELETE_GROUPS_TITLE

@@ -17,11 +17,13 @@
  */
 package spritey.ui.dialogs;
 
+import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.graphics.Rectangle;
+import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Shell;
 
 /**
@@ -29,56 +31,49 @@ import org.eclipse.swt.widgets.Shell;
  */
 public class StaticWizardDialog extends WizardDialog {
 
-    private int width;
-    private int height;
+    /**
+     * Creates a new wizard dialog.
+     * 
+     * @param parent
+     *        the parent shell.
+     * @param wizard
+     *        the wizard to display in this dialog.
+     */
+    public StaticWizardDialog(Shell parent, IWizard wizard) {
+        this(parent, 0, 0, wizard);
+    }
 
     /**
      * Creates a new wizard dialog.
      * 
-     * @param parentShell
+     * @param parent
      *        the parent shell.
-     * @param width
-     *        the dialog width.
-     * @param height
-     *        the dialog height.
-     * @param newWizard
+     * @param minPageWidth
+     *        the minimum page width.
+     * @param minPageHeight
+     *        the minimum page height.
+     * @param wizard
      *        the wizard to display in this dialog.
      */
-    public StaticWizardDialog(Shell parentShell, int width, int height,
-            IWizard newWizard) {
-        super(parentShell, newWizard);
-        this.width = width;
-        this.height = height;
-
+    public StaticWizardDialog(Shell parent, int minPageWidth,
+            int minPageHeight, IWizard wizard) {
+        super(parent, wizard);
         setShellStyle(getShellStyle() & ~SWT.MAX & ~SWT.RESIZE);
+        setMinimumPageSize(minPageWidth, minPageHeight);
     }
 
-    /**
-     * Configures the size and the location of the shell.
-     */
     @Override
-    protected void configureShell(Shell newShell) {
-        super.configureShell(newShell);
-        newShell.setSize(width, height);
-        center(newShell, getParentShell());
+    protected Point getInitialSize() {
+        return getShell().computeSize(SWT.DEFAULT, SWT.DEFAULT);
     }
 
-    /**
-     * Centers window relative to its parent window.
-     * 
-     * @param dialog
-     *        the window to center.
-     * @param parent
-     *        the parent window.
-     */
-    private void center(Shell dialog, Shell parent) {
-        Rectangle parentSize = parent.getBounds();
-        Rectangle dialogSize = dialog.getBounds();
+    @Override
+    protected void createButtonsForButtonBar(Composite parent) {
+        super.createButtonsForButtonBar(parent);
 
-        int x = (parentSize.width - dialogSize.width) / 2 + parentSize.x;
-        int y = (parentSize.height - dialogSize.height) / 2 + parentSize.y;
-
-        dialog.setLocation(new Point(x, y));
+        Button finish = getButton(IDialogConstants.FINISH_ID);
+        finish.setText(IDialogConstants.OK_LABEL);
+        setButtonLayoutData(finish);
     }
 
 }

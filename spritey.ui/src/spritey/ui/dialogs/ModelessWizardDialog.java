@@ -17,25 +17,78 @@
  */
 package spritey.ui.dialogs;
 
+import org.eclipse.jface.dialogs.IDialogConstants;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Shell;
+
+import spritey.ui.Messages;
 
 /**
  * A modeless wizard dialog to show to the end user.
  */
 public class ModelessWizardDialog extends WizardDialog {
 
+    /**
+     * An exception handler for handling escaped exceptions.
+     */
+    private static class ExceptionHandler implements IExceptionHandler {
+
+        private Shell parent;
+
+        /**
+         * Creates a new instance of ExeptionHandler.
+         * 
+         * @param parent
+         *        the parent shell.
+         */
+        public ExceptionHandler(Shell parent) {
+            this.parent = parent;
+        }
+
+        @Override
+        public void handleException(Throwable t) {
+            if (t instanceof ThreadDeath) {
+                // ThreadDeath is a normal occurrence when the thread dies.
+                throw (ThreadDeath) t;
+            }
+
+            // Log it.
+            t.printStackTrace();
+
+            MessageDialog.open(MessageDialog.ERROR, parent,
+                    Messages.SPRITE_SHEET_WIZARD_TITLE,
+                    Messages.UNEXPECTED_ERROR_OCCURRED, SWT.SHEET);
+        }
+    }
+
     public ModelessWizardDialog(Shell parentShell, IWizard newWizard) {
         super(parentShell, newWizard);
         setShellStyle(SWT.SHELL_TRIM);
+        setExceptionHandler(new ExceptionHandler(getShell()));
     }
 
     @Override
     protected Shell getParentShell() {
         // Returning null makes this dialog modeless.
         return null;
+    }
+
+    @Override
+    protected void createButtonsForButtonBar(Composite parent) {
+        super.createButtonsForButtonBar(parent);
+
+        Button finish = getButton(IDialogConstants.FINISH_ID);
+        finish.setText(Messages.SPRITE_SHEET_WIZARD_BUILD);
+        setButtonLayoutData(finish);
+
+        Button cancel = getButton(IDialogConstants.CANCEL_ID);
+        cancel.setText(Messages.SPRITE_SHEET_WIZARD_CLOSE);
+        setButtonLayoutData(cancel);
     }
 
 }

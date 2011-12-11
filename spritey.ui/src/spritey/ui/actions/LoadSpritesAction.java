@@ -23,6 +23,7 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.Viewer;
 
 import spritey.core.Node;
+import spritey.ui.InternalError;
 import spritey.ui.operations.LoadSpritesOperation;
 import spritey.ui.pages.WizardPageEx;
 
@@ -72,7 +73,8 @@ public abstract class LoadSpritesAction extends SelectionListenerAction {
             } catch (InterruptedException e) {
                 // Do nothing.
             } catch (InvocationTargetException e) {
-                e.printStackTrace();
+                throw new InternalError(
+                        "Error occurred during load sprites operation.", e);
             }
         }
         return new Node[0];

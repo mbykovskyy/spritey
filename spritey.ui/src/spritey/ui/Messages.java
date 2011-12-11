@@ -26,7 +26,12 @@ public class Messages {
 
     private static final String BUNDLE_NAME = "spritey.ui.messages";
 
+    public static String UNEXPECTED_ERROR_OCCURRED;
+
     public static String SPRITE_SHEET_WIZARD_TITLE;
+    public static String SPRITE_SHEET_WIZARD_BUILD;
+    public static String SPRITE_SHEET_WIZARD_CLOSE;
+    public static String SPRITE_SHEET_WIZARD_BUILT_SUCCESSFULLY;
 
     public static String NEW_SHEET_PAGE_TITLE;
     public static String NEW_SHEET_PAGE_DESCRIPTION;
@@ -49,6 +54,7 @@ public class Messages {
     public static String ADD_SPRITES_EXPAND_ALL;
     public static String ADD_SPRITES_COLLAPSE_ALL;
     public static String ADD_SPRITES_SELECT_ALL;
+    public static String ADD_SPRITES_RENAME;
     public static String ADD_SPRITES_NAME_COLUMN;
     public static String ADD_SPRITES_SIZE_COLUMN;
     public static String ADD_SPRITES_DELETE_GROUP_TITLE;
@@ -65,6 +71,16 @@ public class Messages {
     public static String NEW_GROUP_PAGE_TITLE;
     public static String NEW_GROUP_PAGE_DESCRIPTION;
     public static String NEW_GROUP_NAME;
+
+    public static String RENAME_SPRITE_WIZARD_TITLE;
+    public static String RENAME_GROUP_WIZARD_TITLE;
+
+    public static String RENAME_SPRITE_PAGE_TITLE;
+    public static String RENAME_GROUP_PAGE_TITLE;
+    public static String RENAME_PAGE_DESCRIPTION;
+    public static String RENAME_PAGE_RENAME_GROUP;
+    public static String RENAME_PAGE_RENAME_SPRITE;
+    public static String RENAME_PAGE_NEW_NAME;
 
     public static String SAVE_AS_PAGE_TITLE;
     public static String SAVE_AS_PAGE_NAME;
@@ -83,7 +99,6 @@ public class Messages {
     public static String SAVE_AS_WRITING_FAILED;
     public static String SAVE_AS_OPEN_FILE_FAILED;
     public static String SAVE_AS_OVERWRITE_FILE;
-    public static String SAVE_AS_OPERATION_INVOCATION_ERROR;
     public static String SAVE_AS_PROBLEMS_SAVING;
     public static String SAVE_AS_ACCESS_DENIED;
 

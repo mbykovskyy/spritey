@@ -24,6 +24,8 @@ import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.Viewer;
 
+import spritey.ui.InternalError;
+
 /**
  * Action that listens to selection change events in the specified viewer.
  */
@@ -69,7 +71,7 @@ public abstract class SelectionListenerAction extends ViewerAction implements
             this.selection = (IStructuredSelection) selection;
             selectionChanged(this.selection);
         } else {
-            throw new RuntimeException("Expected structured selection.");
+            throw new InternalError("Expected structured selection.");
         }
     }
 

@@ -18,7 +18,6 @@
 package spritey.ui.pages;
 
 import org.eclipse.jface.wizard.WizardPage;
-import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
@@ -30,32 +29,42 @@ import org.eclipse.swt.widgets.Text;
 
 import spritey.core.Group;
 import spritey.core.Node;
+import spritey.core.Sprite;
+import spritey.ui.InternalError;
 import spritey.ui.Messages;
 
 /**
- * A main wizard page for creating a new group.
+ * A main wizard page for renaming nodes.
  */
-public class NewGroupPage extends WizardPage {
+public class RenamePage extends WizardPage {
 
-    public static final String NAME = "NEW_GROUP";
+    public static final String NAME = "RENAME";
 
-    private Group group;
-    private Node parent;
+    private Node node;
     private Text nameText;
 
-    /**
-     * Creates a new group main wizard page.
-     * 
-     * @param parent
-     *        the node to which a new group should be added.
-     */
-    public NewGroupPage(Node parent) {
-        super(NAME);
-        setTitle(Messages.NEW_GROUP_PAGE_TITLE);
-        setDescription(Messages.NEW_GROUP_PAGE_DESCRIPTION);
+    private String originalName;
 
-        group = new Group();
-        this.parent = parent;
+    /**
+     * Creates a new rename page.
+     * 
+     * @param node
+     *        the node to rename.
+     */
+    public RenamePage(Node node) {
+        super(NAME);
+
+        if (node instanceof Sprite) {
+            setTitle(Messages.RENAME_SPRITE_PAGE_TITLE);
+        } else if (node instanceof Group) {
+            setTitle(Messages.RENAME_GROUP_PAGE_TITLE);
+        } else {
+            throw new InternalError("Unexpected node " + node.getClass() + ".");
+        }
+
+        setDescription(Messages.RENAME_PAGE_DESCRIPTION);
+        this.node = node;
+        originalName = node.getName();
     }
 
     @Override
@@ -75,12 +84,12 @@ public class NewGroupPage extends WizardPage {
      */
     private void createNameControls(Composite parent) {
         Label nameLabel = new Label(parent, SWT.NONE);
-        nameLabel.setText(Messages.NEW_GROUP_NAME);
-        nameLabel.setLayoutData(new GridData(
-                GridData.VERTICAL_ALIGN_BEGINNING));
+        nameLabel.setText(Messages.RENAME_PAGE_NEW_NAME);
+        nameLabel
+                .setLayoutData(new GridData(GridData.VERTICAL_ALIGN_BEGINNING));
 
         nameText = new Text(parent, SWT.BORDER);
-        nameText.setText(group.getName());
+        nameText.setText(node.getName());
         nameText.selectAll();
         nameText.setTextLimit(Node.MAX_NAME_LENGTH);
         nameText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
@@ -96,19 +105,26 @@ public class NewGroupPage extends WizardPage {
      * Validates the text value and sets an error message accordingly.
      */
     private void validatePage() {
-        String name = nameText.getText();
-
         try {
-            group.setName(name);
+            String newName = nameText.getText();
 
-            if (parent.contains(name)) {
-                setErrorMessage(NLS.bind(spritey.core.Messages.NAME_NOT_UNIQUE,
-                        name, parent.getName()));
-                setPageComplete(false);
-            } else {
-                setErrorMessage(null);
+            if (!newName.equals(originalName)) {
+                // Temporarily change node name to verify that the new name is
+                // valid and then change it back to original.
+                node.setName(newName);
+                node.setName(originalName);
+
+                if (node instanceof Sprite) {
+                    setDescription(Messages.RENAME_PAGE_RENAME_SPRITE);
+                } else {
+                    setDescription(Messages.RENAME_PAGE_RENAME_GROUP);
+                }
                 setPageComplete(true);
+            } else {
+                setDescription(Messages.RENAME_PAGE_DESCRIPTION);
+                setPageComplete(false);
             }
+            setErrorMessage(null);
         } catch (IllegalArgumentException e) {
             setErrorMessage(e.getMessage());
             setPageComplete(false);
@@ -116,12 +132,12 @@ public class NewGroupPage extends WizardPage {
     }
 
     /**
-     * Returns an instance of a new group.
+     * Returns the new name.
      * 
-     * @return a new group.
+     * @return the new name.
      */
-    public Node getGroup() {
-        return group;
+    public String getNewName() {
+        return nameText.getText();
     }
 
 }

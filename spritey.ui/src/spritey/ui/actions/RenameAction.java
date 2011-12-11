@@ -17,59 +17,51 @@
  */
 package spritey.ui.actions;
 
-import static spritey.ui.Application.CREATE_GROUP_IMG_ID;
-
-import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.graphics.Image;
 
 import spritey.core.Node;
-import spritey.ui.Application;
+import spritey.core.Sheet;
 import spritey.ui.Messages;
 import spritey.ui.dialogs.StaticWizardDialog;
-import spritey.ui.wizards.NewGroupWizard;
+import spritey.ui.wizards.RenameWizard;
 
 /**
- * Action for creating a new group and adding it to a sheet.
+ * Action for renaming nodes in a sprite tree.
  */
-public class CreateGroupAction extends SelectionListenerAction {
+public class RenameAction extends SelectionListenerAction {
 
     /**
-     * Creates an new instance of CreateGroupAction.
+     * Creates an new instance of RenameAction.
      * 
      * @param viewer
      *        the viewer on which action will be performed.
      */
-    public CreateGroupAction(Viewer viewer) {
+    public RenameAction(Viewer viewer) {
         super(viewer);
-        Image image = Application.getImageRegistry().get(CREATE_GROUP_IMG_ID);
-        setImageDescriptor(ImageDescriptor.createFromImage(image));
-        setToolTipText(Messages.ADD_SPRITES_CREATE_GROUP);
-        setText(Messages.ADD_SPRITES_CREATE_GROUP);
-        setAccelerator(SWT.MOD1 | 'G');
+        setToolTipText(Messages.ADD_SPRITES_RENAME);
+        setText(Messages.ADD_SPRITES_RENAME);
+        setAccelerator(SWT.F2);
         setEnabled(false);
     }
 
     @Override
     public void run() {
-        Node parent = (Node) getSelection().getFirstElement();
-        NewGroupWizard wizard = new NewGroupWizard(parent);
+        Node node = (Node) getSelection().getFirstElement();
+        RenameWizard wizard = new RenameWizard(node);
         StaticWizardDialog dialog = new StaticWizardDialog(getShell(), 380, 40,
                 wizard);
 
         if (dialog.open() != Window.CANCEL) {
-            Node group = wizard.getGroup();
-            parent.addChildren(group);
-            refreshAndSelect(group);
+            refreshAndSelect(node);
         }
     }
 
     @Override
     protected void selectionChanged(IStructuredSelection selection) {
-        setEnabled(1 == selection.toArray().length);
+        setEnabled((1 == selection.size())
+                && !(selection.getFirstElement() instanceof Sheet));
     }
-
 }

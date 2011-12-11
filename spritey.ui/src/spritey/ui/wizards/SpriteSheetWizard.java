@@ -27,7 +27,9 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.widgets.Shell;
 
+import spritey.ui.InternalError;
 import spritey.ui.Messages;
 import spritey.ui.operations.OverwriteQuery;
 import spritey.ui.operations.SaveSheetOperation;
@@ -114,32 +116,32 @@ public class SpriteSheetWizard extends Wizard {
                     callback);
             getContainer().run(true, true, op);
 
+            Shell parent = getContainer().getShell();
             IStatus status = op.getStatus();
+
             if (!status.isOK()) {
                 // To make dialogs consistent throughout the application,
                 // display a custom error dialog with details button only when
                 // there are multiple problems. Otherwise display an OS native
                 // dialog.
                 if (status.isMultiStatus()) {
-                    ErrorDialog.openError(getContainer().getShell(),
+                    ErrorDialog.openError(parent,
                             Messages.SPRITE_SHEET_WIZARD_TITLE, null, status);
                 } else {
-                    MessageDialog.open(MessageDialog.ERROR, getContainer()
-                            .getShell(), Messages.SPRITE_SHEET_WIZARD_TITLE,
+                    MessageDialog.open(MessageDialog.ERROR, parent,
+                            Messages.SPRITE_SHEET_WIZARD_TITLE,
                             status.getMessage(), SWT.SHEET);
                 }
-                return false;
+            } else {
+                MessageDialog.open(MessageDialog.INFORMATION, parent,
+                        Messages.SPRITE_SHEET_WIZARD_TITLE,
+                        Messages.SPRITE_SHEET_WIZARD_BUILT_SUCCESSFULLY,
+                        SWT.SHEET);
             }
         } catch (InterruptedException e) {
             return false;
         } catch (InvocationTargetException e) {
-            MessageDialog.open(MessageDialog.ERROR, getContainer().getShell(),
-                    Messages.SPRITE_SHEET_WIZARD_TITLE,
-                    Messages.SAVE_AS_OPERATION_INVOCATION_ERROR, SWT.SHEET);
-
-            // TODO log it.
-            e.printStackTrace();
-            return false;
+            throw new InternalError("Error occurred during save operation.", e);
         }
         return false;
     }

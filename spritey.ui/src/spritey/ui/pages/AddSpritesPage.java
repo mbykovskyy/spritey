@@ -51,6 +51,7 @@ import spritey.core.filter.AbstractFilter;
 import spritey.core.filter.Filter;
 import spritey.core.filter.SpriteFilter;
 import spritey.ui.Application;
+import spritey.ui.InternalError;
 import spritey.ui.Messages;
 import spritey.ui.actions.AddFolderAction;
 import spritey.ui.actions.AddSpritesAction;
@@ -59,6 +60,7 @@ import spritey.ui.actions.CreateGroupAction;
 import spritey.ui.actions.DeleteGroupsAction;
 import spritey.ui.actions.DeleteSpritesAction;
 import spritey.ui.actions.ExpandAllAction;
+import spritey.ui.actions.RenameAction;
 import spritey.ui.actions.SelectAllTableAction;
 import spritey.ui.actions.SelectAllTreeAction;
 import spritey.ui.dnd.ViewerDragAssistant;
@@ -177,6 +179,7 @@ public class AddSpritesPage extends WizardPageEx {
         menuManager.add(createGroup);
         menuManager.add(new Separator());
         menuManager.add(deleteGroups);
+        menuManager.add(new RenameAction(groups));
         menuManager.add(new SelectAllTreeAction(groups));
 
         Tree tree = groups.getTree();
@@ -247,6 +250,7 @@ public class AddSpritesPage extends WizardPageEx {
 
         MenuManager menuManager = new MenuManager();
         menuManager.add(new DeleteSpritesAction(sprites, this));
+        menuManager.add(new RenameAction(sprites));
         menuManager.add(new SelectAllTableAction(sprites));
 
         Table table = sprites.getTable();
@@ -270,15 +274,13 @@ public class AddSpritesPage extends WizardPageEx {
      * Returns the node selected in the group tree.
      * 
      * @return the selected node.
-     * @throws RuntimeException
-     *         when multiple nodes are selected.
      */
     private Node getSelectedNode() {
         Object[] list = ((IStructuredSelection) groups.getSelection())
                 .toArray();
 
         if (1 != list.length) {
-            throw new RuntimeException(
+            throw new InternalError(
                     "Expected group tree to have a single selection.");
         }
         return (Node) list[0];

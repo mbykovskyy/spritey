@@ -24,6 +24,7 @@ import org.eclipse.jface.viewers.Viewer;
 import spritey.core.Node;
 import spritey.core.Sprite;
 import spritey.core.filter.AbstractFilter;
+import spritey.ui.InternalError;
 import spritey.ui.Messages;
 import spritey.ui.pages.WizardPageEx;
 
@@ -55,7 +56,7 @@ public class DeleteSpritesAction extends DeleteAction {
         IStructuredSelection selection = getSelection();
 
         if (!(selection.getFirstElement() instanceof Sprite)) {
-            throw new RuntimeException("Expected selection of sprites.");
+            throw new InternalError("Expected selection of sprites.");
         }
 
         String title = selection.size() > 1 ? Messages.ADD_SPRITES_DELETE_SPRITES_TITLE

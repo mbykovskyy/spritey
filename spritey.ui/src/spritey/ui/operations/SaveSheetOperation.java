@@ -136,9 +136,6 @@ public class SaveSheetOperation implements IRunnableWithProgress {
         monitor.beginTask("", TOTAL_WORK);
         monitor.subTask(Messages.SAVE_AS_PACKING);
 
-        // Profiling
-        long start = System.currentTimeMillis();
-
         try {
             packer.pack(sheet, constraints);
         } catch (SizeTooSmallException e) {
@@ -146,9 +143,6 @@ public class SaveSheetOperation implements IRunnableWithProgress {
             monitor.setCanceled(true);
             return;
         }
-
-        long finish = System.currentTimeMillis();
-        System.out.println((finish - start) / 1000.0);
 
         monitor.worked(1);
 
