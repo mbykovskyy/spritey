@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project name="macosx-x86" default="zip">
+    <import file="../common/common.xml"/>
+    <property file="../common/common.properties"/>
+    <property file="macosx-x86.properties" />
+    
+    <target name="bundle" depends="jar" description="Generates MAC .app bundle.">
+        <copy todir="${exe.file}">
+            <fileset dir="${exe.name}"/>
+        </copy>
+        <copy file="${jar.file}" todir="${java.root.dir}"/>
+        <delete file="${jar.file}"/>
+    </target>
+    
+    <target name="zip" depends="bundle, common.zip">
+        <delete dir="${exe.file}"/>
+    </target>
+</project>

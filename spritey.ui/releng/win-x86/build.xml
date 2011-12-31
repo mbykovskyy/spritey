@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project name="win-x86" default="zip">
+    <import file="../common/common.xml"/>
+    <property file="../common/common.properties"/>
+    <property file="win-x86.properties"/>
+    
+    <target name="jar2bin" depends="jar" description="Converts jar to binary.">
+        <taskdef name="launch4j" classname="net.sf.launch4j.ant.Launch4jTask"
+            classpath="${tools.dir}/launch4j/launch4j.jar:${tools.dir}/xstream.jar" />
+        
+        <launch4j>
+            <config headerType="gui" jar="${jar.file}" outfile="${exe.file}" errTitle="${app.name}" chdir="." customProcName="true">
+                <jre minVersion="1.5.0"/>
+            </config>
+        </launch4j>
+        
+        <delete file="${jar.file}"/>
+    </target>
+
+    <target name="zip" depends="jar2bin, common.zip"/>
+</project>

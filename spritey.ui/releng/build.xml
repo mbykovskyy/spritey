@@ -12,6 +12,5 @@
         <ant antfile="macosx-x86/build.xml" inheritall="false" />
     </target>
     
-    <target name="all" depends="win-x86, linux-gtk-x86, macosx-x86">
-    </target>
+    <target name="all" depends="win-x86, linux-gtk-x86, macosx-x86"/>
 </project>

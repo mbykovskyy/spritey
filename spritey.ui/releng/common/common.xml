@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project name="common">
+    <target name="clean" description="Cleans build directory.">
+        <delete dir="${dist.file}"/>
+    </target>
+
+    <target name="init" depends="clean" description="Initializes directory structure and necessary resources.">
+        <mkdir dir="${build.dir}"/>
+    </target>
+
+    <target name="jar" depends="init" description="Generates executable jar file.">
+        <jar destfile="${jar.file}">
+            <manifest>
+                <attribute name="Main-Class" value="spritey.ui.Application"/>
+                <attribute name="Class-Path" value=". libs/java-xmlbuilder-0.3.jar libs/${swt.jar} libs/org.eclipse.equinox.common_3.6.0.v20100503.jar libs/org.eclipse.jface_3.6.0.I20100601-0800.jar libs/org.eclipse.osgi_3.6.0.v20100517.jar libs/org.eclipse.core.commands_3.6.0.I20100512-1500.jar"/>
+            </manifest>
+            <fileset dir="${spritey.core.dir}/bin"/>
+            <fileset dir="${spritey.ui.dir}/bin"/>
+        </jar>
+    </target>
+
+    <target name="zip" depends="jar" description="Archives product for distribution.">
+    	<zip destfile="${dist.file}">
+    	    <!-- Executable -->
+    	    <zipfileset dir="${build.dir}" includes="${exe.name}" prefix="${app.base.dir}"/>
+    	    
+    	    <!-- Copyright information -->
+    	    <zipfileset dir="${git.dir}" includes="COPYING" prefix="${app.base.dir}"/>
+    	    
+    	    <!-- Libraries -->
+    	    <zipfileset dir="${spritey.core.dir}/libs" includes="java-xmlbuilder-0.3.jar" prefix="${app.libs.dir}"/>
+    	    <zipfileset dir="${spritey.ui.dir}/libs" prefix="${app.libs.dir}">
+        		<include name="${swt.jar}"/>
+        		<include name="org.eclipse.equinox.common_3.6.0.v20100503.jar"/>
+        		<include name="org.eclipse.jface_3.6.0.I20100601-0800.jar"/>
+                <include name="org.eclipse.osgi_3.6.0.v20100517.jar"/>
+                <include name="org.eclipse.core.commands_3.6.0.I20100512-1500.jar"/>
+            </zipfileset>
+        </zip>
+        
+        <delete file="${exe.file}"/>
+    </target>
+</project>
