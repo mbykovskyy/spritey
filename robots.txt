@@ -1,0 +1,4 @@
+User-agent: *
+Disallow: 
+
+Sitemap: http://mbykovskyy.github.io/spritey/sitemap.xml 
