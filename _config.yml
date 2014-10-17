@@ -1,14 +1,14 @@
 # Site settings
-title: Your awesome title
-email: your-email@domain.com
-description: > # this means to ignore newlines until "baseurl:"
-  Write an awesome description for your new site here. You can edit this
-  line in _config.yml. It will appear in your document head meta (for
-  Google search results) and in your feed.xml site description.
-baseurl: "" # the subpath of your site, e.g. /blog/
-url: "http://yourdomain.com" # the base hostname & protocol for your site
-twitter_username: jekyllrb
-github_username:  jekyll
+title: Spritey Blog
+description: >
+  Spritey is an open source sprite sheet creator. It is implemented
+  in Java with SWT and JFace front end. This tool is one of the most
+  efficient sprite sheet packers which can pack a large amount of sprites
+  in less than a second. You can find out about its progress, functionality
+  and implementation in the project blog, pivotal tracker or github. Links
+  can be found in a side bar..
+baseurl: "/spritey"
+url: "http://bykovskyy.com"
 
 # Build settings
 markdown: kramdown
