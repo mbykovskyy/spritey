@@ -4,8 +4,4 @@ title: About
 permalink: /about/
 ---
 
-This is the base Jekyll theme. You can find out more info about customizing your Jekyll theme, as well as basic Jekyll usage documentation at [jekyllrb.com](http://jekyllrb.com/)
-
-You can find the source code for the Jekyll new theme at: [github.com/jglovier/jekyll-new](https://github.com/jglovier/jekyll-new)
-
-You can find the source code for Jekyll at [github.com/jekyll/jekyll](https://github.com/jekyll/jekyll)
+Spritey is an open source sprite sheet creator. It is implemented in Java with SWT and JFace front end. This tool is one of the most efficient sprite sheet packers which can pack a large amount of sprites in less than a second. You can find out about its progress, functionality and implementation in the project blog, pivotal tracker or github. Links can be found in a side bar.
