@@ -25,12 +25,14 @@ Initially, I thought  that when sprite sheet configuration is exported as XML, 
 
 would've produced the following configuration
 
-	<sheet>
-	    <buttons>
-	        <default x="" y="" width="" height="" />
-	        <pressed x="" y="" width="" height="" />
-	    </buttons>
-	</sheet>
+{% highlight xml %}
+<sheet>
+    <buttons>
+        <default x="" y="" width="" height="" />
+        <pressed x="" y="" width="" height="" />
+    </buttons>
+</sheet>
+{% endhighlight %}
 
 But, I did not take into account that I had no character restrictions on names and that they could include characters deemed illegal by [W3C XML specification][w3c].
 
@@ -46,16 +48,20 @@ When users are happy with selected sprites they can move to the next page where 
 
 As I was close to finishing these changes I talked to [Alan Morey][alan_morey] to get his input about this. He suggested that exporting names as tags was not a good idea and that instead I should export names just like other attributes to have something like this,
 
-	<sheet>
-	    <group name="buttons">
-	        <sprite name="default" x="" y="" width="" height="" />
-	        <sprite name="pressed" x="" y="" width="" height="" />
-	    </group>
-	</sheet>
+{% highlight xml %}
+<sheet>
+    <group name="buttons">
+        <sprite name="default" x="" y="" width="" height="" />
+        <sprite name="pressed" x="" y="" width="" height="" />
+    </group>
+</sheet>
+{% endhighlight %}
 
 I liked the idea but I was still concerned with allowing users to access nodes directly with XPath like so,
 
+{% highlight java %}
 	xml.selectNode("/sheet/buttons/default");
+{% endhighlight %}
 
 
 But he insisted that users will most likely be concerned with importing the whole sprite sheet configuration and then accessing nodes with my API, and I can also provide an API for addressing sprites similar to XPath. So, to keep story short, I took his suggestions in and now names are exported as attributes.
