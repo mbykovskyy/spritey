@@ -9,6 +9,7 @@ tags:
 - css
 - tree
 ---
+
 <ol>
 <li style="list-style-image: none;">A user can create a deep hierachy of sprites. For example, a user can create a sprite group called "menu" and add another sub-group called "buttons":
 <ul>
