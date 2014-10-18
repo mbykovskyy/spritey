@@ -12,8 +12,11 @@ tags:
 - fit
 ---
 
-Here're some screenshots of first fit strategy in action. ;)
+Here're some screenshots of first fit strategy in action.
 
-<a href="http://bykovskyy.com/spritepacker/blog/wp-content/uploads/2010/08/sprite-sheet-opaque.png"><img class="aligncenter size-medium wp-image-460" title="sprite-sheet-opaque" src="http://bykovskyy.com/spritepacker/blog/wp-content/uploads/2010/08/sprite-sheet-opaque-300x193.png" alt="" width="300" height="193" /></a>
+![][sprite_sheet_opaque]
 
-<a href="http://bykovskyy.com/spritepacker/blog/wp-content/uploads/2010/08/sprite-sheet-transparent.png"><img class="aligncenter size-medium wp-image-461" title="sprite-sheet-transparent" src="http://bykovskyy.com/spritepacker/blog/wp-content/uploads/2010/08/sprite-sheet-transparent-300x191.png" alt="" width="300" height="191" /></a>
+![][sprite_sheet_transparent]
+
+[sprite_sheet_opaque]: {{site.baseurl}}/assets/images/2010/08/sprite-sheet-opaque.png "Opaque Sprite Sheet Screenshot"
+[sprite_sheet_transparent]: {{site.baseurl}}/assets/images/2010/08/sprite-sheet-transparent.png "Transparent Sprite Sheet Screenshot"

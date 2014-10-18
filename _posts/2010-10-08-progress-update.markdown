@@ -14,4 +14,6 @@ tags:
 
 Slowly but surely I'm getting there! Have made a good progress since last week. Some major problems were overcome with workarounds, which need to be fixed later.
 
-<a href="http://bykovskyy.com/spritepacker/blog/wp-content/uploads/2010/10/spritey-screenshot-2.png"><img class="aligncenter size-medium wp-image-473" title="spritey-screenshot-2" src="http://bykovskyy.com/spritepacker/blog/wp-content/uploads/2010/10/spritey-screenshot-2-300x224.png" alt="" width="300" height="224" /></a>
+![][spritey_screenshot]
+
+[spritey_screenshot]: {{site.baseurl}}/assets/images/2010/10/spritey-screenshot.png "Spritey Screenshot"
