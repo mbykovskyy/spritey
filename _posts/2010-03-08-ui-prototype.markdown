@@ -1,0 +1,50 @@
+---
+layout: post
+status: publish
+published: true
+title: UI Prototype
+author:
+  display_name: Max
+  login: admin
+  email: maksym@bykovskyy.com
+  url: http://bykovskyy.com
+author_login: admin
+author_email: maksym@bykovskyy.com
+author_url: http://bykovskyy.com
+wordpress_id: 46
+wordpress_url: http://bykovskyy.com/spritepacker/blog/?p=46
+date: '2010-03-08 00:06:47 -0800'
+date_gmt: '2010-03-08 00:06:47 -0800'
+categories:
+- Research and Design
+tags:
+- ui
+- prototype
+- mockup
+- screen
+- wireframe
+- sketcher
+- sprite
+- packer
+- wireframesketcher
+- spritepacker
+- image
+- texture
+- imagepacker
+---
+<p>I've put together a quick UI prototype using <a href="http://wireframesketcher.com">WireframeSketcher</a> developed by <a href="http://wireframesketcher.com/about.html">Peter Severin</a>. WireframeSketcher is an Eclipse plugin for creating screen mockups. It has a rich library of UI components which lets you create prototypes really fast. It is also very easy to create custom widgets by combining various components together. What I also like about this tool is its clean interface and the fact that it's part of Eclipse which means no switching between applications and mockups are saved within a project. It might not be a big deal but for me it's very important to have everything in one place. ;) I would like to thank Peter for kindly giving me a free open-source developer license and I would like to encourage anyone looking for such tool to check it out. This tool is amazing.</p>
+<p style="text-align: center;"><a href="http://bykovskyy.com/spritepacker/blog/wp-content/uploads/2010/03/MainScreen1.png"><img class="aligncenter size-full wp-image-104" title="Main Screen" src="http://bykovskyy.com/spritepacker/blog/wp-content/uploads/2010/03/MainScreen1.png" alt="" width="427" height="361" /></a></p>
+<p>So, there going to be two sprite sheet views:</p>
+<ul>
+<li>Canvas (positioned on the left) - will render spites how they will actually appear in the exported sheet.</li>
+<li>Sprite List/Tree (positioned top-right) - will group sprites by their classes.</li>
+</ul>
+<p>There will also be three sprite views:</p>
+<ul>
+<li>Graphical - will be rendered to the canvas.</li>
+<li>Sprite List Item - will only render sprite class value/text in the Sprite List.</li>
+<li>Sprite Properties (positioned bottom-right) - will display sprite attributes that can be changed manually.</li>
+</ul>
+<div id="_mcePaste" style="overflow: hidden; position: absolute; left: -10000px; top: 0px; width: 1px; height: 1px;">
+<h2 class="title underline">WireframeSketcher</h2>
+</div>
