@@ -1,20 +1,6 @@
 ---
 layout: post
-status: publish
-published: true
 title: Spritey Loses Weight
-author:
-  display_name: Max
-  login: admin
-  email: maksym@bykovskyy.com
-  url: http://bykovskyy.com
-author_login: admin
-author_email: maksym@bykovskyy.com
-author_url: http://bykovskyy.com
-wordpress_id: 549
-wordpress_url: http://bykovskyy.com/spritey/blog/?p=549
-date: '2011-04-23 22:53:59 -0700'
-date_gmt: '2011-04-23 22:53:59 -0700'
 categories:
 - Implementation
 tags:

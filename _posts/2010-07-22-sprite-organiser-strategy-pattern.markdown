@@ -1,20 +1,6 @@
 ---
 layout: post
-status: publish
-published: true
 title: Sprite Organiser - Strategy Pattern
-author:
-  display_name: Max
-  login: admin
-  email: maksym@bykovskyy.com
-  url: http://bykovskyy.com
-author_login: admin
-author_email: maksym@bykovskyy.com
-author_url: http://bykovskyy.com
-wordpress_id: 360
-wordpress_url: http://bykovskyy.com/spritepacker/blog/?p=360
-date: '2010-07-22 10:48:22 -0700'
-date_gmt: '2010-07-22 10:48:22 -0700'
 categories:
 - Research and Design
 tags:

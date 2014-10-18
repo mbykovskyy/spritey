@@ -1,20 +1,6 @@
 ---
 layout: post
-status: publish
-published: true
 title: Highest Fit Packing Algorithm
-author:
-  display_name: Max
-  login: admin
-  email: maksym@bykovskyy.com
-  url: http://bykovskyy.com
-author_login: admin
-author_email: maksym@bykovskyy.com
-author_url: http://bykovskyy.com
-wordpress_id: 564
-wordpress_url: http://bykovskyy.com/spritey/blog/?p=564
-date: '2011-12-10 22:49:02 -0800'
-date_gmt: '2011-12-10 22:49:02 -0800'
 categories:
 - Implementation
 tags:

@@ -1,20 +1,6 @@
 ---
 layout: post
-status: publish
-published: true
 title: Spritey Project
-author:
-  display_name: Max
-  login: admin
-  email: maksym@bykovskyy.com
-  url: http://bykovskyy.com
-author_login: admin
-author_email: maksym@bykovskyy.com
-author_url: http://bykovskyy.com
-wordpress_id: 262
-wordpress_url: http://bykovskyy.com/spritepacker/blog/?p=262
-date: '2010-03-30 16:18:20 -0700'
-date_gmt: '2010-03-30 16:18:20 -0700'
 categories:
 - Research and Design
 tags:

@@ -1,20 +1,6 @@
 ---
 layout: post
-status: publish
-published: true
 title: Flow Strategy vs. First Fit Strategy
-author:
-  display_name: Max
-  login: admin
-  email: maksym@bykovskyy.com
-  url: http://bykovskyy.com
-author_login: admin
-author_email: maksym@bykovskyy.com
-author_url: http://bykovskyy.com
-wordpress_id: 368
-wordpress_url: http://bykovskyy.com/spritepacker/blog/?p=368
-date: '2010-08-03 13:36:58 -0700'
-date_gmt: '2010-08-03 13:36:58 -0700'
 categories:
 - Research and Design
 - Implementation

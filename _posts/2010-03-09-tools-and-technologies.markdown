@@ -1,20 +1,6 @@
 ---
 layout: post
-status: publish
-published: true
 title: Tools and Technologies
-author:
-  display_name: Max
-  login: admin
-  email: maksym@bykovskyy.com
-  url: http://bykovskyy.com
-author_login: admin
-author_email: maksym@bykovskyy.com
-author_url: http://bykovskyy.com
-wordpress_id: 73
-wordpress_url: http://bykovskyy.com/spritepacker/blog/?p=73
-date: '2010-03-09 14:07:36 -0800'
-date_gmt: '2010-03-09 14:07:36 -0800'
 categories:
 - Research and Design
 tags:

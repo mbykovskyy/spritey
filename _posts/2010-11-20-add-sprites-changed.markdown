@@ -1,20 +1,6 @@
 ---
 layout: post
-status: publish
-published: true
 title: Add Sprites - Changed
-author:
-  display_name: Max
-  login: admin
-  email: maksym@bykovskyy.com
-  url: http://bykovskyy.com
-author_login: admin
-author_email: maksym@bykovskyy.com
-author_url: http://bykovskyy.com
-wordpress_id: 479
-wordpress_url: http://bykovskyy.com/spritey/blog/?p=479
-date: '2010-11-20 23:50:04 -0800'
-date_gmt: '2010-11-20 23:50:04 -0800'
 categories:
 - Implementation
 tags:

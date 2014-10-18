@@ -1,20 +1,6 @@
 ---
 layout: post
-status: publish
-published: true
 title: Sprite Packer - The Big Bang
-author:
-  display_name: Max
-  login: admin
-  email: maksym@bykovskyy.com
-  url: http://bykovskyy.com
-author_login: admin
-author_email: maksym@bykovskyy.com
-author_url: http://bykovskyy.com
-wordpress_id: 3
-wordpress_url: http://bykovskyy.com/spritepacker/blog/?p=3
-date: '2010-02-24 00:08:18 -0800'
-date_gmt: '2010-02-24 00:08:18 -0800'
 categories:
 - Research and Design
 tags:

@@ -1,20 +1,6 @@
 ---
 layout: post
-status: publish
-published: true
 title: More User Stories
-author:
-  display_name: Max
-  login: admin
-  email: maksym@bykovskyy.com
-  url: http://bykovskyy.com
-author_login: admin
-author_email: maksym@bykovskyy.com
-author_url: http://bykovskyy.com
-wordpress_id: 334
-wordpress_url: http://bykovskyy.com/spritepacker/blog/?p=334
-date: '2010-06-30 22:03:34 -0700'
-date_gmt: '2010-06-30 22:03:34 -0700'
 categories:
 - Uncategorized
 tags:
