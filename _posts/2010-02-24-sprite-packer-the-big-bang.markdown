@@ -18,7 +18,7 @@ I'm so excited to announce that today I'm officially starting my first (and hope
 
 As I was researching for my next simple 2D game I compiled a short list of tools that I thought I will need to make a complete game in short time. Sprite packer was one of them.
 
-There are already a number of sprite packing software lying around the Internet that I could use. Namely, the two packers that I just have to mention for their efficient packing capabilities are the [Image Packer][blitz_packer] from Blitz and the [Sprite Sheet Packer][sprite_packer] developed by Nick Gravelyn, who was also looking for a tool for making sprite sheets and at the end decided to write his own. :)
+There are already a number of sprite packing software lying around the Internet that I could use. Namely, the two packers that I just have to mention for their efficient packing capabilities are the [Image Packer][blitz_packer] from Blitz and the [Sprite Sheet Packer][sprite_packer] developed by Nick Gravelyn, who was also looking for a tool for making sprite sheets and at the end decided to write his own.
 
 While two of them are really good, especially the Sprite Sheet Packer, I felt it would be a great exercise for me to create my own packer that should give the user more control over sprite properties. Such as, defining sprite classes and subclasses (or types/names whatever you wanna call it), manual arrangement of sprites as well as auto-packing capabilities.
 
