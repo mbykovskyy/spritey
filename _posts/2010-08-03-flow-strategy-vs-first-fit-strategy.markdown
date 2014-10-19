@@ -45,7 +45,7 @@ This is an improvement on the first approach. Sprites are still positioned in a 
 
 ![][flow_strategy_approach2]
 
-I'm not going to theorise about how to implement it, because I haven't found a "decent" way to shift sprites up, ;) but by trying to implement this approach I found a better strategy called the First Fit Strategy.
+I'm not going to theorise about how to implement it, because I haven't found a "decent" way to shift sprites up, but by trying to implement this approach I found a better strategy called the First Fit Strategy.
 
 # First Fit Strategy
 

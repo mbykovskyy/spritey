@@ -14,7 +14,7 @@ tags:
 - algorithm
 ---
 
-This algorithm is something I'm very proud of. When I started doing Spritey I didn't know if I would be able to write a packing algorithm that can compete with other packing tools. But after comparing the results with my favourite [Sprite Sheet Packer][sprite_packer] I was amazed to see that Spritey does not only pack sprites faster but it's also  more efficient with a larger number of sprites. Here are just a few examples of what Spritey can do.
+This algorithm is something I'm very proud of. When I started working on Spritey I didn't know if I would be able to write a packing algorithm that can compete with other packing tools. But after comparing the results with my favourite [Sprite Sheet Packer][sprite_packer] I was amazed to see that Spritey does not only pack sprites faster but it's also  more efficient with a larger number of sprites. Here are just a few examples of what Spritey can do.
 
 ![][sprite_sheet_1]
 
