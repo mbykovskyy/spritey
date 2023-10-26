@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project name="linux-gtk-x86_64" default="zip">
+    <import file="../common/common.xml"/>
+    <property file="../common/common.properties"/>
+    <property file="linux-gtk-x86_64.properties" />
+</project>

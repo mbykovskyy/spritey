@@ -1,17 +1,27 @@
+# Spritey
 Spritey is an open-source sprite sheet creator, written in Java with SWT and
 JFace front-end.
 
 This tool is distributed under GNU GPL version 3, which can be found in the file
 COPYING.
 
-Each project comes with project specific settings enabled for consistency and
-coding style reasons. Which means some of your global settings in Eclipse will
-not be applied to this project. Do not disable or modify those settings if you
-wish to contribute to this project. We need to follow some rules to make
-everybody happy! ;)
-
-Also, check out the CREDITS file to see the acknowledgements to people who
-kindly contributed to this project.
-
-Enjoy!
-Spritey Team.
+## Run via command-line
+### On Linux x86_64
+0. Compile core classes
+```
+cd ./spritey.core
+find -name "*.java" -not -path "*/test/*" > sources.txt
+javac -cp ./libs/java-xmlbuilder-0.3.jar -d ./bin @sources.txt
+```
+0. Copy `messages.properties` file to `bin` directory
+0. Compile UI classes
+```
+cd ./spritey.ui
+find -name "*.java" -not -path "*/test/*" > sources.txt
+javac -cp ./libs/swt-3.7.1-linux-gtk-x86.jar:./libs/org.eclipse.equinox.common_3.6.0.v20100503.jar:./libs/org.eclipse.jface_3.6.0.I20100601-0800.jar:./libs/org.eclipse.osgi_3.6.0.v20100517.jar:./libs/org.eclipse.core.commands_3.6.0.I20100512-1500.jar:../spritey.core/bin -d ./bin @sources.txt
+```
+0. Copy `messages.properties` file and `icons` directory to `bin` directory
+0. Run application
+```
+java -cp ./libs/swt-3.7.1-linux-gtk-x86_64.jar:./libs/org.eclipse.equinox.common_3.6.0.v20100503.jar:./libs/org.eclipse.jface_3.6.0.I20100601-0800.jar:./libs/org.eclipse.osgi_3.6.0.v20100517.jar:./libs/org.eclipse.core.commands_3.6.0.I20100512-1500.jar:../spritey.core/bin:./bin spritey.ui.Application
+```
