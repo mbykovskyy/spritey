@@ -23,5 +23,6 @@ javac -cp ./libs/swt-3.7.1-linux-gtk-x86.jar:./libs/org.eclipse.equinox.common_3
 - Copy `messages.properties` file and `icons` directory to `bin` directory
 - Run application
 ```
+cd ./spritey.ui
 java -cp ./libs/swt-3.7.1-linux-gtk-x86_64.jar:./libs/org.eclipse.equinox.common_3.6.0.v20100503.jar:./libs/org.eclipse.jface_3.6.0.I20100601-0800.jar:./libs/org.eclipse.osgi_3.6.0.v20100517.jar:./libs/org.eclipse.core.commands_3.6.0.I20100512-1500.jar:../spritey.core/bin:./bin spritey.ui.Application
 ```
